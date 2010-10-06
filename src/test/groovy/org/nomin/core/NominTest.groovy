@@ -1,7 +1,6 @@
 package org.nomin.core
 
 import org.junit.Test
-
 import org.nomin.entity.LinearManager
 import org.nomin.entity.Person
 import org.nomin.entity.Employee

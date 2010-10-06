@@ -1,7 +1,7 @@
 Introduction
 
   Nomin is a mapping engine for Java platform transforming object trees according to declarative mapping rules.
-  This Java framework aims to reduce efforts when it's needed to map different structures to each other. 
+  This Java mapping framework aims to reduce efforts when it's needed to map different structures to each other.
   The current stable version of the Nomin framework is 1.0.1.
 
 * What mapping is

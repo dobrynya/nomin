@@ -1,10 +1,11 @@
 package org.nomin.core
 
 import org.nomin.entity.Person
-import org.junit.*
+import org.junit.Test
+import org.junit.Before
 
 /**
- * Documentation.
+ * Tests TypeInfo.
  * @author Dmitry Dobrynin
  * Created: 08.05.2010 15:38:21
  */
