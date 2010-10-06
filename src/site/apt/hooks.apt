@@ -1,0 +1,26 @@
+Pre and postprocessing
+
+  Often there is something else we should do with our entities before or after these will be mapped. You can do that
+  right in a mapping defining pre and/or postprocessing code as closures. You will not find a better place for such
+  calculations :) The closures can access <<a>>, <<b>> instances
+  and also boolean value <<direction>> which specifies mapping direction. It's <<<true>>> if <<a>> is being mapped to <<b>>
+  and it's <<<false>>> otherwise.
+
++---
+  mappingFor a: Person, b: Employee
+
+  before {
+    // before mapping we need to check whether current user has permissions to work with a Person being mapped
+    if (direction) securityService.checkUserRightsToAccessPerson(a)
+  }
+
+  after {
+    // after successful mapping we should register accessing a Person
+    if (direction) securityService.registerAccessToPerson(a)
+
+    // after successful mapping we should log importing an Employee
+    if (!direction) logService.logImportingEmployee(b, securityService.currentUser)
+  }
++---
+
+  Well, that's all.

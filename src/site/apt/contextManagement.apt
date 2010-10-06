@@ -1,0 +1,58 @@
+Context management
+
+  As you will see later Nomin's expressions, hooks and conversions have access to the configured context.
+  What is a context in terms of Nomin? Just a map of shared components/services between all the mappings.
+  And any of Groovy closures defined in Nomin's mappings has access to that.
+
+  If you plan to use Nomin in a concurrent environment notice that all the components used in Nomin's mappings should be
+  thread-safe or externally synchronized, Nomin doesn't manage it by itself.
+
+  Well, let's look at the examples.
+
++---
+  // Configuration.java
+  class Configuration {
+    public Configuration() {
+      Map<String, Object> ctx = new HashMap();
+      ctx.put("component1", component1);
+      ctx.put("component2", component2);
+      // and so on
+      nomin = new Nomin(ctx, "theSnipet.groovy");
+    }
+  }
++---
+
+  The next mapping snippet shows how to use the components.
+
++---
+  a.calculatedPropertyA = { component1.calculatePropertyA(b) }
+  b.calculatedPropertyB = { component2.calculatePropertyA(a) }
++---
+
+  So, components are identified by its keys in the map and used like as they are defined locally.
+
+  Now I'll introduce the features that are available for using only in Groovy code.
+
++---
+  // Configuration.groovy
+  class Configuration {
+    def ctx = [component1: component1, component2: component2,
+               calcA: { b -> component1.calculatePropertyA(b) },
+               calcB: { a-> component2.calculatePropertyA(a) }]
+
+    def nomin = new Nomin(ctx, "theSnipet.groovy")
+  }
++---
+
+  The next mapping snippet shows how to use components and closures defined in the context.
+
++---
+  a.calculatedPropertyA = { component1.calculatePropertyA(b) }
+  b.calculatedPropertyB = { component2.calculatePropertyA(a) }
+  // for using named closures just call these like methods
+  a.calculatedPropertyA = { calcA(b) }
+  b.calculatedPropertyB = { calcB(a) }
++---
+
+  In the next release I plan to replace Map as context interface with more specific interface and make integrations with
+  containers such as Spring, Guice, JNDI registry.

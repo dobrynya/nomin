@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://dozer.sourceforge.net http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+    <mapping>
+        <class-a>org.nomin.entity.Person</class-a>
+        <class-b>org.nomin.entity.Employee</class-b>
+        <field>
+            <a>name</a>
+            <b>name</b>
+        </field>
+
+        <field>
+            <a>lastName</a>
+            <b>last</b>
+        </field>
+
+        <field>
+            <a>birthDate</a>
+            <b>details.birth</b>
+        </field>
+
+        <field custom-converter="org.nomin.dozer.Gender2Boolean">
+            <a>gender</a>
+            <b>details.sex</b>
+        </field>
+
+        <field>
+            <a>children</a>
+            <b>details.kids</b>
+        </field>
+
+        <field>
+            <a date-format="dd-MM-yyyy">strDate</a>
+            <b>details.birth</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>org.nomin.entity.DetailedPerson</class-a>
+        <class-b>org.nomin.entity.LinearManager</class-b>
+        <field>
+            <a>description</a>
+            <b>characteristics</b>
+        </field>
+        <field>
+            <a>educationName</a>
+            <b>details.educations[0].name</b>
+        </field>
+        <field>
+            <a>educationDescription</a>
+            <b>details.educations[0].description</b>
+        </field>
+    </mapping>
+
+    <mapping>
+        <class-a>org.nomin.entity.Child</class-a>
+        <class-b>org.nomin.entity.Kid</class-b>
+        <field>
+            <a>name</a>
+            <b>kidName</b>
+        </field>
+    </mapping>
+
+</mappings>

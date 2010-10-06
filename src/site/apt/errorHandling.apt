@@ -1,0 +1,31 @@
+Error handling
+
+  There is a couple of ways to enforce Nomin not to rethrow <<<Throwable>>>s.
+  The first of them is to call <<<handle>>> method and pass a map containing Throwables to be catched and a 'handler'
+  closure. The handler has access to context variables such as <<<mapping>>>, <<<failed>>>, <<<throwable>>>.
+  This is shown on the snippet below.
+
++---
+  handle throwables: Exception, handler: {
+    specialLogger.logError("Exception in " + mapping + ". Failed object " + failed, throwable)
+  }
+
+  // in case of several Throwable classes
+  handle throwables: [IllegalArgumentException, NullPointerException], handler: {
+    specialLogger.logError("Exception in " + mapping + ". Failed rule " + failed, throwable)
+  }
++---
+
+  Here is a predefined handler <<<swallow>>> logging errors. Actually <<<swallow>>> method calls <<<handle>>> method to
+  do its work.
+
++---
+  // there can be security issues during accessing entities
+  swallow NoGrantsSecurityException, AccessDeniedException, RegistrationFaildException
+
+  // swallowing all exceptions
+  swallow true, Exception // it's available pass true as the silent parameter for ensuring Nomin not to log errors
++---
+
+  Handling throwables is enabled only for that mapping where it's defined. It's not automatically propagated to
+  aggregated mappings.
