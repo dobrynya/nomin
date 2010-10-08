@@ -1,8 +1,8 @@
 package org.nomin.mappings
 
 import org.nomin.Mapping
-import org.nomin.entity.Order
 import org.nomin.entity.CompletedOrder
+import org.nomin.entity.Order
 
 /**
  * Just a mapping.

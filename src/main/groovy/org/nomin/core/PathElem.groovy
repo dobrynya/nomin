@@ -10,8 +10,6 @@ abstract class PathElem {
   PathElem nextPathElem
   MappingEntry mappingEntry
 
-  def propertyMissing(name) { return nextPathElem = new PropPathElem(prop: name, mappingEntry: mappingEntry) }
-
   private def processOppositeSide(value) {
     switch (value) {
       case PathElem: break;
@@ -20,9 +18,21 @@ abstract class PathElem {
     }
   }
 
+  def propertyMissing(name) { return nextPathElem = new PropPathElem(prop: name, mappingEntry: mappingEntry) }
+
   def propertyMissing(name, value) {
     propertyMissing(name)
     processOppositeSide(value)
+  }
+
+  /** Overrides the predefined method to let getting values from Map to a user */
+  Object getAt(String index) {
+    methodMissing("getAt", [index])
+  }
+
+  /** Overrides the predefined method to let putting values to Map to a user */
+  void putAt(String index, value) {
+    methodMissing("putAt", [index])
   }
 
   def methodMissing(String name, args) {

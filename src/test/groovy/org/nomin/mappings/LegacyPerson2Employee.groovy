@@ -1,12 +1,11 @@
 package org.nomin.mappings
 
 import org.nomin.Mapping
-
 import org.nomin.core.Array
-import org.nomin.entity.LegacyDetails
-import org.nomin.entity.Kid
-import org.nomin.entity.LegacyPerson
 import org.nomin.entity.Employee
+import org.nomin.entity.Kid
+import org.nomin.entity.LegacyDetails
+import org.nomin.entity.LegacyPerson
 
 /**
  * Mapping between classes.

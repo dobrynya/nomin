@@ -2,11 +2,9 @@ package org.nomin.integration
 
 import org.nomin.NominMapper
 import org.nomin.core.Nomin
-import org.nomin.mappings.Device2Router
-import org.junit.*
-
 import org.nomin.entity.Device
 import org.nomin.entity.Router
+import org.nomin.mappings.Device2Router
 
 /**
  * Tests mapping expressions and method invocations.
@@ -17,11 +15,13 @@ import org.nomin.entity.Router
 class MappingExpressionsTest {
   static boolean isBeforeCalled = false, isAfterCalled = false
   static int counter = 2;
-  
-  def deviceResolver = new Object() { public String resolveProtocol(String model) { return "http" }}
+
+  def deviceResolver = new Object() {
+    public String resolveProtocol(String model) { return "http" }
+  }
   NominMapper mapper = new Nomin([upperCase: { it?.toUpperCase() }, deviceResolver: deviceResolver], Device2Router)
 
-  @Test
+  @org.junit.Test
   void testMapping() {
     def d = new Device(model: "Vendor Model Software", integrated: [new Device(name: "port1", model: "Model1"),
             new Device(name: "port2", model: "Model2")])

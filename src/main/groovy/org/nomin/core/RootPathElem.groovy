@@ -1,7 +1,7 @@
 package org.nomin.core
 
 /**
- * Document please.
+ * Specifies the root of a path.
  * @author Dmitry Dobrynin
  * Created 09.04.2010 10:36:08
  */

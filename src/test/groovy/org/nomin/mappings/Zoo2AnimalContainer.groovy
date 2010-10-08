@@ -1,12 +1,11 @@
 package org.nomin.mappings
 
 import org.nomin.Mapping
-
 import org.nomin.core.Array
-import org.nomin.entity.Zoo
 import org.nomin.entity.AnimalContainer
-import org.nomin.entity.Rhino
 import org.nomin.entity.Crocodile
+import org.nomin.entity.Rhino
+import org.nomin.entity.Zoo
 
 /**
  * Just a mapping.

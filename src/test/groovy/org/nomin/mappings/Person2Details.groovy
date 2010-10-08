@@ -1,10 +1,9 @@
 package org.nomin.mappings
 
 import org.nomin.Mapping
-
+import org.nomin.entity.Details
 import org.nomin.entity.Gender
 import org.nomin.entity.Person
-import org.nomin.entity.Details
 
 /**
  * Just a mapping.

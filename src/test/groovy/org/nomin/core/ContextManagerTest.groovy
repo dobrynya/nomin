@@ -1,7 +1,5 @@
 package org.nomin.core
 
-import org.junit.Test
-
 /**
  * Tests ContextManager.
  * @author Dmitry Dobrynin
@@ -12,7 +10,7 @@ class ContextManagerTest {
   def cm = new ContextManager()
   def ownerProperty = "Just a value"
 
-  @Test
+  @org.junit.Test
   void testPushPopPeek() {
     cm.pushLocalContext a: "a"
     assert cm.a == "a"
@@ -24,29 +22,29 @@ class ContextManagerTest {
     assert "Shared data" == cm.sharedData
   }
 
-  @Test (expected = RuntimeException)
+  @org.junit.Test(expected = RuntimeException.class)
   void testModification() {
     cm.a = "Not allowed"
   }
 
-  @Test (expected = RuntimeException)
+  @org.junit.Test(expected = RuntimeException.class)
   void testNonExistentObject() {
     cm.nonExistent
   }
 
-  @Test
+  @org.junit.Test
   void testMethodMissing() {
     cm.pushLocalContext [:]
     cm.pushSharedContext function: { a, b, c -> "Function(${a}, ${b}, ${c})" }
     assert "Function(1, 2, 3)" == cm.function(1, 2, 3)
   }
 
-  @Test (expected = RuntimeException)
+  @org.junit.Test(expected = RuntimeException.class)
   void testNonExistentClosure() {
     cm.nonexistentClosure()
   }
 
-  @Test
+  @org.junit.Test
   void testLookingUpOwnerPropety() {
     cm.pushLocalContext [:]
     def closure = { ownerProperty }

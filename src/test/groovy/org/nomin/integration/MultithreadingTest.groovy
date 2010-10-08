@@ -1,9 +1,9 @@
 package org.nomin.integration
 
-import org.nomin.mappings.*
-import org.nomin.core.*
-import org.nomin.entity.*
-import org.junit.Test
+import org.nomin.core.Nomin
+import org.nomin.entity.Employee
+import org.nomin.entity.Person
+import org.nomin.mappings.MultiThreading
 
 /**
  * Tests Nomin in a multithreading environment.
@@ -15,7 +15,7 @@ class MultithreadingTest {
 
   Employee e
 
-  @Test
+  @org.junit.Test
   void test() {
     def t = new Thread({ e = nomin.map(new Person(), Employee) } as Runnable)
     t.start()

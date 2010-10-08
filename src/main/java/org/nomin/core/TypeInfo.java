@@ -4,6 +4,8 @@ import java.lang.reflect.*;
 import java.text.MessageFormat;
 import java.util.*;
 import groovy.lang.Closure;
+
+import static java.text.MessageFormat.*;
 import static java.util.Arrays.asList;
 
 /**
@@ -16,11 +18,13 @@ public class TypeInfo {
     Closure dynamicType;
     List<TypeInfo> parameters;
     boolean collection;
+    boolean map;
     boolean array;
 
     public TypeInfo(Class<?> type) {
         this.type = type;
         collection = Collection.class.isAssignableFrom(type);
+        map = Map.class.isAssignableFrom(type);
         array = type.isArray() || type == Array.class;
     }
 
@@ -33,9 +37,11 @@ public class TypeInfo {
 
     public boolean isCollection() { return collection; }
 
+    public boolean isMap() { return map; }
+
     public boolean isArray() { return array; }
 
-    public boolean isContainer() { return isCollection() || isArray(); }
+    public boolean isContainer() { return collection || array || map; }
 
     public boolean isUndefined() { return type == Undefined.class; }
 
@@ -104,8 +110,11 @@ public class TypeInfo {
     }
 
     public String toString() {
-        if (isContainer()) {
-            return MessageFormat.format("{0}[{1}]", array ? "Array" : type.getSimpleName(),
+        if (map) return format("{0}[{1}, {2}]", type.getSimpleName(),
+                parameters != null && parameters.size() > 0 ? parameters.get(0) : "Object",
+                parameters != null && parameters.size() > 1 ? parameters.get(1) : "Object");
+        if (array || collection) {
+            return format("{0}[{1}]", array ? "Array" : type.getSimpleName(),
                     parameters != null && parameters.size() > 0 ? parameters.get(0) : "Object");
         }
         return dynamicType != null ? "{ expression }" : type.getSimpleName();

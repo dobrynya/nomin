@@ -1,13 +1,7 @@
 package org.nomin.core
 
-import org.junit.Test
-import org.nomin.entity.LinearManager
-import org.nomin.entity.Person
-import org.nomin.entity.Employee
-import org.nomin.entity.Gender
-import org.nomin.entity.DetailedPerson
-import org.nomin.entity.Child
-import org.nomin.entity.Kid
+import org.nomin.core.NominException
+import org.nomin.entity.*
 
 /**
  * Tests Nomin.
@@ -17,14 +11,14 @@ import org.nomin.entity.Kid
 class NominTest {
   Nomin nomin = new Nomin()
 
-  @Test
+  @org.junit.Test
   void testFindApplicable() {
     ParsedMapping m1, m2, m3, m4
     nomin.mappings = [
             m1 = new ParsedMapping("", Person, Employee, null, [], [:], false, null, nomin),
             m2 = new ParsedMapping("", Person, Employee, "1", [], [:], false, null, nomin),
             m3 = new ParsedMapping("", LinearManager, DetailedPerson, null, [], [:], false, null, nomin),
-            m4 = new ParsedMapping("", LinearManager, DetailedPerson,  "1", [], [:], false, null, nomin)
+            m4 = new ParsedMapping("", LinearManager, DetailedPerson, "1", [], [:], false, null, nomin)
     ]
 
     def res = nomin.findApplicable(Person, Employee, null)
@@ -72,29 +66,29 @@ class NominTest {
     assert !nomin.findApplicable(DetailedPerson, LinearManager, "non-existent")
   }
 
-  @Test
+  @org.junit.Test
   void testKey() {
     assert new Nomin.Key(Person, Employee, null) == new Nomin.Key(Person, Employee, null)
     assert new Nomin.Key(Person, Employee, "1") == new Nomin.Key(Person, Employee, "1")
     assert new Nomin.Key(Person, Employee, null) != new Nomin.Key(Employee, Person, null)
-    assert new Nomin.Key(Person, Employee, "1") != new Nomin.Key(Employee, Person, "1") 
+    assert new Nomin.Key(Person, Employee, "1") != new Nomin.Key(Employee, Person, "1")
     assert new Nomin.Key(Person, Employee, null) != new Nomin.Key(Person, Employee, "1")
     assert new Nomin.Key(Person, Employee, "1") != new Nomin.Key(Person, Employee, null)
   }
 
-  @Test
+  @org.junit.Test
   void testParsingScripts() {
     nomin.parse "person2employee.groovy", "child2kid.groovy"
     def now = new Date()
     Employee e = nomin.map(new Person(name: "Name", lastName: "Last", gender: Gender.MALE, birthDate: now,
-    children: [new Child(name: "Child")]), Employee)
+            children: [new Child(name: "Child")]), Employee)
     assert e && e.name == "Name" && e.last == "Last" && e.details && e.details.birth == now && e.details.sex &&
             e.details.kids?.size() == 1
     Kid kid = e.details.kids.iterator().next();
     assert kid.kidName == "Child"
   }
 
-  @Test (expected = NominException)
+  @org.junit.Test (expected = NominException.class)
   void testFailedParsingScripts() {
     nomin.parse "unexistentMapping.groovy"
   }

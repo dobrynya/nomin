@@ -2,9 +2,9 @@ package org.nomin.mappings
 
 import java.text.SimpleDateFormat
 import org.nomin.Mapping
-import org.nomin.integration.MappingExpressionsTest
 import org.nomin.entity.Device
 import org.nomin.entity.Router
+import org.nomin.integration.MappingExpressionsTest
 
 /**
  * Just a mapping.
@@ -23,7 +23,7 @@ class Device2Router extends Mapping {
       MappingExpressionsTest.isBeforeCalled = true
       throw new Exception("Just a checked exception in before hook!")
     }
-    
+
     after {
       if (!(b.vendor && b.model && b.software && b.portCount && b.supportedProtocol && b.portNames && b.portModels && b.importDate && b.frequencies))
         throw new RuntimeException("b should be mapped!")

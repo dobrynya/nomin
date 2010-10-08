@@ -27,9 +27,7 @@ public class CollectionRuleElem extends PropRuleElem {
         else if (clazz == BlockingDeque.class) return new LinkedBlockingDeque(size);
         else if (!clazz.isInterface() && Collection.class.isAssignableFrom(clazz)) {
             try { return clazz.newInstance(); }
-            catch (Exception e) {
-                throw new NominException(format("Could not instantiate {0}!", clazz.getName()), e);
-            }
+            catch (Exception ignored) {}
         }
         throw new NominException(format("Could not instantiate {0}!", clazz.getName()));
     }
@@ -54,7 +52,5 @@ public class CollectionRuleElem extends PropRuleElem {
         else return Collections.emptyList();
     }
 
-    public String toString() {
-        return format("{0}:{1}", property.getName(), typeInfo);
-    }
+    public String toString() { return format("{0}:{1}", property.getName(), typeInfo); }
 }

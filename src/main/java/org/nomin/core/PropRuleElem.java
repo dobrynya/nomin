@@ -39,7 +39,5 @@ public class PropRuleElem extends RuleElem {
         return result;
     }
 
-    public String toString() {
-        return format("{0}:{1}", property.getName(), typeInfo.determineType().getSimpleName());
-    }
+    public String toString() { return format("{0}:{1}", property.getName(), typeInfo); }
 }

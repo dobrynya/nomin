@@ -77,7 +77,8 @@ class MappingEntry {
   }
 
   protected boolean allowed(RuleElem elem) {
-    [PropRuleElem, CollectionRuleElem, ArrayRuleElem, ArraySeqRuleElem, SeqRuleElem, RootRuleElem].contains(elem.class)
+    [PropRuleElem, CollectionRuleElem, ArrayRuleElem, ArraySeqRuleElem, SeqRuleElem,
+            MapRuleElem, MapAccessRuleElem, RootRuleElem].contains(elem.class)
   }
 
   protected RuleElem buildRuleElem(TypeInfo ti, Iterator<TypeInfo> hints, PathElem elem, RuleElem prev = null) {
@@ -104,20 +105,36 @@ class MappingEntry {
     if (!property)
       throw new NominException(format("{0}: Mapping rule {1} is invalid because of missing property {2}.{3}!",
               mapping.mappingName, this, ti.type.simpleName, elem.prop))
-    if (property.typeInfo.collection) {
+
+    if (property.typeInfo.collection)
       applyHint(new CollectionRuleElem(property.typeInfo, property), hints)
-    } else if (property.typeInfo.array) {
+    else if (property.typeInfo.array)
       applyHint(new ArrayRuleElem(property.typeInfo, property), hints)
-    } else {
+    else if (property.typeInfo.map)
+      applyHint(new MapRuleElem(property.typeInfo, property), hints)
+    else
       applyHint(new PropRuleElem(property.typeInfo, property), hints)
-    }
   }
 
   protected RuleElem processElem(SeqPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
     if (ti.container) {
-      applyHint(prev instanceof ArrayRuleElem ?
-        new ArraySeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfo.typeInfo(Object), elem.index, prev) :
-        new SeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfo.typeInfo(Object), elem.index), hints)
+      RuleElem res
+      if (prev instanceof ArrayRuleElem) {
+        if (elem.index instanceof Integer)
+          res = new ArraySeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfo.typeInfo(Object), (Integer) elem.index, prev)
+        else throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
+            mapping.mappingName, this, prev))
+      } else {
+        if (ti.map) res = new MapAccessRuleElem(ti.parameters ? ti.parameters[1] : TypeInfo.typeInfo(Object), elem.index)
+        else {
+          if (elem.index instanceof Integer)
+            res = new SeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfo.typeInfo(Object), elem.index)
+          else
+            throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
+                    mapping.mappingName, this, prev))
+        }
+      }
+      applyHint(res, hints)
     } else throw new NominException(format("{0}: Mapping rule {1} is invalid because property {2} isn''t indexable!",
             mapping.mappingName, this, prev));
   }

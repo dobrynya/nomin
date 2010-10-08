@@ -6,9 +6,8 @@ import org.objectweb.asm.*
 import java.util.concurrent.ConcurrentHashMap
 import java.text.MessageFormat
 import org.nomin.core.NominException
-import org.nomin.NominMapper
-import org.apache.commons.logging.*
 import static org.objectweb.asm.Opcodes.*
+import org.slf4j.*
 
 /**
  * Generates property accessors using ASM generating facilities.
@@ -16,7 +15,7 @@ import static org.objectweb.asm.Opcodes.*
  * Created 24.05.2010 14:02:43
  */
 class AsmPropertyAccessorGenerator {
-  private Log log = LogFactory.getLog(AsmPropertyAccessorGenerator)
+  private Logger log = LoggerFactory.getLogger(AsmPropertyAccessorGenerator)
   private Map<Class, Map<String, PropertyAccessor>> cache = new ConcurrentHashMap<Class, Map<String, PropertyAccessor>>()
   private NominClassLoader classLoader = new NominClassLoader()
   private Map<Class, Class> wrappers = [(Integer.TYPE): Integer, (Long.TYPE): Long, (Float.TYPE): Float,

@@ -1,10 +1,7 @@
 package org.nomin.core
 
-import org.junit.Test
-import static org.junit.Assert.*
-
-import org.nomin.core.RootPathElem
-import org.nomin.core.MappingEntry
+import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertTrue
 
 /**
  * Document please.
@@ -15,7 +12,7 @@ class MappingEntryTest {
 
   def me = new MappingEntry()
 
-  @Test
+  @org.junit.Test
   void testCompleted() {
     assertFalse me.completed()
     me.side.a.pathElem = new RootPathElem()

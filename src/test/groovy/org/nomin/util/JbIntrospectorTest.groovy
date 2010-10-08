@@ -1,11 +1,8 @@
 package org.nomin.util
 
-import org.junit.Test
-import static org.junit.Assert.*
-
 import org.nomin.entity.Child
-import org.nomin.entity.Person
 import org.nomin.entity.LegacyDetails
+import org.nomin.entity.Person
 
 /**
  * Tests JbIntrospector.
@@ -20,14 +17,13 @@ class JbIntrospectorTest {
     "${s} ${i} ${s2} ${l}"
   }
 
-  @Test
+  @org.junit.Test
   void testInvocation() {
-    def params = ["String", 1, null, 1L]
     def invocation = intr.invocation("methodToFind", getClass(), "String", 1, null, 1L)
     assert invocation && invocation.invoke(this) == "String 1 null 1"
   }
 
-  @Test
+  @org.junit.Test
   void testCanApply() {
     assert intr.canApply(null, String)
     assert intr.canApply(String, String)
@@ -36,31 +32,31 @@ class JbIntrospectorTest {
     assert !intr.canApply(Integer, String)
   }
 
-  @Test
+  @org.junit.Test
   void testCapitalized() {
-    assertEquals "Name", intr.prefixed("name", "")
+    assert "Name" == intr.prefixed("name", "")
   }
 
-  @Test
+  @org.junit.Test
   void testProperty() {
     def prop = intr.property("name", Person)
-    assertNotNull prop
-    assertEquals "name", prop.name
-    assertEquals String, prop.typeInfo.determineType()
+    assert prop
+    assert "name" == prop.name
+    assert String == prop.typeInfo.determineType()
     def p = new Person(name: "Person's Name")
-    assertEquals p.name, prop.get(p)
+    assert p.name == prop.get(p)
     prop.set(p, "New Name")
-    assertEquals "New Name", p.name
+    assert "New Name" == p.name
     prop = intr.property("sex", LegacyDetails)
     def ld = new LegacyDetails(sex: true)
-    assertTrue prop.get(ld)
+    assert prop.get(ld)
     prop = intr.property("children", Person)
-    assertEquals Child, prop.typeInfo.determineType()
-    assertEquals List, prop.typeInfo.type
+    assert Child == prop.typeInfo.determineType()
+    assert List == prop.typeInfo.type
     assert !intr.property("non-existent", Person)
   }
 
-  @Test
+  @org.junit.Test
   void testProperties() {
     assert intr.properties(Person).containsAll(["name", "lastName", "birthDate", "gender", "children", "strDate"])
   }

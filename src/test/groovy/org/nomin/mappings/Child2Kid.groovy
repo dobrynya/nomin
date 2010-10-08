@@ -1,9 +1,8 @@
 package org.nomin.mappings
 
 import org.nomin.Mapping
-
-import org.nomin.entity.Kid
 import org.nomin.entity.Child
+import org.nomin.entity.Kid
 
 /**
  * Just a mapping.

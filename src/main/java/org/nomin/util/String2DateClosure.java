@@ -1,8 +1,7 @@
 package org.nomin.util;
 
-import java.text.ParseException;
+import java.text.*;
 import groovy.lang.Closure;
-import org.apache.commons.lang.time.FastDateFormat;
 import org.nomin.core.NominException;
 
 /**
@@ -11,15 +10,15 @@ import org.nomin.core.NominException;
  *         Created 26.05.2010 12:04:15
  */
 public class String2DateClosure extends Closure {
-    private FastDateFormat fdf;
+    private SimpleDateFormat sdf;
 
-    public String2DateClosure(FastDateFormat fdf) {
+    public String2DateClosure(SimpleDateFormat sdf) {
         super(null, null);
-        this.fdf = fdf;
+        this.sdf = sdf;
     }
 
     public Object call(Object[] args) {
-        try { return fdf.parseObject((String) args[0]); } catch (ParseException e) {
+        try { return sdf.parseObject((String) args[0]); } catch (ParseException e) {
             throw new NominException("Could not parse a date from " + args[0] + "!");
         }
     }

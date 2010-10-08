@@ -1,14 +1,12 @@
 package org.nomin.core
 
-import org.junit.Test
-import org.junit.Before
-import org.nomin.util.PropertyAccessor
-import org.mockito.Mockito
-import static org.nomin.core.TypeInfo.*
-import java.util.concurrent.BlockingQueue
 import java.util.concurrent.BlockingDeque
-import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingDeque
+import java.util.concurrent.LinkedBlockingQueue
+import org.mockito.Mockito
+import org.nomin.util.PropertyAccessor
+import static org.nomin.core.TypeInfo.typeInfo
 
 /**
  * Tests CollectionRuleElem.
@@ -19,14 +17,14 @@ class CollectionRuleElemTest {
   PropertyAccessor pa = Mockito.mock(PropertyAccessor)
   CollectionRuleElem elem = new CollectionRuleElem(null, pa);
 
-  @Before
+  @org.junit.Before
   void before() {
     Mockito.when(pa.getTypeInfo()).thenReturn(typeInfo(Collection), typeInfo(List), typeInfo(Set), typeInfo(SortedSet),
-    typeInfo(NavigableSet), typeInfo(Queue), typeInfo(Deque), typeInfo(BlockingQueue), typeInfo(BlockingDeque),
-    typeInfo(ArrayList), typeInfo(HashSet))
+            typeInfo(NavigableSet), typeInfo(Queue), typeInfo(Deque), typeInfo(BlockingQueue), typeInfo(BlockingDeque),
+            typeInfo(ArrayList), typeInfo(HashSet))
   }
 
-  @Test
+  @org.junit.Test
   void testCreateContainer() {
     assert elem.createContainer(0) instanceof ArrayList
     assert elem.createContainer(0) instanceof ArrayList

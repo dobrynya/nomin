@@ -1,8 +1,11 @@
 package org.nomin.integration
 
-import org.junit.Test
-import org.nomin.core.*
-import org.nomin.mappings.*
+import org.nomin.core.Nomin
+import org.nomin.core.NominException
+import org.nomin.mappings.Invalid1
+import org.nomin.mappings.Invalid2
+import org.nomin.mappings.Invalid3
+import org.nomin.mappings.Invalid4
 
 /**
  * Tests invalid mappings.
@@ -12,7 +15,7 @@ import org.nomin.mappings.*
 class InvalidMappingsTest {
   Nomin nomin = new Nomin()
 
-  @Test
+  @org.junit.Test
   void testInvalid1() {
     try {
       nomin.parse Invalid1
@@ -22,7 +25,7 @@ class InvalidMappingsTest {
     }
   }
 
-  @Test
+  @org.junit.Test
   void testInvalid2() {
     try {
       nomin.parse Invalid2
@@ -32,7 +35,7 @@ class InvalidMappingsTest {
     }
   }
 
-  @Test
+  @org.junit.Test
   void testInvalid3() {
     try {
       nomin.parse Invalid3
@@ -42,7 +45,7 @@ class InvalidMappingsTest {
     }
   }
 
-  @Test
+  @org.junit.Test
   void testInvalid4() {
     try {
       nomin.parse Invalid4

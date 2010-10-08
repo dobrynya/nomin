@@ -1,8 +1,7 @@
 package org.nomin.core;
 
 /**
- * Documentation.
- *
+ * Thrown when an error occurs.
  * @author Dmitry Dobrynin
  *         Created: 09.05.2010 21:42:46
  */

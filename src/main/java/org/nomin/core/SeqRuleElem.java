@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import org.nomin.core.preprocessing.Preprocessing;
 
+import static java.text.MessageFormat.*;
+
 /**
  * Provides access to an indexed element of collections or arrays.
  * @author Dmitry Dobrynin
@@ -59,8 +61,8 @@ public class SeqRuleElem extends RuleElem {
     protected void store(Object instance, Object value, Preprocessing preprocessing) {
         if (instance instanceof List) setListItem((List) instance,
                 preprocessing != null ? preprocessing.preprocess(value, null) : value);
-        else throw new RuntimeException(instance.getClass() + " is not supported yet!");
+        else throw new NominException(instance.getClass() + " is not supported yet!");
     }
 
-    public String toString() { return MessageFormat.format("[{0}]:{1}", index, typeInfo); }
+    public String toString() { return format("[{0}]:{1}", index, typeInfo); }
 }

@@ -1,11 +1,10 @@
 package org.nomin
 
-import org.apache.commons.lang.time.FastDateFormat
 import static java.text.MessageFormat.*
 import org.nomin.core.*
 import org.nomin.util.*
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import org.slf4j.*
+import java.text.SimpleDateFormat
 
 /**
  * Stores and parses mapping entries defined in method build body. It also provides a number of operations to control
@@ -114,9 +113,9 @@ class Mapping implements MappingConsts {
    * @param date specifies the date property
    */
   def dateFormat(String pattern, date) {
-    FastDateFormat fdf = FastDateFormat.getInstance(pattern)
-    if (last.side.a.pathElem) convert to_a: new String2DateClosure(fdf), to_b: new Date2StringClosure(fdf)
-    else convert to_b: new String2DateClosure(fdf), to_a: new Date2StringClosure(fdf)
+    SimpleDateFormat sdf = new SimpleDateFormat(pattern)
+    if (last.side.a.pathElem) convert to_a: new String2DateClosure(sdf), to_b: new Date2StringClosure(sdf)
+    else convert to_b: new String2DateClosure(sdf), to_a: new Date2StringClosure(sdf)
     date
   }
 

@@ -1,7 +1,6 @@
 package org.nomin.mappings
 
 import org.nomin.Mapping
-
 import org.nomin.entity.Employee
 import org.nomin.entity.Person
 

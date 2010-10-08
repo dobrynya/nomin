@@ -2,14 +2,7 @@ package org.nomin.integration
 
 import org.nomin.core.Nomin
 import org.nomin.mappings.Zoo2AnimalContainer
-import org.junit.*
-
-import org.nomin.entity.WildAnimal
-import org.nomin.entity.Zoo
-import org.nomin.entity.Crocodile
-import org.nomin.entity.Camel
-import org.nomin.entity.AnimalContainer
-import org.nomin.entity.Rhino
+import org.nomin.entity.*
 
 /**
  * Tests dynamic hints.
@@ -19,10 +12,10 @@ import org.nomin.entity.Rhino
 class DynamicHintsTest {
   def mapper = new Nomin()
 
-  @Before
+  @org.junit.Before
   void before() { mapper.parse Zoo2AnimalContainer }
 
-  @Test
+  @org.junit.Test
   void test() {
     def c = new AnimalContainer(
             wildAnimals: [new WildAnimal(kind: "Camel"), new WildAnimal(kind: "Crocodile"), new WildAnimal(kind: "Rhino")])

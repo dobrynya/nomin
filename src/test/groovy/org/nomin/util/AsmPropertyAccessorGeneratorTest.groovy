@@ -1,9 +1,8 @@
 package org.nomin.util
 
-import org.junit.Test
-import org.nomin.entity.Person
-import org.nomin.core.TypeInfo
 import org.nomin.core.NominException
+import org.nomin.core.TypeInfo
+import org.nomin.entity.Person
 
 /**
  * Tests AsmPropertyAccessorGenerator.
@@ -21,7 +20,7 @@ class AsmPropertyAccessorGeneratorTest {
   short s
   boolean bool
 
-  @Test
+  @org.junit.Test
   void testGenerateAccessor() {
     PropertyAccessor pa = gen.generateAccessor("name", TypeInfo.typeInfo(String), Person.getMethod("getName"),
             Person.getMethod("setName", String))
@@ -34,7 +33,7 @@ class AsmPropertyAccessorGeneratorTest {
             Person.getMethod("setName", String)))
   }
 
-  @Test
+  @org.junit.Test
   void testNoGetter() {
     PropertyAccessor pa = gen.generateAccessor("name", TypeInfo.typeInfo(String), null, Person.getMethod("setName", String))
     try {
@@ -45,7 +44,7 @@ class AsmPropertyAccessorGeneratorTest {
     }
   }
 
-  @Test
+  @org.junit.Test
   void testNoSetter() {
     PropertyAccessor pa = gen.generateAccessor("name", TypeInfo.typeInfo(String), Person.getMethod("getName"), null)
     try {
@@ -56,7 +55,7 @@ class AsmPropertyAccessorGeneratorTest {
     }
   }
 
-  @Test
+  @org.junit.Test
   void testSetterForPrimitive() {
     PropertyAccessor pa = gen.generateAccessor("i", TypeInfo.typeInfo(Integer.TYPE), getClass().getMethod("getI"), getClass().getMethod("setI", Integer.TYPE))
     pa.set(this, 5)

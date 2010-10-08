@@ -22,6 +22,7 @@
             <item name="Pre and postprocessing" href="hooks.html"/>
             <item name="Automapping facility" href="automapping.html"/>
             <item name="Error handling" href="errorHandling.html"/>
+            <item name="Using the mapper in mappings" href="usingMapper.html"/>
         </menu>
         <menu ref="reports"/>
     </body>

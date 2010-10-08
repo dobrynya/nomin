@@ -1,7 +1,7 @@
 package org.nomin.core
 
 /**
- * Document please.
+ * Contains name of the requested property.
  * @author Dmitry Dobrynin
  * Created 09.04.2010 10:45:49
  */

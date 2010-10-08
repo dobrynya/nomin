@@ -1,10 +1,9 @@
 package org.nomin.integration
 
 import org.nomin.core.Nomin
-import org.junit.Test
-import org.nomin.mappings.AutoPerson2Employee
-import org.nomin.entity.Person
 import org.nomin.entity.Employee
+import org.nomin.entity.Person
+import org.nomin.mappings.AutoPerson2Employee
 
 /**
  * Tests automapping facility.
@@ -14,14 +13,14 @@ import org.nomin.entity.Employee
 class AutomappingTest {
   Nomin nomin = new Nomin(AutoPerson2Employee)
 
-  @Test
+  @org.junit.Test
   void testAutomap() {
     Person p = new Person(name: "Automapped Name", lastName: "Last name")
     Employee e = nomin.map(p, Employee)
     assert e && e.name == "Automapped Name" && !e.last
   }
 
-  @Test
+  @org.junit.Test
   void testNominAutomappingFacility() {
     nomin.enableAutomapping();
     Person p = new Person(name: "Automapped Name", lastName: "Last name")

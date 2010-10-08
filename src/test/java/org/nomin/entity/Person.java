@@ -14,6 +14,7 @@ public class Person {
     private Gender gender;
     private String strDate;
     private List<Child> children;
+    private Map<String, Object> options = new HashMap<String, Object>();
 
     public String getName() {
         return name;
@@ -63,7 +64,14 @@ public class Person {
         this.children = children;
     }
 
-    @Override
+    public Map<String, Object> getOptions() {
+        return options;
+    }
+
+    public void setOptions(Map<String, Object> options) {
+        this.options = options;
+    }
+
     public String toString() {
         return MessageFormat.format("Person [ name = {0} lastName = {1} birthDate = {2} gender = {3} children = {4} strDate = {5} ]",
                 name, lastName, birthDate, gender, children, strDate);

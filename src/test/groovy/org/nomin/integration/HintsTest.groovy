@@ -1,14 +1,12 @@
 package org.nomin.integration
 
-import org.junit.Test
 import org.nomin.NominMapper
 import org.nomin.core.Nomin
-import org.nomin.mappings.LegacyPerson2Employee
-
-import org.nomin.entity.LegacyPerson
 import org.nomin.entity.Employee
-import org.nomin.entity.LegacyDetails
 import org.nomin.entity.Kid
+import org.nomin.entity.LegacyDetails
+import org.nomin.entity.LegacyPerson
+import org.nomin.mappings.LegacyPerson2Employee
 
 /**
  * Tests hint processing.
@@ -19,11 +17,12 @@ class HintsTest {
   NominMapper mapper = new Nomin()
 
   // TODO: Write tests with using DEFAULT constant
-  @Test
+
+  @org.junit.Test
   void testHints() {
     mapper.parse LegacyPerson2Employee
-    def lp = new LegacyPerson(name : "Legacy", lastName : "Person", details : new LegacyDetails(birthday : new Date(),
-            sex : true, children: [new Kid(kidName: "Kid")]))
+    def lp = new LegacyPerson(name: "Legacy", lastName: "Person", details: new LegacyDetails(birthday: new Date(),
+            sex: true, children: [new Kid(kidName: "Kid")]))
     Employee em = mapper.map(lp, Employee)
     assert em && em.name == "Legacy" && em.last == "Person" && em.details && em.details.birth == lp.details.birthday &&
             em.details.sex == true && em.details.kids && em.details.kids.size() == 1 &&

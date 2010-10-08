@@ -1,10 +1,9 @@
 package org.nomin.mappings
 
 import org.nomin.Mapping
-
+import org.nomin.entity.Employee
 import org.nomin.entity.Gender
 import org.nomin.entity.Person
-import org.nomin.entity.Employee
 
 /**
  * Just a mapping.
@@ -21,6 +20,6 @@ class Person2Employee extends Mapping {
     a.children = b.details.kids
     a.strDate = dateFormat("dd-MM-yyyy", b.details.birth)
     a.gender = b.details.sex
-    simple ([Gender.MALE, true], [Gender.FEMALE, false])
+    simple([Gender.MALE, true], [Gender.FEMALE, false])
   }
 }

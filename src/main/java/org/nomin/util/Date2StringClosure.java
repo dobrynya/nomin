@@ -1,7 +1,8 @@
 package org.nomin.util;
 
 import groovy.lang.Closure;
-import org.apache.commons.lang.time.FastDateFormat;
+
+import java.text.SimpleDateFormat;
 
 /**
  * Performs date to string conversion.
@@ -9,14 +10,12 @@ import org.apache.commons.lang.time.FastDateFormat;
  *         Created 26.05.2010 12:04:15
  */
 public class Date2StringClosure extends Closure {
-    private FastDateFormat fdf;
+    private SimpleDateFormat sdf;
 
-    public Date2StringClosure(FastDateFormat fdf) {
+    public Date2StringClosure(SimpleDateFormat sdf) {
         super(null, null);
-        this.fdf = fdf;
+        this.sdf = sdf;
     }
 
-    public Object call(Object[] args) {
-        return fdf.format(args[0]);
-    }
+    public Object call(Object[] args) { return sdf.format(args[0]); }
 }
