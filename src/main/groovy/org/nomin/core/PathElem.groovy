@@ -18,6 +18,8 @@ abstract class PathElem {
     }
   }
 
+  def getProperties() { propertyMissing("properties") }
+
   def propertyMissing(name) { return nextPathElem = new PropPathElem(prop: name, mappingEntry: mappingEntry) }
 
   def propertyMissing(name, value) {

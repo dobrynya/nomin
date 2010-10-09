@@ -24,7 +24,7 @@ class ExplodingIntrospector extends JbIntrospector {
 
   protected Field searchField(Class clazz, String fieldName) {
     def field = clazz.declaredFields.find { it.name == fieldName }
-    field ? field : clazz.superclass ? searchField(clazz.superclass, fieldName) : null
+    field ?: clazz.superclass ? searchField(clazz.superclass, fieldName) : null
   }
 
   protected List<Field> collectFields(Class<?> targetClass) {

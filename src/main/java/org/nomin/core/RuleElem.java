@@ -9,6 +9,7 @@ import static java.text.MessageFormat.format;
  *         Created: 27.04.2010 20:33:25
  */
 public abstract class RuleElem {
+    // TODO: to be refactored as the code is not obvious as needed
     protected RuleElem next;
     protected TypeInfo typeInfo;
 

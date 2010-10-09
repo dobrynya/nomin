@@ -8,8 +8,7 @@ import java.text.MessageFormat;
  *         Created 13.04.2010 11:04:19
  */
 public class Employee {
-
-    private String name, last;
+    private String name, last, properties;
 
     private Details details;
 
@@ -27,6 +26,14 @@ public class Employee {
 
     public void setLast(String last) {
         this.last = last;
+    }
+
+    public String getProperties() {
+        return properties;
+    }
+
+    public void setProperties(String properties) {
+        this.properties = properties;
     }
 
     public Details getDetails() {
