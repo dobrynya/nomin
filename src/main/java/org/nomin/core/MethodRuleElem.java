@@ -2,6 +2,7 @@ package org.nomin.core;
 
 import org.nomin.util.MethodInvocation;
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfo;
 
 /**
  * Invokes a method.

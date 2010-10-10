@@ -2,7 +2,6 @@ package org.nomin.util
 
 import java.lang.reflect.Method
 import org.nomin.core.NominException
-import org.nomin.core.TypeInfo
 
 /**
  * Provides base operations to introspect classes.
@@ -45,7 +44,7 @@ abstract class BaseIntrospector implements Introspector {
     Method setter = targetClass.methods.find {
       setterNames.contains(it.name) && it.genericParameterTypes && (!getterType || it.genericParameterTypes[0] == getterType)
     }
-    [getter, setter, getterType ? TypeInfo.typeInfo(getterType) : 
-      setter?.genericParameterTypes ? TypeInfo.typeInfo(setter.genericParameterTypes[0]) : null]
+    [getter, setter, getterType ? TypeInfoFactory.typeInfo(getterType) :
+      setter?.genericParameterTypes ? TypeInfoFactory.typeInfo(setter.genericParameterTypes[0]) : null]
   }
 }

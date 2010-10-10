@@ -1,8 +1,8 @@
 package org.nomin.core;
 
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfo;
 
-import java.text.MessageFormat;
 import java.util.Map;
 
 import static java.text.MessageFormat.*;

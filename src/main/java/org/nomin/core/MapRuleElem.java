@@ -1,6 +1,7 @@
 package org.nomin.core;
 
 import org.nomin.util.PropertyAccessor;
+import org.nomin.util.TypeInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,11 +19,11 @@ public class MapRuleElem extends PropRuleElem {
     }
 
     Object createInstance(Object value) {
-        if (typeInfo.type == Map.class) return new HashMap<Object, Object>();
-        else if (!typeInfo.type.isInterface()) {
-            try { return typeInfo.type.newInstance(); }
+        if (typeInfo.getType() == Map.class) return new HashMap<Object, Object>();
+        else if (!typeInfo.getType().isInterface()) {
+            try { return typeInfo.getType().newInstance(); }
             catch (Exception ignored) {}
         }
-        throw new NominException(format("Could not instantiate {0}!", typeInfo.type.getName()));
+        throw new NominException(format("Could not instantiate {0}!", typeInfo.getType().getName()));
     }
 }

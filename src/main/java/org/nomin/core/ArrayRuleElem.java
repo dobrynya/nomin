@@ -2,6 +2,8 @@ package org.nomin.core;
 
 import org.nomin.util.PropertyAccessor;
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfo;
+
 import java.lang.reflect.Array;
 
 /**

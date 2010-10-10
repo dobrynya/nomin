@@ -1,0 +1,7 @@
+Working with Maps
+
+  If there is a Map property on one of the sides we can use the same approach as accessing a collection/array element.
+
++---
+  a.options["birthdate"] = b.details.birth // options is a Map<String, Object>
++---

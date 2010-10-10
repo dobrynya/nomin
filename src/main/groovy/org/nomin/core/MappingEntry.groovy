@@ -47,8 +47,8 @@ class MappingEntry {
   void mappingCase(mappingCase) { this.mappingCase = mappingCase }
 
   MappingRule parse() {
-    def a = buildRuleElem(TypeInfo.typeInfo(mapping.sideA), side.a.hints?.iterator(), side.a.pathElem)
-    def b = buildRuleElem(TypeInfo.typeInfo(mapping.sideB), side.b.hints?.iterator(), side.b.pathElem)
+    def a = buildRuleElem(TypeInfoFactory.typeInfo(mapping.sideA), side.a.hints?.iterator(), side.a.pathElem)
+    def b = buildRuleElem(TypeInfoFactory.typeInfo(mapping.sideB), side.b.hints?.iterator(), side.b.pathElem)
     def (lastA, lastB) = [findLast(a), findLast(b)]
     validate lastA, lastB
     new MappingRule(a, b, analyzeElem(lastA, lastB, side.a.conversion), allowed(lastB),
@@ -121,14 +121,14 @@ class MappingEntry {
       RuleElem res
       if (prev instanceof ArrayRuleElem) {
         if (elem.index instanceof Integer)
-          res = new ArraySeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfo.typeInfo(Object), (Integer) elem.index, prev)
+          res = new ArraySeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), (Integer) elem.index, prev)
         else throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
             mapping.mappingName, this, prev))
       } else {
-        if (ti.map) res = new MapAccessRuleElem(ti.parameters ? ti.parameters[1] : TypeInfo.typeInfo(Object), elem.index)
+        if (ti.map) res = new MapAccessRuleElem(ti.parameters ? ti.parameters[1] : TypeInfoFactory.typeInfo(Object), elem.index)
         else {
           if (elem.index instanceof Integer)
-            res = new SeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfo.typeInfo(Object), elem.index)
+            res = new SeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), elem.index)
           else
             throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
                     mapping.mappingName, this, prev))
@@ -140,7 +140,7 @@ class MappingEntry {
   }
 
   protected RuleElem processElem(MethodPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    MethodInvocation invocation = introspector.invocation(elem.methodName, ti.type, * elem.params)
+    MethodInvocation invocation = introspector.invocation(elem.methodName, ti.type, * elem.methodInvocationParameters)
     applyHint(new MethodRuleElem(invocation.typeInfo, invocation), hints)
   }
 
@@ -171,9 +171,9 @@ class MappingEntry {
 
   protected String printElem(side, MethodPathElem elem) {
     if (elem.nextPathElem) {
-      if (elem.nextPathElem.class == SeqPathElem) "${elem.methodName}(${elem.params})${printElem(side, elem.nextPathElem)}"
-      else "${elem.methodName}(${elem.params}).${printElem(side, elem.nextPathElem)}"
-    } else "${elem.methodName}(${elem.params})"
+      if (elem.nextPathElem.class == SeqPathElem) "${elem.methodName}(${elem.methodInvocationParameters})${printElem(side, elem.nextPathElem)}"
+      else "${elem.methodName}(${elem.methodInvocationParameters}).${printElem(side, elem.nextPathElem)}"
+    } else "${elem.methodName}(${elem.methodInvocationParameters})"
   }
 
   protected String printElem(side, ExprPathElem elem) {

@@ -7,7 +7,7 @@ package org.nomin.core
  */
 class MethodPathElem extends PathElem {
   String methodName
-  List params
+  List methodInvocationParameters
 
-  String toString() { "${methodName}(${params})" }
+  String toString() { "${methodName}(${methodInvocationParameters})" }
 }

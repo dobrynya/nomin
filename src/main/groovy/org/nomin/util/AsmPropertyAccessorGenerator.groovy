@@ -1,7 +1,7 @@
 package org.nomin.util
 
 import java.lang.reflect.Method
-import org.nomin.core.TypeInfo
+
 import org.objectweb.asm.*
 import java.util.concurrent.ConcurrentHashMap
 import java.text.MessageFormat
@@ -43,7 +43,8 @@ class AsmPropertyAccessorGenerator {
     fv = cw.visitField(ACC_PRIVATE, "typeInfo", Type.getDescriptor(TypeInfo), null, null); fv.visitEnd();
     fv = cw.visitField(ACC_PRIVATE, "name", Type.getDescriptor(String), null, null); fv.visitEnd();
     // Generates the only constructor
-    mv = cw.visitMethod(ACC_PUBLIC, "<init>", "(Ljava/lang/String;Lorg/nomin/core/TypeInfo;)V", null, null);
+    mv = cw.visitMethod(ACC_PUBLIC, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE,
+                    [Type.getType(String.class), Type.getType(TypeInfo.class)] as Type[]), null, null);
     mv.visitCode();
     mv.visitVarInsn(ALOAD, 0);
     mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");

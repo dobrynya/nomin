@@ -1,9 +1,10 @@
 package org.nomin.core
 
 import org.nomin.entity.Person
+import org.nomin.util.TypeInfo
 
 /**
- * Document please.
+ * Tests adding getAt method to the Class class.
  * @author Dmitry Dobrynin
  * Created 11.05.2010 16:47:25
  */
@@ -23,5 +24,16 @@ class ClassImproverTest {
     assert ti && ti instanceof TypeInfo && ti.type == Map && ti.parameters && ti.parameters.size() == 2 &&
             ti.parameters[0] instanceof TypeInfo && ti.parameters[0].type == String &&
             ti.parameters[1] instanceof TypeInfo && ti.parameters[1].type == Person
+  }
+
+  @org.junit.Test
+  void testerHintedMap() {
+    def ti = Map[{ String }, { Person }]
+    switch (ti) {
+      case TypeInfo:
+        assert ti.parameters?.size() == 2 && ti.parameters[0]?.dynamic && ti.parameters[1]?.dynamic
+        break
+      default: assert false
+    }
   }
 }

@@ -3,6 +3,7 @@ package org.nomin.core.preprocessing;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.nomin.NominMapper;
 import org.nomin.core.*;
+import org.nomin.util.TypeInfo;
 
 /**
  * Chooses applicable processing depending on a value.

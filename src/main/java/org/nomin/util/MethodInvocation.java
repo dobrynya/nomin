@@ -20,18 +20,11 @@ public class MethodInvocation {
     }
 
     public Object invoke(Object instance) {
-        try {
-            return method.invoke(instance, args);
-        } catch (Exception e) {
-            throw new NominException(format("Could not invoke {0} on {1}!", method, instance), e);
-        }
+        try { return method.invoke(instance, args); }
+        catch (Exception e) { throw new NominException(format("Could not invoke {0} on {1}!", method, instance), e); }
     }
 
-    public TypeInfo getTypeInfo() {
-        return TypeInfo.typeInfo(method.getGenericReturnType());
-    }
+    public TypeInfo getTypeInfo() { return TypeInfoFactory.typeInfo(method.getGenericReturnType()); }
 
-    public String toString() {
-        return method.getName() + "(" + Arrays.toString(args) + ")";
-    }
+    public String toString() { return format("{0}({1})", method.getName(), Arrays.toString(args)); }
 }

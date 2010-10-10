@@ -20,7 +20,11 @@ abstract class PathElem {
 
   def getProperties() { propertyMissing("properties") }
 
-  def propertyMissing(name) { return nextPathElem = new PropPathElem(prop: name, mappingEntry: mappingEntry) }
+  def propertyMissing(String name) {
+    def escapedMethod = ["hashCode", "toString", "getClass"].find { name.startsWith(it) && name.endsWith("()") }
+    escapedMethod ? methodMissing(escapedMethod, new Object[0]) :
+      (nextPathElem = new PropPathElem(prop: name, mappingEntry: mappingEntry))
+  }
 
   def propertyMissing(name, value) {
     propertyMissing(name)
@@ -34,14 +38,14 @@ abstract class PathElem {
 
   /** Overrides the predefined method to let putting values to Map to a user */
   void putAt(String index, value) {
-    methodMissing("putAt", [index])
+    methodMissing("putAt", [index, value])
   }
 
   def methodMissing(String name, args) {
     switch (name) {
       case "putAt": processOppositeSide(args[1])
       case "getAt": nextPathElem = new SeqPathElem(index: args[0], mappingEntry: mappingEntry); break
-      default: nextPathElem = new MethodPathElem(methodName: name, params: args, mappingEntry: mappingEntry)
+      default: nextPathElem = new MethodPathElem(methodName: name, methodInvocationParameters: args, mappingEntry: mappingEntry)
     }
   }
 }

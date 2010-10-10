@@ -22,31 +22,4 @@ class MappingMapValueTest {
     p = nomin.map(e, Person)
     assert p && p.options && p.options["name"] == "Person's Name" && p.options["lastName"] == "Person's Lastname"
   }
-
-  @org.junit.Test
-  void test2() {
-    def r = new RootPathElem()
-    println(r.options["masd"])
-    println(r.options[true])
-  }
-
-  /*void setProperty(String name, Object value) {
-    println "setProp " + name + value
-  }
-
-  Object getProperty(String name) {
-    println "getProp " + name
-    null
-  }
-
-  Map<String, Object> getProperties() {
-    println ("getProps is called")
-    [:]
-  }
-
-  Object invokeMethod(String name, Object args) {
-    println name
-    println args
-    null
-  }*/
 }

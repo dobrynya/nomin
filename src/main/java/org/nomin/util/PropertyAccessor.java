@@ -1,7 +1,5 @@
 package org.nomin.util;
 
-import org.nomin.core.TypeInfo;
-
 /**
  * Accesses a property.
  * @author Dmitry Dobrynin

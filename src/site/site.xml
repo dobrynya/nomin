@@ -13,6 +13,8 @@
         </menu>
         <menu name="User guide">
             <item name="Simple mapping rules" href="simpleRules.html"/>
+            <item name="Working with Maps" href="workingWithMaps.html"/>
+            <item name="Using Object's methods in mappings" href="usingObjectMethods.html"/>
             <item name="Hierarchical mappings" href="hierarchicalMappings.html"/>
             <item name="Context management" href="contextManagement.html"/>
             <item name="Conversions" href="conversions.html"/>

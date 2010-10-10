@@ -2,6 +2,8 @@ package org.nomin.core;
 
 import org.nomin.core.preprocessing.Preprocessing;
 import org.nomin.util.PropertyAccessor;
+import org.nomin.util.TypeInfo;
+
 import java.util.*;
 import java.util.concurrent.*;
 import static java.text.MessageFormat.format;
@@ -18,7 +20,7 @@ public class CollectionRuleElem extends PropRuleElem {
     }
 
     Object createContainer(int size) {
-        Class<?> clazz = property.getTypeInfo().type;
+        Class<?> clazz = property.getTypeInfo().getType();
         if (clazz == Collection.class || clazz == List.class) return new ArrayList(size);
         else if (clazz == Set.class) return new HashSet(size);
         else if (clazz == SortedSet.class || clazz == NavigableSet.class) return new TreeSet();

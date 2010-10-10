@@ -1,7 +1,6 @@
 package org.nomin.util
 
 import java.lang.reflect.Field
-import org.nomin.core.TypeInfo
 
 /**
  * Uses fields to change state of an instance. It's useful when the type of an instance isn't satisfied to JavaBeans

@@ -2,6 +2,7 @@ package org.nomin.core;
 
 import groovy.lang.Closure;
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfoFactory;
 
 /**
  * Calculates an expression.
@@ -12,7 +13,7 @@ public class ClosureRuleElem extends RuleElem {
     final Closure closure;
 
     public ClosureRuleElem(Closure closure) {
-        super(TypeInfo.typeInfo(Undefined.class));
+        super(TypeInfoFactory.typeInfo(Undefined.class));
         this.closure = closure;
     }
 

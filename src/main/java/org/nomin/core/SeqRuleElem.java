@@ -1,9 +1,9 @@
 package org.nomin.core;
 
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfo;
 
 import static java.text.MessageFormat.*;
 

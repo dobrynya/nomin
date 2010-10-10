@@ -144,7 +144,7 @@ class Mapping implements MappingConsts {
     if (hints) {
       hints = hints instanceof List ? hints : [hints]
       hints = hints.collect {
-        TypeInfo typeInfo = it instanceof TypeInfo ? it : it != MappingConsts.DEFAULT ? TypeInfo.typeInfo(it) : null
+        TypeInfo typeInfo = TypeInfo.isInstance(it) ? it : it != MappingConsts.DEFAULT ? TypeInfoFactory.typeInfo(it) : null
         if (typeInfo?.isDynamic()) mapper.contextManager.makeContextAware(typeInfo.dynamicType)
         typeInfo
       }

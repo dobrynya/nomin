@@ -6,7 +6,7 @@ import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.LinkedBlockingQueue
 import org.mockito.Mockito
 import org.nomin.util.PropertyAccessor
-import static org.nomin.core.TypeInfo.typeInfo
+import static org.nomin.util.TypeInfoFactory.typeInfo
 
 /**
  * Tests CollectionRuleElem.

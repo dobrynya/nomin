@@ -3,6 +3,7 @@ package org.nomin.core;
 import java.text.MessageFormat;
 
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfo;
 
 /**
  * Provides access to a root instance.

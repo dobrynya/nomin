@@ -1,6 +1,7 @@
 package org.nomin.core;
 
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfoFactory;
 
 /**
  * Contains static value and provides access to it.
@@ -11,7 +12,7 @@ public class ValueRuleElem extends RuleElem {
     final Object value;
 
     public ValueRuleElem(Object value) {
-        super(TypeInfo.typeInfo(value != null ? value.getClass() : Object.class));
+        super(TypeInfoFactory.typeInfo(value != null ? value.getClass() : Object.class));
         this.value = value;
     }
 
