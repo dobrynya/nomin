@@ -14,5 +14,6 @@ class MappingMapValue extends Mapping {
     mappingFor a: Person, b: Employee
     b.name = a.options["name"]
     b.last = a.options["lastName"]
+    b.details.kids = a.options.values()
   }
 }

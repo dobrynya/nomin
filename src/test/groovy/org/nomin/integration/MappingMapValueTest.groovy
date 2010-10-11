@@ -12,7 +12,6 @@ import org.nomin.mappings.MappingMapValue
  */
 class MappingMapValueTest {
   Nomin nomin = new Nomin(MappingMapValue)
-  String nnn = "fuck"
 
   @org.junit.Test
   void test() {

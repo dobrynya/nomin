@@ -27,7 +27,7 @@ public class SeqRuleElem extends RuleElem {
             setListItem((List) instance, result);
             return result;
         } catch (Exception e) {
-            throw new RuntimeException("Could not instantiate a " + typeInfo.determineType().getSimpleName() + "!", e);
+            throw new NominException(format("Could not instantiate a {0}!", typeInfo.determineType().getSimpleName()), e);
         }
     }
 
@@ -49,12 +49,12 @@ public class SeqRuleElem extends RuleElem {
     }
 
     protected Object getListItem(List list) {
-        if (list.size() > index) return list.get(index);
+        if (index > 0 && list.size() > index) return list.get(index);
         return null;
     }
 
     protected void setListItem(List list, Object item) {
-        if (list.size() - 1 < index) for (int i = 0; i < index - list.size(); i++) list.add(null);
+        if (index > 0 && list.size() - 1 < index) for (int i = 0; i < index - list.size(); i++) list.add(null);
         list.add(item);
     }
 
