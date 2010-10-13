@@ -24,7 +24,6 @@ class Mapping implements MappingConsts {
 
   private Introspector introspector = jb
   private List<MappingEntry> entries = []
-  private MappingEntry last = new MappingEntry(mapping: this, introspector: introspector)
   private Map<String, Closure> hooks = [ throwableHandler: {} ]
   private List<Class<? extends Throwable>> throwables;
 
@@ -36,16 +35,14 @@ class Mapping implements MappingConsts {
 
   ParsedMapping parse() {
     build()
-    completed()
     new ParsedMapping(mappingName, sideA, sideB, mappingCase, entries*.parse(), hooks, mapNulls, throwables, mapper)
   }
 
   /** Defines mapping information: classes of the sides and mapping case */
-  void mappingFor(Map mappingInfo, Closure block = null) {
+  void mappingFor(Map mappingInfo) {
     if (mappingInfo.a) sideA = mappingInfo.a
     if (mappingInfo.b) sideB = mappingInfo.b
     if (mappingInfo.case) mappingCase = mappingInfo.case
-    closure(block)
   }
 
   /** Hangs 'after mapping' hook. Closure 'after' has a, b and direction local variables */
@@ -85,8 +82,8 @@ class Mapping implements MappingConsts {
 
   /** Defines conversions between sides. */
   void convert(Map<String, Closure> conversions, Closure block = null) {
-    closure(block)
-    last.conversion to_a: mapper.contextManager.makeContextAware(conversions.to_a),
+    if (!entries) entry()
+    entries.last().conversion to_a: mapper.contextManager.makeContextAware(conversions.to_a),
             to_b: mapper.contextManager.makeContextAware(conversions.to_b)
   }
 
@@ -94,17 +91,18 @@ class Mapping implements MappingConsts {
    * When applying a hint to collections there is the ability to specify the type of collection elements.
    * For instance, hint a: List[Person].
    */
-  void hint(hints, Closure block = null) {
-    closure(block)
-    last.hint a: processHints(hints.a), b: processHints(hints.b)
+  void hint(hints) {
+    if (!entries) entry()
+    entries.last().hint a: processHints(hints.a), b: processHints(hints.b)
   }
 
   /** Defines a mapping case for the last mapping rule. */
   void mappingCase(mappingCase) {
+    if (!entries) entry()
     if (mappingCase instanceof Closure)  {
       mapper.contextManager.makeContextAware(mappingCase)
-      last.mappingCase new DynamicMappingCase(mappingCase)
-    } else last.mappingCase new StaticMappingCase(mappingCase)
+      entries.last().mappingCase new DynamicMappingCase(mappingCase)
+    } else entries.last().mappingCase new StaticMappingCase(mappingCase)
   }
 
   /**
@@ -113,8 +111,9 @@ class Mapping implements MappingConsts {
    * @param date specifies the date property
    */
   def dateFormat(String pattern, date) {
+    if (!entries) entry()
     SimpleDateFormat sdf = new SimpleDateFormat(pattern)
-    if (last.side.a.pathElem) convert to_a: new String2DateClosure(sdf), to_b: new Date2StringClosure(sdf)
+    if (entries.last().side.a.pathElem) convert to_a: new String2DateClosure(sdf), to_b: new Date2StringClosure(sdf)
     else convert to_b: new String2DateClosure(sdf), to_a: new Date2StringClosure(sdf)
     date
   }
@@ -129,7 +128,7 @@ class Mapping implements MappingConsts {
   /** Uses specified class introspector. */
   void introspector(Introspector introspector) {
     this.introspector = introspector
-    if (!last.completed()) last.introspector = introspector
+    entry().introspector = introspector
   }
 
   /** Creates mapping entries with properties of the same names. */
@@ -152,38 +151,25 @@ class Mapping implements MappingConsts {
     hints
   }
 
-  /**
-   * Checks the last entry for completeness. If so the last entry will be stored (i.e. accepted)
-   * and a new one will be created.
-   */
-  private def completed() {
-    if (last.completed()) {
-      entries << last
-      last = new MappingEntry(mapping: this, introspector: introspector)
-    }
+  /** Returns current mapping entry or newly created entry if the previous entry is full */
+  private def entry() {
+    if (!entries || entries.last().completed()) entries << new MappingEntry(mapping: this, introspector: introspector)
+    entries.last()
   }
 
   private def checkSides() {
     if (!sideA || !sideB) throw new NominException("${mappingName}: Mapping sides should be defined before defining mapping rules!")
   }
 
-  /** Executes a block of code. */
-  private void closure(Closure block) {
-    if (block) { block.delegate = this; block() }
-  }
-
   /**
-   * Creates a root path element and also updates the last entry.
+   * Creates a root path element.
    * @param side specifies an entry side as map, a or b
    */
   def propertyMissing(String name) {
     checkSides()
-    completed()
-    switch (name) {
-      case "a": return last.pathElem(a: new RootPathElem(mappingEntry: last))
-      case "b": return last.pathElem(b: new RootPathElem(mappingEntry: last))
-      default: throw new NominException("${mappingName}: Property '${name}' isn't defined!")
-    }
+    if (["a", "b"].contains(name))
+      entry().pathElem((name): new RootPathElem(rootPathElementSide: name, mappingEntry: entry()))
+    else throw new NominException("${mappingName}: Property '${name}' isn't defined!")
   }
 
   def propertyMissing(String name, value) {
