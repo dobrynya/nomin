@@ -25,7 +25,7 @@ class Mapping implements MappingConsts {
   private Introspector introspector = jb
   private List<MappingEntry> entries = []
   private Map<String, Closure> hooks = [ throwableHandler: {} ]
-  private List<Class<? extends Throwable>> throwables;
+  private List<Class<? extends Throwable>> throwables
 
   def Mapping() {}
 
@@ -58,7 +58,7 @@ class Mapping implements MappingConsts {
    * handle throwables: [RuntimeException, IllegalArgumentException],  handler: { ... }
    */
   void handle(parameters) {
-    if (parameters.throwables instanceof List) this.throwables = parameters.throwables
+    if (List.isInstance(parameters.throwables)) this.throwables = parameters.throwables
     else this.throwables = [parameters.throwables]
     hook throwableHandler: parameters.handler
   }
@@ -99,10 +99,8 @@ class Mapping implements MappingConsts {
   /** Defines a mapping case for the last mapping rule. */
   void mappingCase(mappingCase) {
     if (!entries) entry()
-    if (mappingCase instanceof Closure)  {
-      mapper.contextManager.makeContextAware(mappingCase)
-      entries.last().mappingCase new DynamicMappingCase(mappingCase)
-    } else entries.last().mappingCase new StaticMappingCase(mappingCase)
+    if (Closure.isInstance(mappingCase)) mapper.contextManager.makeContextAware(mappingCase)
+    entries.last().mappingCase new MappingCase(mappingCase)
   }
 
   /**
@@ -141,7 +139,7 @@ class Mapping implements MappingConsts {
 
   private def processHints(hints) {
     if (hints) {
-      hints = hints instanceof List ? hints : [hints]
+      hints = List.isInstance(hints) ? hints : [hints]
       hints = hints.collect {
         TypeInfo typeInfo = TypeInfo.isInstance(it) ? it : it != MappingConsts.DEFAULT ? TypeInfoFactory.typeInfo(it) : null
         if (typeInfo?.isDynamic()) mapper.contextManager.makeContextAware(typeInfo.dynamicType)

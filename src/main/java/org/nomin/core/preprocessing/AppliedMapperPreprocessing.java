@@ -18,6 +18,6 @@ public class AppliedMapperPreprocessing implements Preprocessing {
     }
 
     public Object preprocess(Object source, Object target) {
-        return mapper.map(source, target, mappingCase != null ? mappingCase.get() : null);
+        return mapper.map(source, target, mappingCase.get());
     }
 }

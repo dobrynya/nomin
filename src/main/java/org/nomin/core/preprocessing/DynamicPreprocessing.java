@@ -25,6 +25,6 @@ public class DynamicPreprocessing implements Preprocessing {
         Class<?> targetClass = typeInfo.determineTypeDynamically(source);
         if (source == null || targetClass.isInstance(source)) return source;
         if (ConvertUtils.lookup(source.getClass(), targetClass) != null) return ConvertUtils.convert(source, targetClass);
-        return mapper.map(source, targetClass, mappingCase != null ? mappingCase.get() : null);
+        return mapper.map(source, targetClass, mappingCase.get());
     }
 }

@@ -13,10 +13,12 @@ import static java.text.MessageFormat.*
  */
 @SuppressWarnings(["GroovyVariableNotAssigned", "GroovyAssignabilityCheck"])
 class MappingEntry {
+  private static final defaultMappingCase = new MappingCase(null)
+
   Mapping mapping
   Map<String, Object> side = [a: [:], b: [:]]
   Introspector introspector
-  private MappingCase mappingCase
+  private MappingCase mappingCase = defaultMappingCase
 
   /** Checks whether path elements for both sides aren't empty.  */
   boolean completed() { side.a.pathElem && side.b.pathElem }
@@ -176,7 +178,5 @@ class MappingEntry {
     } else "${elem.methodName}(${elem.methodInvocationParameters})"
   }
 
-  protected String printElem(side, ExprPathElem elem) {
-    elem.expr instanceof Closure ? "{ expression }" : elem.expr
-  }
+  protected String printElem(side, ExprPathElem elem) { Closure.isInstance(elem.expr) ? "{ expression }" : elem.expr }
 }

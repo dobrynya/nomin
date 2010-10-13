@@ -14,6 +14,7 @@ import org.nomin.util.*;
  */
 public class NominPerformanceTest {
     Nomin nomin = new Nomin(Person2Employee.class, DetailedPerson2LinearManager.class, Child2Kid.class);
+    int N = 1;
 
     @Test
     public void testMap() {
@@ -37,7 +38,7 @@ public class NominPerformanceTest {
         lm.setCharacteristics("Just an employee");
         lm.getDetails().setEducations(Arrays.asList(new Education("MIT", "High")));
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < N; i++) {
             calcTime(dp, Employee.class);
             calcTime(dp, LinearManager.class);
             calcTime(lm, Person.class);
@@ -54,7 +55,7 @@ public class NominPerformanceTest {
         System.out.println("Sum = " + sum);
     }
 
-    protected ArrayList<Long> times = new ArrayList<Long>(500001);
+    protected ArrayList<Long> times = new ArrayList<Long>(N);
 
     void calcTime(Object o, Class<?> clazz) {
         times.add(System.nanoTime());
