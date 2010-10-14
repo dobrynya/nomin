@@ -7,5 +7,6 @@ package org.nomin.core
  */
 class RootPathElem extends PathElem {
   String rootPathElementSide
+  Class<?> rootPathElementClass
   String toString() { "root" }
 }

@@ -14,7 +14,7 @@ abstract class PathElem {
     switch (value) {
       case PathElem: break;
       case Closure: mappingEntry.mapping.mapper.contextManager.makeContextAware value
-      default: mappingEntry.pathElem empty: new ExprPathElem(expr: value, mappingEntry: mappingEntry)
+      default: mappingEntry.pathElem new ExprPathElem(expr: value, mappingEntry: mappingEntry)
     }
   }
 

@@ -15,8 +15,7 @@ import java.text.SimpleDateFormat
 class Mapping implements MappingConsts {
   protected static final Logger logger = LoggerFactory.getLogger(Mapping)
 
-  Class sideA
-  Class sideB
+  Map<String, Class> side = [:]
   Object mappingCase
   String mappingName = this.class.name
   Boolean mapNulls = false
@@ -35,13 +34,13 @@ class Mapping implements MappingConsts {
 
   ParsedMapping parse() {
     build()
-    new ParsedMapping(mappingName, sideA, sideB, mappingCase, entries*.parse(), hooks, mapNulls, throwables, mapper)
+    new ParsedMapping(mappingName, side.a, side.b, mappingCase, entries*.parse(), hooks, mapNulls, throwables, mapper)
   }
 
   /** Defines mapping information: classes of the sides and mapping case */
   void mappingFor(Map mappingInfo) {
-    if (mappingInfo.a) sideA = mappingInfo.a
-    if (mappingInfo.b) sideB = mappingInfo.b
+    if (mappingInfo.a) side.a = mappingInfo.a
+    if (mappingInfo.b) side.b = mappingInfo.b
     if (mappingInfo.case) mappingCase = mappingInfo.case
   }
 
@@ -104,15 +103,16 @@ class Mapping implements MappingConsts {
   }
 
   /**
-   * Applies a conversion between string and date values. As a formatter FastDateFormat is used.
+   * Applies a conversion between string and date values. As a formatter SimpleDateFormat is used.
    * @param pattern specifies a conversion pattern as supported by SimpleDateFormat
    * @param date specifies the date property
    */
   def dateFormat(String pattern, date) {
-    if (!entries) entry()
+//    if (!entries) entry()
     SimpleDateFormat sdf = new SimpleDateFormat(pattern)
-    if (entries.last().side.a.pathElem) convert to_a: new String2DateClosure(sdf), to_b: new Date2StringClosure(sdf)
-    else convert to_b: new String2DateClosure(sdf), to_a: new Date2StringClosure(sdf)
+    // TODO: Fix this!
+//    if (entries.last().side.a.pathElem) convert to_a: new String2DateClosure(sdf), to_b: new Date2StringClosure(sdf)
+//    else convert to_b: new String2DateClosure(sdf), to_a: new Date2StringClosure(sdf)
     date
   }
 
@@ -133,8 +133,8 @@ class Mapping implements MappingConsts {
   void automap() {
     checkSides()
     logger.debug "{}: Automapping facility is enabled", mappingName
-    Set<String> b = introspector.properties(sideB)
-    for (String property : introspector.properties(sideA)) if (b.contains(property)) this.a."${property}" = this.b."${property}"
+    Set<String> b = introspector.properties(side.b)
+    for (String property : introspector.properties(side.a)) if (b.contains(property)) this.a."${property}" = this.b."${property}"
   }
 
   private def processHints(hints) {
@@ -156,7 +156,7 @@ class Mapping implements MappingConsts {
   }
 
   private def checkSides() {
-    if (!sideA || !sideB) throw new NominException("${mappingName}: Mapping sides should be defined before defining mapping rules!")
+    if (!side.a || !side.b) throw new NominException("${mappingName}: Mapping sides should be defined before defining mapping rules!")
   }
 
   /**
@@ -166,7 +166,7 @@ class Mapping implements MappingConsts {
   def propertyMissing(String name) {
     checkSides()
     if (["a", "b"].contains(name))
-      entry().pathElem((name): new RootPathElem(rootPathElementSide: name, mappingEntry: entry()))
+      entry().pathElem(new RootPathElem(rootPathElementSide: name, rootPathElementClass: side[name], mappingEntry: entry()))
     else throw new NominException("${mappingName}: Property '${name}' isn't defined!")
   }
 

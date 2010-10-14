@@ -5,6 +5,7 @@ import org.nomin.Mapping
 import org.nomin.util.*
 import org.nomin.core.preprocessing.*
 import static java.text.MessageFormat.*
+import static org.nomin.util.TypeInfoFactory.*
 
 /**
  * Contains mapping pair from side a and side b.
@@ -16,45 +17,51 @@ class MappingEntry {
   private static final defaultMappingCase = new MappingCase(null)
 
   Mapping mapping
-  Map<String, Object> side = [a: [:], b: [:]]
+  List<MappingSide> sides = []
   Introspector introspector
   private MappingCase mappingCase = defaultMappingCase
 
-  /** Checks whether path elements for both sides aren't empty.  */
-  boolean completed() { side.a.pathElem && side.b.pathElem }
+  /** Checks whether this mapping entry is full. */
+  boolean completed() { sides.size() == 2 }
 
   /** Defines left or right conversion.  */
   void conversion(conversion) {
-    side.a.conversion = conversion.to_b
-    side.b.conversion = conversion.to_a
+    sides.each {
+      if (it.sideA) it.conversion = conversion.to_b
+      if (it.sideB) it.conversion = conversion.to_a
+    }
   }
 
-  /** Defines hints for a and/or b side.  */
-  void hint(hints) {
-    if (hints.a) side.a.hints = hints.a
-    if (hints.b) side.b.hints = hints.b
+  /** Defines hints for the sides.  */
+  void hint(Map<String, List<TypeInfo>> hints) {
+    hints.each { k, v -> sides.each { if (it.isSide(k)) it.hints = v }}
   }
 
   /**
+   * TODO: Change comment! Change caller!
    * Defines left or right path element. If a path element is specified with 'empty' key it will be stored in firstly
    * available side.
    */
   def pathElem(pathElem) {
-    if (pathElem.a) side.a.pathElem = pathElem.a
-    else if (pathElem.b) side.b.pathElem = pathElem.b
-    else side.a.pathElem ? (side.b.pathElem = pathElem.empty) : (side.a.pathElem = pathElem.empty) // set empty pathElem
+    if (completed()) throw new NominException("Mapping Entry ${this} is full!")
+    sides << new MappingSide(pathElem: pathElem)
+    pathElem
   }
 
   /** Forces the mapper to use a particular mapping case.  */
   void mappingCase(mappingCase) { this.mappingCase = mappingCase }
 
   MappingRule parse() {
-    def a = buildRuleElem(TypeInfoFactory.typeInfo(mapping.sideA), side.a.hints?.iterator(), side.a.pathElem)
-    def b = buildRuleElem(TypeInfoFactory.typeInfo(mapping.sideB), side.b.hints?.iterator(), side.b.pathElem)
-    def (lastA, lastB) = [findLast(a), findLast(b)]
-    validate lastA, lastB
-    new MappingRule(a, b, analyzeElem(lastA, lastB, side.a.conversion), allowed(lastB),
-            analyzeElem(lastB, lastA, side.b.conversion), allowed(lastA))
+    sides.sort { it.sideA ? -1 : it.sideB ? 1 : 0 }
+    sides.each {
+      it.firstRuleElem = buildRuleElem(typeInfo(it.sideA || it.sideB ? it.pathElem.rootPathElementClass : Undefined),
+              it.hints.iterator(), it.pathElem)
+      it.lastRuleElem = findLast(it.firstRuleElem)
+    }
+    validate sides[0].lastRuleElem, sides[1].lastRuleElem
+    new MappingRule(sides[0].firstRuleElem, sides[1].firstRuleElem,
+            analyzeElem(sides[0].lastRuleElem, sides[1].lastRuleElem, sides[0].conversion), allowed(sides[1].lastRuleElem),
+            analyzeElem(sides[1].lastRuleElem, sides[0].lastRuleElem, sides[1].conversion), allowed(sides[0].lastRuleElem))
   }
 
   protected void validate(lastA, lastB) {
@@ -151,32 +158,33 @@ class MappingEntry {
   }
 
   String toString() {
-    if (side.a.pathElem instanceof RootPathElem) "${printElem('a', side.a.pathElem)} = ${printElem('b', side.b.pathElem)}"
-    else "${printElem('b', side.b.pathElem)} = ${printElem('a', side.a.pathElem)}"
+    "${printElem(sides[0].pathElem)} = ${printElem(sides[1].pathElem)}"
   }
 
-  protected String printElem(side, RootPathElem elem) {
-    if (elem.nextPathElem) "${side}.${printElem(side, elem.nextPathElem)}"; else side
+  protected String printElem(RootPathElem elem) {
+    if (elem.nextPathElem) "${elem.rootPathElementSide}.${printElem(elem.nextPathElem)}"; else elem.rootPathElementSide
   }
 
-  protected String printElem(side, PropPathElem elem) {
+  protected String printElem(PropPathElem elem) {
     if (elem.nextPathElem) {
-      if (elem.nextPathElem.class == SeqPathElem) "${elem.prop}${printElem(side, elem.nextPathElem)}"; else "${elem.prop}.${printElem(side, elem.nextPathElem)}"
+      if (elem.nextPathElem.class == SeqPathElem) "${elem.prop}${printElem(elem.nextPathElem)}";
+      else "${elem.prop}.${printElem(elem.nextPathElem)}"
     } else elem.prop
   }
 
-  protected String printElem(side, SeqPathElem elem) {
+  protected String printElem(SeqPathElem elem) {
     if (elem.nextPathElem) {
-      if (elem.nextPathElem.class == SeqPathElem) "[${elem.index}]${printElem(side, elem.nextPathElem)}"; else "[${elem.index}].${printElem(side, elem.nextPathElem)}"
+      if (elem.nextPathElem.class == SeqPathElem) "[${elem.index}]${printElem(elem.nextPathElem)}";
+      else "[${elem.index}].${printElem(elem.nextPathElem)}"
     } else "[${elem.index}]"
   }
 
-  protected String printElem(side, MethodPathElem elem) {
+  protected String printElem(MethodPathElem elem) {
     if (elem.nextPathElem) {
-      if (elem.nextPathElem.class == SeqPathElem) "${elem.methodName}(${elem.methodInvocationParameters})${printElem(side, elem.nextPathElem)}"
-      else "${elem.methodName}(${elem.methodInvocationParameters}).${printElem(side, elem.nextPathElem)}"
+      if (elem.nextPathElem.class == SeqPathElem) "${elem.methodName}(${elem.methodInvocationParameters})${printElem(elem.nextPathElem)}"
+      else "${elem.methodName}(${elem.methodInvocationParameters}).${printElem(elem.nextPathElem)}"
     } else "${elem.methodName}(${elem.methodInvocationParameters})"
   }
 
-  protected String printElem(side, ExprPathElem elem) { Closure.isInstance(elem.expr) ? "{ expression }" : elem.expr }
+  protected String printElem(ExprPathElem elem) { Closure.isInstance(elem.expr) ? "{ expression }" : elem.expr }
 }

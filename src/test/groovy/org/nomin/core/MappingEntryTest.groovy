@@ -14,10 +14,10 @@ class MappingEntryTest {
 
   @org.junit.Test
   void testCompleted() {
-    assertFalse me.completed()
-    me.side.a.pathElem = new RootPathElem()
-    assertFalse me.completed()
-    me.side.b.pathElem = new RootPathElem()
-    assertTrue me.completed()
+    assert !me.completed()
+    me.pathElem new RootPathElem()
+    assert !me.completed()
+    me.pathElem new RootPathElem()
+    assert me.completed()
   }
 }
