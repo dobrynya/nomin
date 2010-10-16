@@ -1,3 +1,7 @@
+   ---
+The Nomin framework's pre and postprocessing
+   ---
+
 Pre and postprocessing
 
   Often there is something else we should do with our entities before or after these will be mapped. You can do that

@@ -1,4 +1,4 @@
-package org.nomin.integration
+package org.nomin.functional
 
 import java.text.SimpleDateFormat
 import org.nomin.NominMapper

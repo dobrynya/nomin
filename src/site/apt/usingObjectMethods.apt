@@ -1,3 +1,7 @@
+   ---
+Using Object's methods in mappings
+   ---
+
 Using Object's methods in mappings
 
   Sometimes it needs to map methods of the Object class. The method should be mapped using special syntax as follows:

@@ -1,3 +1,7 @@
+   ---
+Context management
+   ---
+
 Context management
 
   As you will see later Nomin's expressions, hooks and conversions have access to the configured context.

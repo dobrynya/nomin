@@ -1,3 +1,7 @@
+   ---
+Nomin's abilities for error handling
+   ---
+
 Error handling
 
   There is a couple of ways to enforce Nomin not to rethrow <<<Throwable>>>s.

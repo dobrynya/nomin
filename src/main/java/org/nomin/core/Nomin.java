@@ -14,7 +14,7 @@ import static java.text.MessageFormat.format;
  *         Created 28.04.2010 17:10:24
  */
 public class Nomin implements NominMapper {
-    public static final String NOMIN_VERSION = "1.0.1";
+    public static final String NOMIN_VERSION = "1.1.0";
     static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
     List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();

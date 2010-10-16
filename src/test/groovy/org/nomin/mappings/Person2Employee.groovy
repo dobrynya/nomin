@@ -18,7 +18,9 @@ class Person2Employee extends Mapping {
     a.lastName = b.last
     a.birthDate = b.details.birth
     a.children = b.details.kids
-    a.strDate = dateFormat("dd-MM-yyyy", b.details.birth)
+    a.strDate = b.details.birth
+    dateFormat "dd-MM-yyyy"
+
     a.gender = b.details.sex
     simple([Gender.MALE, true], [Gender.FEMALE, false])
   }

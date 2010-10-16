@@ -15,7 +15,8 @@ class Person2Details extends Mapping {
     mappingFor a: Person, b: Details
     a.birthDate = b.birth
     a.children = b.kids
-    a.strDate = dateFormat("dd-MM-yyyy", b.birth)
+    a.strDate = b.birth
+    dateFormat "dd-MM-yyyy"
     a.gender = b.sex
     simple([Gender.MALE, true], [Gender.FEMALE, false])
   }

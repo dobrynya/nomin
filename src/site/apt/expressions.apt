@@ -1,4 +1,8 @@
-Expressions and method invocations
+   ---
+Expressions and Method invocations
+   ---
+
+Expressions and Method invocations
 
   When it's not enough of usual mapping rules you can use expressions to calculate some properties. Expressions are
   nothing else as {{{http://groovy.codehaus.org/Closures}Groovy closures}}. They are calculated during mapping and can

@@ -1,3 +1,7 @@
+   ---
+The Nomin mapping framework's Automapping facility
+   ---
+
 Automapping facility
 
   If classes on the mapping sides are almost of the same structure, i.e. contains properties of the same names

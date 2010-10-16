@@ -1,3 +1,7 @@
+   ---
+Hints
+   ---
+
 Hints
 
   Nomin uses Java reflection to retrieve type information about properties and methods. Though you can specify more

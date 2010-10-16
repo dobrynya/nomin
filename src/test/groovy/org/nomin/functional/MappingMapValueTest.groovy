@@ -1,8 +1,8 @@
-package org.nomin.integration
+package org.nomin.functional
 
 import org.nomin.core.Nomin
 import org.nomin.entity.*
-import org.nomin.core.RootPathElem
+
 import org.nomin.mappings.MappingMapValue
 
 /**

@@ -1,4 +1,4 @@
-package org.nomin.integration
+package org.nomin.functional
 
 import org.nomin.core.Nomin
 import org.nomin.entity.Employee

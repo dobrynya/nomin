@@ -1,3 +1,7 @@
+   ---
+Hierarchical mappings
+   ---
+
 Hierarchical mappings
 
   If you look at the {{{gettingStarted.html}diagram}} you will see that Employee and Person have descendants,

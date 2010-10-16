@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import org.nomin.Mapping
 import org.nomin.entity.Device
 import org.nomin.entity.Router
-import org.nomin.integration.MappingExpressionsTest
+import org.nomin.functional.MappingExpressionsTest
 
 /**
  * Just a mapping.

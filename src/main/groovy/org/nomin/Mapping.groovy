@@ -5,6 +5,7 @@ import org.nomin.core.*
 import org.nomin.util.*
 import org.slf4j.*
 import java.text.SimpleDateFormat
+import static org.nomin.util.TypeInfoFactory.*
 
 /**
  * Stores and parses mapping entries defined in method build body. It also provides a number of operations to control
@@ -103,17 +104,15 @@ class Mapping implements MappingConsts {
   }
 
   /**
-   * Applies a conversion between string and date values. As a formatter SimpleDateFormat is used.
-   * @param pattern specifies a conversion pattern as supported by SimpleDateFormat
-   * @param date specifies the date property
+   * Applies a conversion between string and date values to the last mappung rule.
+   * As a formatter SimpleDateFormat is used.
+   * @param pattern specifies SimpleDateFormat's pattern
    */
-  def dateFormat(String pattern, date) {
-//    if (!entries) entry()
+  void dateFormat(String pattern) {
+    if (!entries) entry()
     SimpleDateFormat sdf = new SimpleDateFormat(pattern)
-    // TODO: Fix this!
-//    if (entries.last().side.a.pathElem) convert to_a: new String2DateClosure(sdf), to_b: new Date2StringClosure(sdf)
-//    else convert to_b: new String2DateClosure(sdf), to_a: new Date2StringClosure(sdf)
-    date
+    def conversion = new String2DateConversion(sdf)
+    convert to_a: conversion, to_b: conversion
   }
 
   /** Applies simple conversions to the last mapping rule. */
@@ -141,7 +140,7 @@ class Mapping implements MappingConsts {
     if (hints) {
       hints = List.isInstance(hints) ? hints : [hints]
       hints = hints.collect {
-        TypeInfo typeInfo = TypeInfo.isInstance(it) ? it : it != MappingConsts.DEFAULT ? TypeInfoFactory.typeInfo(it) : null
+        TypeInfo typeInfo = TypeInfo.isInstance(it) ? it : it != MappingConsts.DEFAULT ? typeInfo(it) : null
         if (typeInfo?.isDynamic()) mapper.contextManager.makeContextAware(typeInfo.dynamicType)
         typeInfo
       }

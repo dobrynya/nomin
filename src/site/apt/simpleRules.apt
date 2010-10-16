@@ -1,3 +1,7 @@
+   ---
+The Nomin framework's simple mapping rules
+   ---
+
 Simple mapping rules
 
   Mapping rules are defined as usual assignments, but they actually work in both directions.

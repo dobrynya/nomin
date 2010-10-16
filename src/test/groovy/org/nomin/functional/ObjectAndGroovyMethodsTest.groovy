@@ -1,8 +1,7 @@
-package org.nomin.integration
+package org.nomin.functional
 
 import org.nomin.core.Nomin
 import org.nomin.mappings.ObjectAndGroovyMethods
-import org.junit.Test
 import org.nomin.entity.*
 
 /**
@@ -13,7 +12,7 @@ import org.nomin.entity.*
 class ObjectAndGroovyMethodsTest {
   Nomin nomin = new Nomin(ObjectAndGroovyMethods)
 
-  @Test
+  @org.junit.Test
   void test() {
     Employee e = new Employee(properties: "Employee's properties")
     Person p = nomin.map(e, Person)

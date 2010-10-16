@@ -1,4 +1,8 @@
-Using Nomin Mapper in mappings
+   ---
+Using The Nomin Mapper in mappings
+   ---
+
+Using The Nomin Mapper in mappings
 
   The Nomin Mapper instance is available in mappings. You can access it using its name <<<mapper>>> as follows.
 

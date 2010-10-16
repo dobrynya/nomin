@@ -1,16 +1,21 @@
+   ---
+Conversions
+   ---
+
 Conversions
 
   Frequently properties being mapped to each other are represented with values of incompatible types. So we need a way
   to explicitly define conversion rules.
 
-  One of the most common cases is conversion between string and date values. Nomin provides solution with predefined function
-  <<dateFormat>> which receives a pattern to apply and a date property as parameters.
+  One of the most common cases is conversion between <<<String>>> and <<<Date>>> values. Nomin provides the solution with
+  predefined the <<dateFormat>> conversion which receives a pattern to apply as the only parameter.
 
 +---
-  a.strDate = dateFormat("dd-MM-yyyy", b.details.birth)
+  a.strDate = b.details.birth
+  dateFormat "dd-MM-yyyy"
 +---
 
-  There is one more useful conversion named simple conversion. It's applicable when we have a limited set of values
+  There is another useful conversion named <<simple>> conversion. It's applicable when we have a limited set of values
   of the first property corresponding to another set of values of the opposite property.
   For example, in our case there are boolean value on one side and Gender value
   on another. So Gender.MALE corresponds <<true>> value and Gender.FEMALE corresponds to <<false>>.

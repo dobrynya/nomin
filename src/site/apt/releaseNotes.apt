@@ -1,4 +1,22 @@
+   ---
 Release Notes
+   ---
+
+Release Notes   
+
+* 1.1.0
+
+  Changes
+
+  * Changed the use of dateFormat conversion, details at the {{{/conversions.html}conversions page}}.
+
+  * Some components were refactored.
+
+  []
+
+  Improvements
+
+  * <<<java.util.Map>>> type is now supported by Nomin, for details see the {{{/workingWithMaps.html}page dedicated to maps}}
 
 * 1.0.1
 
