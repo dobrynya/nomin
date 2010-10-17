@@ -110,10 +110,10 @@ class MappingEntry {
   }
 
   protected RuleElem processElem(PropPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    PropertyAccessor property = introspector.property(elem.prop, ti.type)
+    PropertyAccessor property = introspector.property(elem.propPathElementPropertyName, ti.type)
     if (!property)
       throw new NominException(format("{0}: Mapping rule {1} is invalid because of missing property {2}.{3}!",
-              mapping.mappingName, this, ti.type.simpleName, elem.prop))
+              mapping.mappingName, this, ti.type.simpleName, elem.propPathElementPropertyName))
 
     if (property.typeInfo.collection)
       applyHint(new CollectionRuleElem(property.typeInfo, property), hints)
@@ -129,15 +129,15 @@ class MappingEntry {
     if (ti.container) {
       RuleElem res
       if (prev instanceof ArrayRuleElem) {
-        if (elem.index instanceof Integer)
-          res = new ArraySeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), (Integer) elem.index, prev)
+        if (elem.seqPathElementIndex instanceof Integer)
+          res = new ArraySeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), (Integer) elem.seqPathElementIndex, prev)
         else throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
             mapping.mappingName, this, prev))
       } else {
-        if (ti.map) res = new MapAccessRuleElem(ti.parameters ? ti.parameters[1] : TypeInfoFactory.typeInfo(Object), elem.index)
+        if (ti.map) res = new MapAccessRuleElem(ti.parameters ? ti.parameters[1] : TypeInfoFactory.typeInfo(Object), elem.seqPathElementIndex)
         else {
-          if (elem.index instanceof Integer)
-            res = new SeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), elem.index)
+          if (elem.seqPathElementIndex instanceof Integer)
+            res = new SeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), elem.seqPathElementIndex)
           else
             throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
                     mapping.mappingName, this, prev))
@@ -149,42 +149,13 @@ class MappingEntry {
   }
 
   protected RuleElem processElem(MethodPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    MethodInvocation invocation = introspector.invocation(elem.methodName, ti.type, * elem.methodInvocationParameters)
+    MethodInvocation invocation = introspector.invocation(elem.methodPathElementMethodName, ti.type, * elem.methodPathElementInvocationParameters)
     applyHint(new MethodRuleElem(invocation.typeInfo, invocation), hints)
   }
 
   protected RuleElem processElem(ExprPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    applyHint(Closure.isInstance(elem.expr) ? new ClosureRuleElem(elem.expr) : new ValueRuleElem(elem.expr), hints)
+    applyHint(Closure.isInstance(elem.exprPathElementExpr) ? new ClosureRuleElem(elem.exprPathElementExpr) : new ValueRuleElem(elem.exprPathElementExpr), hints)
   }
 
-  String toString() {
-    "${printElem(sides[0].pathElem)} = ${printElem(sides[1].pathElem)}"
-  }
-
-  protected String printElem(RootPathElem elem) {
-    if (elem.nextPathElem) "${elem.rootPathElementSide}.${printElem(elem.nextPathElem)}"; else elem.rootPathElementSide
-  }
-
-  protected String printElem(PropPathElem elem) {
-    if (elem.nextPathElem) {
-      if (elem.nextPathElem.class == SeqPathElem) "${elem.prop}${printElem(elem.nextPathElem)}";
-      else "${elem.prop}.${printElem(elem.nextPathElem)}"
-    } else elem.prop
-  }
-
-  protected String printElem(SeqPathElem elem) {
-    if (elem.nextPathElem) {
-      if (elem.nextPathElem.class == SeqPathElem) "[${elem.index}]${printElem(elem.nextPathElem)}";
-      else "[${elem.index}].${printElem(elem.nextPathElem)}"
-    } else "[${elem.index}]"
-  }
-
-  protected String printElem(MethodPathElem elem) {
-    if (elem.nextPathElem) {
-      if (elem.nextPathElem.class == SeqPathElem) "${elem.methodName}(${elem.methodInvocationParameters})${printElem(elem.nextPathElem)}"
-      else "${elem.methodName}(${elem.methodInvocationParameters}).${printElem(elem.nextPathElem)}"
-    } else "${elem.methodName}(${elem.methodInvocationParameters})"
-  }
-
-  protected String printElem(ExprPathElem elem) { Closure.isInstance(elem.expr) ? "{ expression }" : elem.expr }
+  String toString() { format("{0} = {1}", sides[0].pathElem, sides[1].pathElem) }
 }

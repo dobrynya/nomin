@@ -6,8 +6,11 @@ package org.nomin.core
  * Created 09.04.2010 10:25:07
  */
 class MethodPathElem extends PathElem {
-  String methodName
-  List methodInvocationParameters
+  String methodPathElementMethodName
+  List methodPathElementInvocationParameters
 
-  String toString() { "${methodName}(${methodInvocationParameters})" }
+  String toString() {
+    nextPathElem ? ".${methodPathElementMethodName}(${methodPathElementInvocationParameters})${nextPathElem}" :
+      ".${methodPathElementMethodName}(${methodPathElementInvocationParameters})"
+  }
 }

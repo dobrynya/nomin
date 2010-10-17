@@ -6,7 +6,9 @@ package org.nomin.core
  * Created 09.04.2010 10:45:49
  */
 class PropPathElem extends PathElem {
-  String prop
+  String propPathElementPropertyName
 
-  String toString() { prop }
+  String toString() { nextPathElem ?
+    ".${propPathElementPropertyName}${nextPathElem}" : ".${propPathElementPropertyName}"
+  }
 }

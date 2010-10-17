@@ -6,7 +6,7 @@ package org.nomin.core
  * Created 09.04.2010 10:37:45
  */
 class ExprPathElem extends PathElem {
-  def expr
+  def exprPathElementExpr
 
-  String toString() { expr instanceof Closure ? "{ expression }" : String.valueOf(expr) }
+  String toString() { Closure.isInstance(exprPathElementExpr) ? "{ expression }" : exprPathElementExpr }
 }

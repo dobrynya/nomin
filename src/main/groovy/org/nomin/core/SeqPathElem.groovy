@@ -6,7 +6,7 @@ package org.nomin.core
  * Created 09.04.2010 10:21:50
  */
 class SeqPathElem extends PathElem {
-  Object index
+  Object seqPathElementIndex
 
-  String toString() { "[${index}]" }
+  String toString() { nextPathElem ? "[${seqPathElementIndex}]${nextPathElem}" : "[${seqPathElementIndex}]" }
 }
