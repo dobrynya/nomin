@@ -37,6 +37,10 @@ public class TypeInfo {
 
     public List<TypeInfo> getParameters() { return parameters; }
 
+    public TypeInfo getParameter(int i) { 
+        return parameters != null && i < parameters.size() ? parameters.get(i) : TypeInfoFactory.typeInfo(Object.class);
+    }
+
     public boolean isCollection() { return collection; }
 
     public boolean isMap() { return map; }

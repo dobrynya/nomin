@@ -71,7 +71,7 @@ class MappingEntry {
       throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a collection/array on the first side and a single value on another!", mapping.mappingName, this))
   }
 
-  /** Finds the last element in the chain.  */
+  /** Finds the last element in the chain. */
   protected RuleElem findLast(RuleElem elem) { elem.next ? findLast(elem.next) : elem }
 
   protected Preprocessing analyzeElem(RuleElem source, RuleElem target, Closure conversion) {
@@ -95,14 +95,6 @@ class MappingEntry {
     if (prev) prev.next = current
     if (elem.nextPathElem) buildRuleElem(current.typeInfo, hints, elem.nextPathElem, current)
     current
-  }
-
-  protected RuleElem applyHint(RuleElem elem, Iterator<TypeInfo> hints) {
-    if (hints?.hasNext()) {
-      def nextHint = hints.next()
-      if (nextHint) elem.typeInfo.merge nextHint
-    }
-    elem
   }
 
   protected RootRuleElem processElem(RootPathElem root, TypeInfo typeInfo, RuleElem prev, Iterator<TypeInfo> hints) {
@@ -130,14 +122,14 @@ class MappingEntry {
       RuleElem res
       if (prev instanceof ArrayRuleElem) {
         if (elem.seqPathElementIndex instanceof Integer)
-          res = new ArraySeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), (Integer) elem.seqPathElementIndex, prev)
+          res = new ArraySeqRuleElem(ti.getParameter(0), (Integer) elem.seqPathElementIndex, prev)
         else throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
             mapping.mappingName, this, prev))
       } else {
-        if (ti.map) res = new MapAccessRuleElem(ti.parameters ? ti.parameters[1] : TypeInfoFactory.typeInfo(Object), elem.seqPathElementIndex)
+        if (ti.map) res = new MapAccessRuleElem(ti.getParameter(1), elem.seqPathElementIndex)
         else {
           if (elem.seqPathElementIndex instanceof Integer)
-            res = new SeqRuleElem(ti.parameters ? ti.parameters[0] : TypeInfoFactory.typeInfo(Object), elem.seqPathElementIndex)
+            res = new SeqRuleElem(ti.getParameter(0), elem.seqPathElementIndex)
           else
             throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
                     mapping.mappingName, this, prev))
@@ -155,6 +147,14 @@ class MappingEntry {
 
   protected RuleElem processElem(ExprPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
     applyHint(Closure.isInstance(elem.exprPathElementExpr) ? new ClosureRuleElem(elem.exprPathElementExpr) : new ValueRuleElem(elem.exprPathElementExpr), hints)
+  }
+
+  protected RuleElem applyHint(RuleElem elem, Iterator<TypeInfo> hints) {
+    if (hints?.hasNext()) {
+      def nextHint = hints.next()
+      if (nextHint) elem.typeInfo.merge nextHint
+    }
+    elem
   }
 
   String toString() { format("{0} = {1}", sides[0].pathElem, sides[1].pathElem) }
