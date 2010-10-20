@@ -58,8 +58,8 @@
     </organization>
 
     <scm>
-        <url>https://nomin.svn.sourceforge.net/svnroot/nomin/trunk</url>
-        <connection>scm:svn:https://nomin.svn.sourceforge.net/svnroot/nomin/trunk</connection>
+        <url>http://nomin.hg.sourceforge.net/hgroot/nomin/nomin</url>
+        <connection>scm:hg:ssh://nomin.hg.sourceforge.net/hgroot/nomin/nomin</connection>
     </scm>
 
     <distributionManagement>
