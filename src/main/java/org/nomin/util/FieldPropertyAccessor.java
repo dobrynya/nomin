@@ -33,19 +33,15 @@ public class FieldPropertyAccessor implements PropertyAccessor {
         this.typeInfo = typeInfo;
     }
 
-    public Object get(Object instance) {
-        try {
-            return property.get(instance);
-        } catch (IllegalAccessException e) {
-            throw new NominException("Could not get field value!", e);
-        }
+    public Object newOwner() throws Exception {
+        return property.getDeclaringClass().newInstance();
     }
 
-    public void set(Object instance, Object value) {
-        try {
-            property.set(instance, value);
-        } catch (IllegalAccessException e) {
-            throw new NominException("Could not set field value!", e);
-        }
+    public Object get(Object instance) throws Exception {
+        return property.get(instance);
+    }
+
+    public void set(Object instance, Object value) throws Exception {
+        property.set(instance, value);
     }
 }

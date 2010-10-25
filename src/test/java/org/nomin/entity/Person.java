@@ -14,7 +14,7 @@ public class Person {
     private Gender gender;
     private String strDate;
     private List<Child> children;
-    private Map<String, Object> options = new HashMap<String, Object>();
+    private Map<String, Object> options;
 
     public String getName() {
         return name;

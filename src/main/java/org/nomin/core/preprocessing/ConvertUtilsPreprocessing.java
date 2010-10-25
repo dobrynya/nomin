@@ -3,7 +3,7 @@ package org.nomin.core.preprocessing;
 import org.apache.commons.beanutils.ConvertUtils;
 
 /**
- * Document please.
+ * Converts a value using ConvertUtils.
  * @author Dmitry Dobrynin
  *         Created 28.04.2010 15:41:32
  */
@@ -14,7 +14,7 @@ public class ConvertUtilsPreprocessing implements Preprocessing {
         this.targetClass = targetClass;
     }
 
-    public Object preprocess(Object source, Object target) {
+    public Object preprocess(Object source) {
         return source != null ? ConvertUtils.convert(source, targetClass) : null;
     }
 }

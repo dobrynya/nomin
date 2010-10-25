@@ -6,7 +6,7 @@ import org.nomin.core.*;
 import org.nomin.util.TypeInfo;
 
 /**
- * Chooses applicable processing depending on a value.
+ * Chooses and applies appropriate preprocessing depending on a value.
  * @author Dmitry Dobrynin
  *         Created: 12.05.2010 23:40:05
  */
@@ -21,7 +21,7 @@ public class DynamicPreprocessing implements Preprocessing {
         this.mappingCase = mappingCase;
     }
 
-    public Object preprocess(Object source, Object target) {
+    public Object preprocess(Object source) {
         Class<?> targetClass = typeInfo.determineTypeDynamically(source);
         if (source == null || targetClass.isInstance(source)) return source;
         if (ConvertUtils.lookup(source.getClass(), targetClass) != null) return ConvertUtils.convert(source, targetClass);

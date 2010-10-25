@@ -2,7 +2,7 @@ package org.nomin.core;
 
 import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
-import org.nomin.core.preprocessing.Preprocessing;
+
 import org.slf4j.*;
 
 /**
@@ -15,27 +15,27 @@ public class MappingRule {
 
     ParsedMapping mapping;
     final RuleElem a, b;
-    final Preprocessing direct, reverse;
-    final boolean directAllowed, reverseAllowed;
+    final boolean allowedToB, allowedToA;
 
-    public MappingRule(RuleElem a, RuleElem b, Preprocessing direct, boolean directAllowed, Preprocessing reverse, boolean reverseAllowed) {
+    public MappingRule(RuleElem a, RuleElem b, boolean allowedToB, boolean allowedToA) {
         this.a = a; this.b = b;
-        this.direct = direct; this.directAllowed = directAllowed;
-        this.reverse = reverse; this.reverseAllowed = reverseAllowed;
+        this.allowedToB = allowedToB;
+        this.allowedToA = allowedToA;
     }
 
-    void map(Object source, Object target, RuleElem srcElem, RuleElem targetElem, Preprocessing preprocessing) {
+    public Object map(Object source, Object target, RuleElem srcElem, RuleElem targetElem) throws Exception {
         Object result = srcElem.get(source);
         if (logger.isTraceEnabled()) logger.trace("{} = {}", srcElem.path(), result);
-        if (result != null || mapping.mapNulls) targetElem.set(target, result, preprocessing);
+        if (result != null || mapping.mapNulls) return targetElem.set(target, result);
+        return target;
     }
 
-    void mapBtoA(Object b, Object a) {
-        if (reverseAllowed) map(b, a, this.b, this.a, reverse);
+    public Object mapBtoA(Object b, Object a) throws Exception {
+        if (allowedToA) return map(b, a, this.b, this.a); else return a;
     }
 
-    void mapAtoB(Object a, Object b) {
-        if (directAllowed) map(a, b, this.a, this.b, direct);
+    public Object mapAtoB(Object a, Object b) throws Exception {
+        if (allowedToB) return map(a, b, this.a, this.b); else return b;
     }
 
     public String toString() {

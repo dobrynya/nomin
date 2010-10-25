@@ -1,9 +1,8 @@
 package org.nomin.core;
 
-import java.text.MessageFormat;
-
-import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.NominMapper;
 import org.nomin.util.TypeInfo;
+import static java.text.MessageFormat.format;
 
 /**
  * Provides access to a root instance.
@@ -11,18 +10,21 @@ import org.nomin.util.TypeInfo;
  *         Created: 27.04.2010 23:20:50
  */
 public class RootRuleElem extends RuleElem {
-    public RootRuleElem(TypeInfo typeInfo) {
+    private NominMapper mapper;
+    private MappingCase mappingCase;
+
+    public RootRuleElem(TypeInfo typeInfo, NominMapper mapper, MappingCase mappingCase) {
         super(typeInfo);
+        this.mapper = mapper;
+        this.mappingCase = mappingCase;
     }
 
-    public void set(Object instance, Object value, Preprocessing preprocessing) {
-        if (next != null) next.set(instance, value, preprocessing);
-        else preprocessing.preprocess(value, instance);
+    public Object get(Object instance) throws Exception { return instance; }
+
+    public Object set(Object instance, Object value) throws Exception {
+        return instance == null ? mapper.map(value, typeInfo.getType(), mappingCase.get()) :
+                mapper.map(value, instance, mappingCase.get());
     }
 
-    protected Object retrieve(Object instance) { return instance; }
-
-    protected void store(Object instance, Object value, Preprocessing reprocessing) {}
-
-    public String toString() { return MessageFormat.format("{0}", typeInfo); }
+    public String toString() { return format("{0}", typeInfo); }
 }

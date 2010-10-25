@@ -14,7 +14,7 @@ public class ConversionPreprocessing implements Preprocessing {
         this.conversion = conversion;
     }
 
-    public Object preprocess(Object source, Object target) {
+    public Object preprocess(Object source) {
         return conversion.call(source);
     }
 }

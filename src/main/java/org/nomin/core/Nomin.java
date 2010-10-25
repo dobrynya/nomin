@@ -104,7 +104,7 @@ public class Nomin implements NominMapper {
         } catch (NominException ne) {
             throw ne;
         } catch (Exception e) {
-            throw new NominException(format("Could not perform mapping {0} to {1}!", source, targetClass.getName()), e); 
+            throw new NominException(format("Could not perform mapping {0} to {1}!", source, targetClass.getName()), e);
         }
     }
 

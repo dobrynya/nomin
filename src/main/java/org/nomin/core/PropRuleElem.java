@@ -1,9 +1,6 @@
 package org.nomin.core;
 
 import org.nomin.util.PropertyAccessor;
-import org.nomin.core.preprocessing.Preprocessing;
-import org.nomin.util.TypeInfo;
-
 import static java.text.MessageFormat.format;
 
 /**
@@ -14,31 +11,21 @@ import static java.text.MessageFormat.format;
 public class PropRuleElem extends RuleElem {
     final PropertyAccessor property;
 
-    public PropRuleElem(TypeInfo typeInfo, PropertyAccessor property) {
-        super(typeInfo);
+    public PropRuleElem(PropertyAccessor property) {
+        super(property.getTypeInfo());
         this.property = property;
     }
 
-    protected Object retrieve(Object instance) {
-        return property.get(instance);
+    public Object get(Object instance) throws Exception {
+        return instance == null ? null :
+                next == null ? property.get(instance) : next.get(property.get(instance));
     }
 
-    protected void store(Object instance, Object value, Preprocessing preprocessing) {
-        property.set(instance, preprocessing != null ? preprocessing.preprocess(value, null) : value);
-    }
-
-    Object createInstance(Object value) {
-        try {
-            return typeInfo.determineTypeDynamically(value).newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException("Could not instantiate " + typeInfo.determineType().getSimpleName() + "!", e);
-        }
-    }
-
-    protected Object initialize(Object instance, Object value) {
-        Object result = createInstance(value);
-        property.set(instance, result);
-        return result;
+    public Object set(Object instance, Object value) throws Exception {
+        if (instance == null) instance = property.newOwner();
+        if (next == null) property.set(instance, preprocessing != null ? preprocessing.preprocess(value) : value);
+        else property.set(instance, next.set(property.get(instance), value));
+        return instance;
     }
 
     public String toString() { return format("{0}:{1}", property.getName(), typeInfo); }

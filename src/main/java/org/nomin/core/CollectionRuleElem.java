@@ -1,12 +1,11 @@
 package org.nomin.core;
 
-import org.nomin.core.preprocessing.Preprocessing;
-import org.nomin.util.PropertyAccessor;
-import org.nomin.util.TypeInfo;
+import org.nomin.util.*;
 
 import java.util.*;
-import java.util.concurrent.*;
+
 import static java.text.MessageFormat.format;
+import static java.util.Arrays.*;
 
 /**
  * Provides access to collections.
@@ -15,43 +14,23 @@ import static java.text.MessageFormat.format;
  */
 @SuppressWarnings({"unchecked"})
 public class CollectionRuleElem extends PropRuleElem {
-    public CollectionRuleElem(TypeInfo typeInfo, PropertyAccessor property) {
-        super(typeInfo, property);
+    public CollectionRuleElem(PropertyAccessor property) { super(property); }
+
+    public Object set(Object instance, Object value) throws Exception {
+        if (instance == null) instance = property.newOwner();
+        if (next == null) {
+            Collection<Object> source = asCollection(value);
+            property.set(instance, source == null || source.size() == 0 ? null : containerHelper.convert(source, preprocessing));
+        } else
+            property.set(instance, next.set(property.get(instance), value));
+        return instance;
     }
 
-    Object createContainer(int size) {
-        Class<?> clazz = property.getTypeInfo().getType();
-        if (clazz == Collection.class || clazz == List.class) return new ArrayList(size);
-        else if (clazz == Set.class) return new HashSet(size);
-        else if (clazz == SortedSet.class || clazz == NavigableSet.class) return new TreeSet();
-        else if (clazz == Queue.class || clazz == Deque.class) return new LinkedList();
-        else if (clazz == BlockingQueue.class) return new LinkedBlockingQueue(size);
-        else if (clazz == BlockingDeque.class) return new LinkedBlockingDeque(size);
-        else if (!clazz.isInterface() && Collection.class.isAssignableFrom(clazz)) {
-            try { return clazz.newInstance(); }
-            catch (Exception ignored) {}
-        }
-        throw new NominException(format("Could not instantiate {0}!", clazz.getName()));
-    }
-
-    Object createInstance(Object value) {
-        int size = 0;
-        if (value instanceof Collection) size = ((Collection) value).size();
-        else if (value instanceof Object[]) size = ((Object[]) value).length;
-        return createContainer(size);
-    }
-
-    protected void store(Object instance, Object value, Preprocessing preprocessing) {
-        Collection<Object> result = (Collection<Object>) initialize(instance, value);
-        // Optimizing performance: checking preprocessing only once
-        if (preprocessing != null) for (Object o : iterable(value)) result.add(preprocessing.preprocess(o, null));
-        else for (Object o : iterable(value)) result.add(o);
-    }
-
-    protected Iterable<Object> iterable(Object value) {
-        if (value instanceof Collection) return (Iterable<Object>) value;
-        else if (value instanceof Object[]) return Arrays.asList((Object[]) value);
-        else return Collections.emptyList();
+    protected Collection<Object> asCollection(Object value) {
+        if (Object[].class.isInstance(value)) return asList((Object[]) value);
+        if (Collection.class.isInstance(value)) return (Collection<Object>) value;
+        if (Map.class.isInstance(value)) return (Collection) ((Map<Object, Object>) value).entrySet();
+        return null;
     }
 
     public String toString() { return format("{0}:{1}", property.getName(), typeInfo); }

@@ -12,7 +12,9 @@ public interface PropertyAccessor {
 
     void setTypeInfo(TypeInfo typeInfo);
 
-    Object get(Object instance);
+    Object newOwner() throws Exception;
 
-    void set(Object instance, Object value);
+    Object get(Object instance) throws Exception;
+
+    void set(Object instance, Object value) throws Exception;
 }

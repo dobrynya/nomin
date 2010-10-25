@@ -10,8 +10,7 @@ public interface Preprocessing {
     /**
      * Preprocesses an object.
      * @param source a source object
-     * @param target a target object, usually null except a case when mapping a root object
      * @return processed object
      */
-    Object preprocess(Object source, Object target);
+    Object preprocess(Object source);
 }

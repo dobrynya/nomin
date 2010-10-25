@@ -17,13 +17,14 @@ public class MethodRuleElem extends RuleElem {
         this.invocation = invocation;
     }
 
-    protected Object retrieve(Object instance) {
-        return invocation.invoke(instance);
+    public Object get(Object instance) throws Exception {
+        return next != null && instance != null ? next.get(invocation.invoke(instance)) :
+                instance != null ? invocation.invoke(instance) : null;
     }
 
-    protected void store(Object instance, Object value, Preprocessing preprocessing) {}
-
-    public String toString() {
-        return invocation.toString();
+    public Object set(Object instance, Object value) throws Exception {
+        throw new NominException("!");
     }
+
+    public String toString() { return invocation.toString(); }
 }

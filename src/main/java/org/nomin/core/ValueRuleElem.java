@@ -16,11 +16,11 @@ public class ValueRuleElem extends RuleElem {
         this.value = value;
     }
 
-    protected Object retrieve(Object instance) { return value; }
+    public Object get(Object instance) throws Exception { return value; }
 
-    protected void store(Object instance, Object value, Preprocessing reprocessing) {}
-
-    public void set(Object instance, Object value, Preprocessing preprocessing) {}
+    public Object set(Object instance, Object value) throws Exception {
+        throw new NominException("Could not change the constant value!");
+    }
 
     public String toString() { return String.valueOf(value); }
 }

@@ -17,11 +17,11 @@ public class ClosureRuleElem extends RuleElem {
         this.closure = closure;
     }
 
-    protected Object retrieve(Object instance) { return closure.call(); }
+    public Object get(Object instance) throws Exception { return closure.call(); }
 
-    protected void store(Object instance, Object value, Preprocessing reprocessing) {}
-
-    public void set(Object instance, Object value, Preprocessing preprocessing) {}
+    public Object set(Object instance, Object value) throws Exception {
+        throw new NominException("Could not set the closure!");
+    }
 
     public String toString() { return "{ expression }"; }
 }

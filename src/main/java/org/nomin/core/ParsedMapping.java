@@ -15,12 +15,12 @@ public class ParsedMapping {
     private static final Logger logger = LoggerFactory.getLogger(ParsedMapping.class);
 
     final String mappingName;
-    final Class<?> sideA, sideB;
+    final Class<?> sideA, sideB; // TODO: Extract to the separate structure
     final Object mappingCase;
     final MappingRule[] rules; // using an array is necessary for optimizing performance
     final Map<String, Closure> hooks;
     private List<Class<? extends Throwable>> throwables;
-    final boolean mapNulls;
+    final boolean mapNulls; // TODO: Extract to the separate structure
     final Nomin mapper;
 
     public ParsedMapping(String mappingName, Class<?> sideA, Class<?> sideB, Object mappingCase, List<MappingRule> rules,
@@ -75,12 +75,16 @@ public class ParsedMapping {
         try { callHook("before"); }
         catch (Throwable throwable) { handle(throwable, lc, hooks.get("before"), "{0}: Hook ''before'' has failed!", mappingName); }
 
-        if (direction) for (MappingRule rule : rules) {
-            try { rule.mapAtoB(source, target); }
-            catch (Throwable throwable) { handle(throwable, lc, rule, "{0}: Mapping rule {1} has failed!", mappingName, rule); }
-        } else for (MappingRule rule : rules) {
-            try { rule.mapBtoA(source, target); }
-            catch (Throwable throwable) { handle(throwable, lc, rule, "{0}: Mapping rule {1} has failed!", mappingName, rule); }
+        for (MappingRule rule : rules) {
+            try {
+                Object newTarget = direction ? rule.mapAtoB(source, target) : rule.mapBtoA(source, target);
+                if (newTarget != target) {
+                    target = newTarget;
+                    lc.put(direction ? "b" : "a", target);
+                }
+            } catch (Throwable throwable) {
+                handle(throwable, lc, rule, "{0}: Mapping rule {1} has failed!", mappingName, rule);
+            }
         }
 
         try { callHook("after"); }

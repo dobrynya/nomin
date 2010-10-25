@@ -22,6 +22,8 @@ class Zoo2AnimalContainer extends Mapping {
     a.animalArray = b.wildAnimals
     hint a: Array[{ Class.forName("org.nomin.entity.${it.kind}") }]
     a.theWorst.name = "The worst"
-    hint a: { b.wildAnimals && b.wildAnimals.size() == 3 ? Crocodile : Rhino }
+    hint a: {
+      b.wildAnimals && b.wildAnimals.size() == 3 ? Crocodile : Rhino 
+    }
   }
 }

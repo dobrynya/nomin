@@ -1,6 +1,8 @@
 package org.nomin.util
 
-import java.lang.reflect.*
+import java.lang.reflect.ParameterizedType
+import java.lang.reflect.TypeVariable
+import java.lang.reflect.WildcardType
 import org.nomin.core.NominException
 
 /**
@@ -12,14 +14,16 @@ class TypeInfoFactory {
   static TypeInfo typeInfo(type) {
     if (Class.isInstance(type))
       return type.isArray() ? new TypeInfo(type, [new TypeInfo(type.componentType)]) : new TypeInfo(type)
-    if (ParameterizedType.isInstance(type))
-      return new TypeInfo(type.rawType, type.actualTypeArguments.collect { typeInfo(it) })
-    if (WildcardType.isInstance(type))
-      return typeInfo(type.upperBounds ? type.upperBounds[0] : type.lowerBounds ? typeInfo(type.lowerBounds[0]) : Object)
-    if (TypeVariable.isInstance(type))
-      return typeInfo(type.bounds ? type.bounds[0] : Object)
-    if (Closure.isInstance(type)) return new TypeInfo(type)
 
+    switch (type) {
+      case ParameterizedType: return new TypeInfo(type.rawType, type.actualTypeArguments.collect { typeInfo(it) })
+
+      case WildcardType: return typeInfo(type.upperBounds ? type.upperBounds[0] :
+        type.lowerBounds ? typeInfo(type.lowerBounds[0]) : Object)
+
+      case TypeVariable: return typeInfo(type.bounds ? type.bounds[0] : Object)
+      case Closure: return new TypeInfo(type)
+    }
     throw new NominException("Could not recognize type ${type}!")
   }
 

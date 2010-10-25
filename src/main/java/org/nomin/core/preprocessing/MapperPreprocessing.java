@@ -19,7 +19,7 @@ public class MapperPreprocessing implements Preprocessing {
         this.mappingCase = mappingCase;
     }
 
-    public Object preprocess(Object source, Object target) {
+    public Object preprocess(Object source) {
         return mapper.map(source, targetClass, mappingCase.get());
     }
 }
