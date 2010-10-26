@@ -11,7 +11,7 @@ import java.util.*;
  *         Created 13.04.2010 17:49:06
  */
 public class DozerTest {
-    private int N = 1;
+    private int N = 100000;
     Mapper dozer = new DozerBeanMapper(Arrays.asList("person2employee.xml"));
 
     @Test
