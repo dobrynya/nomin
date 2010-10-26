@@ -33,11 +33,6 @@ class JbIntrospectorTest {
   }
 
   @org.junit.Test
-  void testCapitalized() {
-    assert "Name" == intr.prefixed("name", "")
-  }
-
-  @org.junit.Test
   void testProperty() {
     def prop = intr.property("name", Person)
     assert prop

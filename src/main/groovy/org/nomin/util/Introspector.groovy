@@ -17,7 +17,7 @@ public interface Introspector {
   MethodInvocation invocation(String name, Class<?> targetClass, Object... args);
 
   /**
-   * Creates a property accessor providing access to a property of a target class.
+   * Creates a property propertyAccessor providing access to a property of a target class.
    * @param name
    * @param targetClass
    * @return

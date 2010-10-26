@@ -3,7 +3,7 @@ package org.nomin.util;
 import java.lang.reflect.Method;
 
 /**
- * Contains accessor methods.
+ * Contains propertyAccessor methods.
  *
  * @author Dmitry Dobrynin
  *         Created: 18.04.2010 14:28:28

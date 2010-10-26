@@ -10,7 +10,6 @@ import org.nomin.core.NominException
  */
 @SuppressWarnings("GroovyAssignabilityCheck")
 abstract class BaseIntrospector implements Introspector {
-
   MethodInvocation invocation(String name, Class<?> targetClass, Object... args) {
     Method method = findApplicableMethod(name, targetClass, args)
     if (!method) throw new NominException("Could not find method ${targetClass.simpleName}.${name}(${args})!")

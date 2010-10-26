@@ -7,9 +7,10 @@ package org.nomin.util
  */
 class AsmJbIntrospector extends JbIntrospector {
   protected AsmPropertyAccessorGenerator generator = new AsmPropertyAccessorGenerator()
+  protected namingPolicy = JbNamingPolicy.jbNamingPolicy
 
   PropertyAccessor property(String name, Class<?> targetClass) {
-    def (getter, setter, typeInfo) = findAccessorMethods([prefixed(name, "get"), prefixed(name, "is")], [prefixed(name, "set")], targetClass)
+    def (getter, setter, typeInfo) = findAccessorMethods(namingPolicy.getters(name), namingPolicy.setters(name), targetClass)
     if (getter || setter) generator.generateAccessor(name, typeInfo, getter, setter)
   }
 }
