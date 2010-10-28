@@ -2,7 +2,7 @@ package org.nomin.core
 
 import java.util.concurrent.*
 import org.nomin.util.*
-import static org.nomin.util.ContainerHelperFactory.*
+import static org.nomin.util.ContainerHelper.*
 
 /**
  * Tests ContainerHelper and its factory.

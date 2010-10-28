@@ -1,5 +1,8 @@
 package org.nomin.core
 
+import org.nomin.util.TypeInfo
+import org.nomin.util.MethodInvocation
+
 /**
  * Contains name of a method and invocation arguments.
  * @author Dmitry Dobrynin
@@ -9,8 +12,14 @@ class MethodPathElem extends PathElem {
   String methodPathElementMethodName
   List methodPathElementInvocationParameters
 
+  RuleElem createMappingRuleElement(TypeInfo typeInfo, RuleElem prev) {
+    MethodInvocation invocation = pathElementMappingEntry.introspector
+            .invocation(methodPathElementMethodName, typeInfo.type, *methodPathElementInvocationParameters)
+    new MethodRuleElem(invocation.typeInfo, invocation)
+  }
+
   String toString() {
-    nextPathElem ? ".${methodPathElementMethodName}(${methodPathElementInvocationParameters})${nextPathElem}" :
+    nextPathElement ? ".${methodPathElementMethodName}(${methodPathElementInvocationParameters})${nextPathElement}" :
       ".${methodPathElementMethodName}(${methodPathElementInvocationParameters})"
   }
 }

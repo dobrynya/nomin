@@ -23,15 +23,15 @@ class CglibTest {
       assert p.&getName() == "New name"
     }
 
-    def params = ["New name"] as Object[]
-    cal("Creating using FastClass", 1000) {
-      def p = (Person) fc.newInstance()
-      fm.&invoke(p, params)
-      assert p.&getName() == "New name"
+//    def params = ["New name"] as Object[]
+    cal("Creating using FastClass", 100000) {
+      fc.&newInstance()
+//      fm.&invoke(p, params)
+//      assert p.&getName() == "New name"
     }
 
-    cal ("Creating FastClass for Employee", 50) {
-      FastClass.&create(Employee)
+    cal ("Creating Employee.newInstance()", 100000) {
+      Employee.newInstance()
     }
   }
 

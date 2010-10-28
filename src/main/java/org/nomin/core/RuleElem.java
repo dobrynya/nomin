@@ -3,7 +3,6 @@ package org.nomin.core;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.nomin.core.preprocessing.*;
 import org.nomin.util.ContainerHelper;
-import org.nomin.util.ContainerHelperFactory;
 import org.nomin.util.TypeInfo;
 import static java.text.MessageFormat.format;
 
@@ -20,7 +19,7 @@ public abstract class RuleElem {
 
     protected RuleElem(TypeInfo typeInfo) {
         this.typeInfo = typeInfo;
-        containerHelper = ContainerHelperFactory.create(typeInfo);
+        containerHelper = ContainerHelper.create(typeInfo);
     }
 
     public ContainerHelper getContainerHelper() { return containerHelper; }

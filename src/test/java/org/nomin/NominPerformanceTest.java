@@ -14,7 +14,7 @@ import org.nomin.util.*;
  */
 public class NominPerformanceTest {
     Nomin nomin = new Nomin(Person2Employee.class, DetailedPerson2LinearManager.class, Child2Kid.class);
-    int N = 100000;
+    int N = 1;
 
     @Test
     public void testMap() {

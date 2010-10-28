@@ -4,6 +4,12 @@ import org.nomin.Mapping
 import org.nomin.util.*
 import static java.text.MessageFormat.format
 import static org.nomin.util.TypeInfoFactory.*
+import org.nomin.core.preprocessing.ConversionPreprocessing
+import org.nomin.core.preprocessing.DynamicPreprocessing
+import org.apache.commons.beanutils.ConvertUtils
+import org.nomin.core.preprocessing.ConvertUtilsPreprocessing
+import org.nomin.core.preprocessing.MapperPreprocessing
+import org.nomin.core.preprocessing.Preprocessing
 
 /**
  * Contains mapping pair from side a and side b.
@@ -68,7 +74,6 @@ class MappingEntry {
       throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a map on the first side and a non-map on another!", mapping.mappingName, this))
   }
 
-  /** Finds the last element in the chain. */
   protected RuleElem findLast(RuleElem elem) { elem.next ? findLast(elem.next) : elem }
 
   protected boolean allowed(RuleElem elem) {
@@ -76,50 +81,27 @@ class MappingEntry {
   }
 
   protected RuleElem buildRuleElem(TypeInfo ti, Iterator<TypeInfo> hints, PathElem elem, RuleElem prev = null) {
-    RuleElem current = processElem(elem, ti, prev, hints)
+    RuleElem current = applyHint(elem.createMappingRuleElement(ti, prev), hints)
     if (prev) prev.next = current
-    if (elem.nextPathElem) buildRuleElem(current.typeInfo, hints, elem.nextPathElem, current)
+    if (elem.nextPathElement) buildRuleElem(current.typeInfo, hints, elem.nextPathElement, current)
     current
   }
 
-  protected RootRuleElem processElem(RootPathElem root, TypeInfo typeInfo, RuleElem prev, Iterator<TypeInfo> hints) {
-    new RootRuleElem(typeInfo, mapping.mapper, mappingCase)
-  }
-
-  protected RuleElem processElem(PropPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    PropertyAccessor property = introspector.property(elem.propPathElementPropertyName, ti.type)
-    if (!property)
-      throw new NominException(format("{0}: Mapping rule {1} is invalid because of missing property {2}.{3}!",
-              mapping.mappingName, this, ti.type.simpleName, elem.propPathElementPropertyName))
-    applyHint(property.typeInfo.container ?
-      new CollectionRuleElem(property) : new PropRuleElem(property), hints)
-  }
-
-  protected RuleElem processElem(SeqPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    if (ti.container) {
-      if (!ti.map && !Integer.isInstance(elem.seqPathElementIndex))
-        throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
-                mapping.mappingName, this, prev))
-      applyHint(new SeqRuleElem(elem.seqPathElementIndex, prev.containerHelper), hints)
-    } else throw new NominException(format("{0}: Mapping rule {1} is invalid because property {2} isn''t indexable!",
-            mapping.mappingName, this, prev));
-  }
-
-  protected RuleElem processElem(MethodPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    MethodInvocation invocation = introspector.invocation(elem.methodPathElementMethodName, ti.type, *elem.methodPathElementInvocationParameters)
-    applyHint(new MethodRuleElem(invocation.typeInfo, invocation), hints)
-  }
-
-  protected RuleElem processElem(ExprPathElem elem, TypeInfo ti, RuleElem prev, Iterator<TypeInfo> hints) {
-    applyHint(Closure.isInstance(elem.exprPathElementExpr) ? new ClosureRuleElem(elem.exprPathElementExpr) : new ValueRuleElem(elem.exprPathElementExpr), hints)
-  }
-
   protected RuleElem applyHint(RuleElem elem, Iterator<TypeInfo> hints) {
-    if (hints?.hasNext()) {
+    if (!RootRuleElem.isInstance(elem) &&  hints?.hasNext()) {
       def nextHint = hints.next()
       if (nextHint) elem.typeInfo.merge nextHint
     }
     elem
+  }
+
+  protected Preprocessing createPreprocessing(MappingSide thiz, MappingSide that) {
+    if (thiz.getConversion() != null) return new ConversionPreprocessing(thiz.getConversion());
+    else if (thiz.lastRuleElem.typeInfo.isDynamic() || that.lastRuleElem.typeInfo.isUndefined())
+      return new DynamicPreprocessing(thiz.lastRuleElem.typeInfo, mapping.mapper, mappingCase);
+    Class st = thiz.lastRuleElem.typeInfo.determineType(), tt = that.lastRuleElem.typeInfo.determineType();
+    if (ConvertUtils.lookup(tt, st) != null) return new ConvertUtilsPreprocessing(st);
+    else if (!st.isAssignableFrom(tt)) return new MapperPreprocessing(st, mapping.mapper, mappingCase);
   }
 
   String toString() { format("{0} = {1}", sides[0].pathElem, sides[1].pathElem) }

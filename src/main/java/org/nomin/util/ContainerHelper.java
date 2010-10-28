@@ -6,9 +6,10 @@ import java.util.Collection;
 
 /**
  * Assists to manipulate with containers.
-* @author Dmitry Dobrynin
-*         Date: 25.10.2010 Time: 21:51:31
-*/
+ *
+ * @author Dmitry Dobrynin
+ *         Date: 25.10.2010 Time: 21:51:31
+ */
 public abstract class ContainerHelper {
     protected TypeInfo elementType;
     protected Class<?> containerClass;
@@ -26,5 +27,18 @@ public abstract class ContainerHelper {
 
     public abstract Object getElement(Object source, Object index);
 
-    public TypeInfo getElementType() { return elementType; }
+    public TypeInfo getElementType() {
+        return elementType;
+    }
+
+    /**
+     * Creates an appropriate ContainerHelper instance.
+     * @param typeInfo specifies the type
+     * @return an appropriate ContainerHelper
+     */
+    public static ContainerHelper create(TypeInfo typeInfo) {
+        return typeInfo.isArray() ? new ArrayHelper(typeInfo) :
+                typeInfo.isCollection() ? new CollectionHelper(typeInfo) :
+                        typeInfo.isMap() ? new MapHelper(typeInfo) : null;
+    }
 }

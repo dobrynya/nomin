@@ -1,5 +1,7 @@
 package org.nomin.core
 
+import org.nomin.util.TypeInfo
+
 /**
  * Provides infrastructure to build mapping rules.
  * @author Dmitry Dobrynin
@@ -7,14 +9,14 @@ package org.nomin.core
  */
 @SuppressWarnings("GroovyFallthrough")
 abstract class PathElem {
-  PathElem nextPathElem
-  MappingEntry mappingEntry
+  PathElem nextPathElement
+  MappingEntry pathElementMappingEntry
 
   private def processOppositeSide(value) {
     switch (value) {
       case PathElem: break;
-      case Closure: mappingEntry.mapping.mapper.contextManager.makeContextAware value
-      default: mappingEntry.pathElem new ExprPathElem(exprPathElementExpr: value, mappingEntry: mappingEntry)
+      case Closure: pathElementMappingEntry.mapping.mapper.contextManager.makeContextAware value
+      default: pathElementMappingEntry.pathElem new ExprPathElem(exprPathElementExpr: value, pathElementMappingEntry: pathElementMappingEntry)
     }
   }
 
@@ -23,7 +25,7 @@ abstract class PathElem {
   def propertyMissing(String name) {
     def escapedMethod = ["hashCode", "toString", "getClass"].find { name.startsWith(it) && name.endsWith("()") }
     escapedMethod ? methodMissing(escapedMethod, new Object[0]) :
-      (nextPathElem = new PropPathElem(propPathElementPropertyName: name, mappingEntry: mappingEntry))
+      (nextPathElement = new PropPathElem(propPathElementPropertyName: name, pathElementMappingEntry: pathElementMappingEntry))
   }
 
   def propertyMissing(name, value) {
@@ -44,8 +46,10 @@ abstract class PathElem {
   def methodMissing(String name, args) {
     switch (name) {
       case "putAt": processOppositeSide(args[1])
-      case "getAt": nextPathElem = new SeqPathElem(seqPathElementIndex: args[0], mappingEntry: mappingEntry); break
-      default: nextPathElem = new MethodPathElem(methodPathElementMethodName: name, methodPathElementInvocationParameters: args, mappingEntry: mappingEntry)
+      case "getAt": nextPathElement = new SeqPathElem(seqPathElementIndex: args[0], pathElementMappingEntry: pathElementMappingEntry); break
+      default: nextPathElement = new MethodPathElem(methodPathElementMethodName: name, methodPathElementInvocationParameters: args, pathElementMappingEntry: pathElementMappingEntry)
     }
   }
+
+  abstract RuleElem createMappingRuleElement(TypeInfo typeInfo, RuleElem prev);
 }

@@ -165,7 +165,7 @@ class Mapping implements MappingConsts {
   def propertyMissing(String name) {
     checkSides()
     if (["a", "b"].contains(name))
-      entry().pathElem(new RootPathElem(rootPathElementSide: name, rootPathElementClass: side[name], mappingEntry: entry()))
+      entry().pathElem(new RootPathElem(rootPathElementSide: name, rootPathElementClass: side[name], pathElementMappingEntry: entry()))
     else throw new NominException("${mappingName}: Property '${name}' isn't defined!")
   }
 
