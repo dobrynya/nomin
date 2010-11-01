@@ -1,7 +1,5 @@
 package org.nomin.core
 
-import org.junit.Test
-import static org.nomin.util.TypeInfoFactory.*
 import org.nomin.entity.*
 
 /**
@@ -11,7 +9,7 @@ import org.nomin.entity.*
  */
 class RuleElemTest implements MappingConsts {
 
-  @Test
+  @org.junit.Test
   void testDeepProperty() {
     PropRuleElem birth = new PropRuleElem(jb.property("birth", Details))
     PropRuleElem details = new PropRuleElem(jb.property("details", Employee))
@@ -25,7 +23,7 @@ class RuleElemTest implements MappingConsts {
     assert e.details && e.details.birth == now
   }
 
-  @Test
+  @org.junit.Test
   void testDeepCollectionProperty() {
     CollectionRuleElem kids = new CollectionRuleElem(jb.property("kids", Details))
     PropRuleElem details = new PropRuleElem(jb.property("details", Employee))
@@ -39,7 +37,7 @@ class RuleElemTest implements MappingConsts {
             e.details.kids.findAll { ["John", "Mary", "Andrew"].contains(it.kidName) }.size() == 3
   }
 
-  @Test
+  @org.junit.Test
   void testArrayProperty() {
     CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order))
 
@@ -50,7 +48,7 @@ class RuleElemTest implements MappingConsts {
     assert o.items && o.items.length == 2 && o.items[0].description == "d1" && o.items[1].description == "d2"
   }
 
-  @Test
+  @org.junit.Test
   void testMapProperty() {
     CollectionRuleElem options = new CollectionRuleElem(jb.property("options", Person))
 
@@ -61,7 +59,7 @@ class RuleElemTest implements MappingConsts {
     assert p.options?.size() == 2 && p.options["a"] == "Option A" && p.options["b"] == "Option B"
   }
 
-  @Test
+  @org.junit.Test
   void testSeqRuleElemOnArray() {
     CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order))
     SeqRuleElem seq = new SeqRuleElem(0, items.containerHelper)

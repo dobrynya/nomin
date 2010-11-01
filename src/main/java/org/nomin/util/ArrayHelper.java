@@ -1,13 +1,13 @@
 package org.nomin.util;
 
+import java.util.*;
 import org.nomin.core.preprocessing.Preprocessing;
-
-import java.util.Arrays;
-import java.util.Collection;
+import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 
 /**
-* @author Dmitry Dobrynin
-*         Date: 25.10.2010 Time: 21:54:18
+ * Assists to manipulate with arrays.
+ * @author Dmitry Dobrynin
+ *         Date: 25.10.2010 Time: 21:54:18
 */
 public class ArrayHelper extends ContainerHelper {
     public ArrayHelper(TypeInfo typeInfo) {
@@ -18,19 +18,19 @@ public class ArrayHelper extends ContainerHelper {
         return (Object[]) java.lang.reflect.Array.newInstance(containerClass, size);
     }
 
-    public Object convert(Collection<Object> source, Preprocessing preprocessing) throws Exception {
+    public Object convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
         Object[] target = createContainer(source.size());
         int index = 0;
-        for (Object object : source) target[index++] = preprocessing != null ? preprocessing.preprocess(object) : object;
+        for (Object object : source) target[index++] = preprocess(object, preprocessings, 0);
         return target;
     }
 
-    public Object setElement(Object target, Object index, Object element, Preprocessing preprocessing) throws Exception {
+    public Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessing) throws Exception {
         Integer i = (Integer) index;
         Object[] targetArray = (Object[]) target;
         if (targetArray != null && i >= targetArray.length) targetArray = Arrays.copyOf(targetArray, i + 1);
         else targetArray = createContainer(i + 1);
-        targetArray[i] = preprocessing != null ? preprocessing.preprocess(element) : element;
+        targetArray[i] = preprocessing != null ? preprocess(element, preprocessing, 0) : element;
         return targetArray;
     }
 

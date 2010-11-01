@@ -14,7 +14,7 @@ import static java.text.MessageFormat.format;
 public abstract class RuleElem {
     protected RuleElem next;
     protected TypeInfo typeInfo;
-    protected Preprocessing preprocessing;
+    protected Preprocessing[] preprocessings;
     protected ContainerHelper containerHelper;
 
     protected RuleElem(TypeInfo typeInfo) {
@@ -30,16 +30,5 @@ public abstract class RuleElem {
 
     public String path() { return next != null ? format("{0}->{1}", this, next.path()) : this.toString(); }
 
-    public void initialize(MappingSide thiz, MappingSide that, MappingEntry entry) {
-        if (thiz.getConversion() != null) preprocessing = new ConversionPreprocessing(thiz.getConversion());
-        else if (typeInfo.isDynamic() || that.getLastRuleElem().typeInfo.isUndefined())
-            preprocessing = new DynamicPreprocessing(typeInfo, entry.getMapping().getMapper(), entry.getMappingCase());
-        else {
-            Class st = typeInfo.determineType(), tt = that.getLastRuleElem().typeInfo.determineType();
-            if (!st.isAssignableFrom(tt)) {
-                if (ConvertUtils.lookup(tt, st) != null) preprocessing = new ConvertUtilsPreprocessing(st);
-                else preprocessing = new MapperPreprocessing(st, entry.getMapping().getMapper(), entry.getMappingCase());
-            }
-        }
-    }
+    public void setPreprocessings(Preprocessing[] preprocessings) { this.preprocessings = preprocessings; }
 }

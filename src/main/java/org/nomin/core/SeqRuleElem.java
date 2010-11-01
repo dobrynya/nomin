@@ -24,7 +24,7 @@ public class SeqRuleElem extends RuleElem {
 
     public Object set(Object instance, Object value) throws Exception {
         return containerHelper.setElement(instance, index,
-                next != null ? next.set(containerHelper.getElement(instance, index), value) : value, preprocessing);
+                next != null ? next.set(containerHelper.getElement(instance, index), value) : value, preprocessings);
     }
 
     public String toString() { return format("[{0}]:{1}", index, typeInfo); }

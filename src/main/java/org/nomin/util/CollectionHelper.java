@@ -2,13 +2,9 @@ package org.nomin.util;
 
 import org.nomin.core.NominException;
 import org.nomin.core.preprocessing.Preprocessing;
-
 import java.util.*;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.LinkedBlockingQueue;
-
+import java.util.concurrent.*;
+import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 import static java.text.MessageFormat.format;
 
 /**
@@ -33,27 +29,25 @@ public class CollectionHelper extends ContainerHelper {
         throw new NominException(format("Could not instantiate {0}!", containerClass.getName()));
     }
 
-    public Collection<Object> convert(Collection<Object> source, Preprocessing preprocessing) throws Exception {
+    public Collection<Object> convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
         Collection<Object> target = createContainer(source.size());
-        for (Object object : source)
-            target.add(preprocessing != null ? preprocessing.preprocess(object) : object);
+        for (Object object : source) target.add(preprocess(object, preprocessings, 0));
         return target;
     }
 
-    public Object setElement(Object target, Object index, Object element, Preprocessing preprocessing) throws Exception {
+    public Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessings) throws Exception {
         if (target == null) target = createContainer((Integer) index + 1);
-        if (List.class.isInstance(target)) return setListElement((List<Object>) target, (Integer) index, element, preprocessing);
+        if (List.class.isInstance(target)) return setListElement((List<Object>) target, (Integer) index, element, preprocessings);
         List<Object> list = new ArrayList<Object>((Collection<Object>) target);
         ((Collection<Object>) target).clear();
-        ((Collection<Object>) target).addAll(setListElement(list, (Integer) index, element, preprocessing));
+        ((Collection<Object>) target).addAll(setListElement(list, (Integer) index, element, preprocessings));
         return target;
     }
 
-    protected List<Object> setListElement(List<Object> list, int index, Object element, Preprocessing preprocessing) {
-        if (list.size() > (Integer) index)
-            list.set((Integer) index, preprocessing != null ? preprocessing.preprocess(element) : element);
-        else for (int i = list.size(); i <= (Integer) index; i++)
-            list.add(i == index ? (preprocessing != null ? preprocessing.preprocess(element) : element): null);
+    protected List<Object> setListElement(List<Object> list, int index, Object element, Preprocessing[] preprocessings) {
+        if (list.size() > index) list.set(index, preprocess(element, preprocessings, 0));
+        else for (int i = list.size(); i <= index; i++)
+            list.add(i == index ? preprocess(element, preprocessings, 0) : null);
         return list;
     }
 

@@ -6,7 +6,6 @@ import java.util.Collection;
 
 /**
  * Assists to manipulate with containers.
- *
  * @author Dmitry Dobrynin
  *         Date: 25.10.2010 Time: 21:51:31
  */
@@ -21,15 +20,13 @@ public abstract class ContainerHelper {
 
     public abstract Object createContainer(int size) throws Exception;
 
-    public abstract Object convert(Collection<Object> source, Preprocessing preprocessing) throws Exception;
+    public abstract Object convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception;
 
-    public abstract Object setElement(Object target, Object index, Object element, Preprocessing preprocessing) throws Exception;
+    public abstract Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessing) throws Exception;
 
     public abstract Object getElement(Object source, Object index);
 
-    public TypeInfo getElementType() {
-        return elementType;
-    }
+    public TypeInfo getElementType() { return elementType; }
 
     /**
      * Creates an appropriate ContainerHelper instance.

@@ -12,7 +12,7 @@ import org.junit.Test
  */
 class CglibTest {
 
-  @Test
+  @org.junit.Test
   void test() {
     FastClass fc = FastClass.&create(Person);
     FastMethod fm = fc.&getMethod("setName", [String] as Class[])

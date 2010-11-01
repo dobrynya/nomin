@@ -60,14 +60,15 @@ class MappingEntry {
       it.lastRuleElem = findLast(it.firstRuleElem)
     }
     validate sides[0].lastRuleElem, sides[1].lastRuleElem
-    sides[0].lastRuleElem.initialize(sides[0], sides[1], this)
-    sides[1].lastRuleElem.initialize(sides[1], sides[0], this)
+    sides[0].lastRuleElem.preprocessings = preprocessings(sides[0], sides[1])
+    sides[1].lastRuleElem.preprocessings = preprocessings(sides[1], sides[0])
     new MappingRule(sides[0].firstRuleElem, sides[1].firstRuleElem, allowed(sides[1].lastRuleElem), allowed(sides[0].lastRuleElem))
   }
 
   protected void validate(lastA, lastB) {
     if (RootRuleElem.isInstance(lastA) && RootRuleElem.isInstance(lastB))
       throw new NominException(format("{0}: Recursive mapping rule {1} causes infinite loop!", mapping.mappingName, this))
+    // TODO: Fix the following!
     if ((lastA.typeInfo.container ^ lastB.typeInfo.container) && PropRuleElem.isInstance(lastA) && PropRuleElem.isInstance(lastB))
       throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a collection/array on the first side and a single value on another!", mapping.mappingName, this))
     if (lastA.typeInfo.map ^ lastB.typeInfo.map)
@@ -95,14 +96,23 @@ class MappingEntry {
     elem
   }
 
-  protected Preprocessing createPreprocessing(MappingSide thiz, MappingSide that) {
-    if (thiz.getConversion() != null) return new ConversionPreprocessing(thiz.getConversion());
-    else if (thiz.lastRuleElem.typeInfo.isDynamic() || that.lastRuleElem.typeInfo.isUndefined())
-      return new DynamicPreprocessing(thiz.lastRuleElem.typeInfo, mapping.mapper, mappingCase);
-    Class st = thiz.lastRuleElem.typeInfo.determineType(), tt = that.lastRuleElem.typeInfo.determineType();
-    if (ConvertUtils.lookup(tt, st) != null) return new ConvertUtilsPreprocessing(st);
-    else if (!st.isAssignableFrom(tt)) return new MapperPreprocessing(st, mapping.mapper, mappingCase);
-  }
+  protected Preprocessing[] preprocessings(MappingSide thiz, MappingSide that) {
+      if (thiz.conversion != null) [new ConversionPreprocessing(thiz.conversion)] as Preprocessing[]
+      else if (!thiz.lastRuleElem.typeInfo.container)
+        [preprocessing(thiz.lastRuleElem.typeInfo, that.lastRuleElem.typeInfo)] as Preprocessing[]
+      else {
+        def result = []
+        for (i in 0..<thiz.lastRuleElem.typeInfo.parameters.size())
+          result[i] = preprocessing(thiz.lastRuleElem.typeInfo.getParameter(i), that.lastRuleElem.typeInfo.getParameter(i))
+        result as Preprocessing[]
+      }
+    }
+
+    protected Preprocessing preprocessing(TypeInfo thiz, TypeInfo that) {
+      if (thiz.dynamic || that.isUndefined()) new DynamicPreprocessing(thiz, mapping.mapper, mappingCase)
+      else if (ConvertUtils.lookup(that.type, thiz.type) != null) new ConvertUtilsPreprocessing(thiz.type)
+      else if (!thiz.type.isAssignableFrom(that.type)) new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
+    }
 
   String toString() { format("{0} = {1}", sides[0].pathElem, sides[1].pathElem) }
 }

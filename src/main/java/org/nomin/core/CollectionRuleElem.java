@@ -20,7 +20,7 @@ public class CollectionRuleElem extends PropRuleElem {
         if (instance == null) instance = property.newOwner();
         if (next == null) {
             Collection<Object> source = asCollection(value);
-            property.set(instance, source == null || source.size() == 0 ? null : containerHelper.convert(source, preprocessing));
+            property.set(instance, source == null || source.size() == 0 ? null : containerHelper.convert(source, preprocessings));
         } else
             property.set(instance, next.set(property.get(instance), value));
         return instance;
