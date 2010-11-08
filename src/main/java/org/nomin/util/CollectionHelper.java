@@ -8,13 +8,14 @@ import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 import static java.text.MessageFormat.format;
 
 /**
+ * Assists to manipulate with collections.
 * @author Dmitry Dobrynin
 *         Date: 25.10.2010 Time: 21:53:39
 */
 @SuppressWarnings({"unchecked"})
 public class CollectionHelper extends ContainerHelper {
     public CollectionHelper(TypeInfo typeInfo) {
-        super(typeInfo.getType(), typeInfo.getParameter(0));
+        super(typeInfo.type, typeInfo.getParameter(0));
     }
 
     public Collection<Object> createContainer(int size) throws Exception {

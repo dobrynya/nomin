@@ -22,7 +22,7 @@ public class RootRuleElem extends RuleElem {
     public Object get(Object instance) throws Exception { return instance; }
 
     public Object set(Object instance, Object value) throws Exception {
-        return instance == null ? mapper.map(value, typeInfo.getType(), mappingCase.get()) :
+        return instance == null ? mapper.map(value, typeInfo.type, mappingCase.get()) :
                 mapper.map(value, instance, mappingCase.get());
     }
 

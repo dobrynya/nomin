@@ -11,7 +11,7 @@ import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 */
 public class ArrayHelper extends ContainerHelper {
     public ArrayHelper(TypeInfo typeInfo) {
-        super(typeInfo.getParameter(0).getType(), typeInfo.getParameter(0));
+        super(typeInfo.getParameter(0).type, typeInfo.getParameter(0));
     }
 
     public Object[] createContainer(int size) throws Exception {

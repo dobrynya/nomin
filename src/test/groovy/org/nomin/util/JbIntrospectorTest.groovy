@@ -37,7 +37,7 @@ class JbIntrospectorTest {
     def prop = intr.property("name", Person)
     assert prop
     assert "name" == prop.name
-    assert String == prop.typeInfo.determineType()
+    assert String == prop.typeInfo.type
     def p = new Person(name: "Person's Name")
     assert p.name == prop.get(p)
     prop.set(p, "New Name")
@@ -46,7 +46,7 @@ class JbIntrospectorTest {
     def ld = new LegacyDetails(sex: true)
     assert prop.get(ld)
     prop = intr.property("children", Person)
-    assert Child == prop.typeInfo.determineType()
+    assert Child == prop.typeInfo.parameters[0].type
     assert List == prop.typeInfo.type
     assert !intr.property("non-existent", Person)
   }

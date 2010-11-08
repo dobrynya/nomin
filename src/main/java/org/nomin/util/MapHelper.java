@@ -13,7 +13,7 @@ import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 */
 @SuppressWarnings({"unchecked"})
 public class MapHelper extends ContainerHelper {
-    public MapHelper(TypeInfo typeInfo) { super(typeInfo.getType(), typeInfo.getParameter(1)); }
+    public MapHelper(TypeInfo typeInfo) { super(typeInfo.type, typeInfo.getParameter(1)); }
 
     public Map<Object, Object> createContainer(int size) throws Exception {
         if (containerClass == Map.class) return new HashMap<Object, Object>();

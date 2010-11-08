@@ -23,28 +23,28 @@ class TypeInfoFactoryTest {
   @org.junit.Test
   void testCreation() {
     def ti = typeInfo(String)
-    assert ti && !ti.isDynamic() && !ti.isArray() && !ti.isCollection() && ti.type == String
+    assert ti && !ti.isDynamic() && !ti.array && !ti.collection && ti.type == String
     ti = typeInfo(this.class.getDeclaredField("persons").genericType)
-    assert ti && ti.isCollection() && ti.type == List && ti.parameters.size() == 1 && ti.parameters[0].type == Person
+    assert ti && ti.collection && ti.type == List && ti.parameters.size() == 1 && ti.parameters[0].type == Person
     ti = typeInfo(this.class.getDeclaredField("persons1").genericType)
-    assert ti && ti.isCollection() && ti.type == List && !ti.parameters
+    assert ti && ti.collection && ti.type == List && !ti.parameters
     ti = typeInfo(this.class.getDeclaredField("persons2").genericType)
-    assert ti && ti.isMap() && ti.type == Map && ti.parameters.size() == 2 && ti.parameters[0].type == String && ti.parameters[1].type == Person
+    assert ti && ti.map && ti.type == Map && ti.parameters.size() == 2 && ti.parameters[0].type == String && ti.parameters[1].type == Person
     ti = typeInfo(this.class.getDeclaredField("person3").genericType)
-    assert ti && ti.isContainer() && ti.isArray() && ti.parameters?.size() == 1 && ti.parameters[0].type == Person
+    assert ti && ti.isContainer() && ti.array && ti.parameters?.size() == 1 && ti.parameters[0].type == Person
   }
 
   @org.junit.Test
   void testMerge() {
     TypeInfo ti = List[Person]
-    ti.merge List[{ Person }]
+    ti = ti.merge(List[{ Person }])
     assert ti && ti.parameters[0].type == Person && ti.parameters[0].dynamicType != null && ti.parameters[0].dynamicType() == Person
     ti = typeInfo(List)
     assert ti && !ti.parameters
-    ti.merge List[Person]
+    ti = ti.merge(List[Person])
     assert ti.parameters && ti.parameters.size() == 1 && ti.parameters[0].type == Person
     ti = typeInfo(Object)
-    ti.merge typeInfo(Person)
+    ti = ti.merge(typeInfo(Person))
     assert ti.type == Person
   }
 
@@ -52,8 +52,8 @@ class TypeInfoFactoryTest {
   void testGetDynamicType() {
     def c = { "just a closure" }
     TypeInfo ti = typeInfo(c)
-    assert ti && ti.isDynamic() && ti.getDynamicType() == c
+    assert ti && ti.isDynamic() && ti.dynamicType == c
     ti = List[c]
-    assert ti && ti.isDynamic() && ti.getDynamicType() == c
+    assert ti && ti.isDynamic() && ti.parameters[0].dynamicType == c
   }
 }

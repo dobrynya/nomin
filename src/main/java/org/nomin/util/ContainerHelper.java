@@ -34,8 +34,8 @@ public abstract class ContainerHelper {
      * @return an appropriate ContainerHelper
      */
     public static ContainerHelper create(TypeInfo typeInfo) {
-        return typeInfo.isArray() ? new ArrayHelper(typeInfo) :
-                typeInfo.isCollection() ? new CollectionHelper(typeInfo) :
-                        typeInfo.isMap() ? new MapHelper(typeInfo) : null;
+        return typeInfo.array ? new ArrayHelper(typeInfo) :
+                typeInfo.collection ? new CollectionHelper(typeInfo) :
+                        typeInfo.map ? new MapHelper(typeInfo) : null;
     }
 }

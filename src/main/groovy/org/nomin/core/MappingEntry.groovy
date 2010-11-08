@@ -82,18 +82,11 @@ class MappingEntry {
   }
 
   protected RuleElem buildRuleElem(TypeInfo ti, Iterator<TypeInfo> hints, PathElem elem, RuleElem prev = null) {
-    RuleElem current = applyHint(elem.createMappingRuleElement(ti, prev), hints)
+    RuleElem current = elem.createMappingRuleElement(ti, prev)
+    if (!RootPathElem.isInstance(elem) && hints.hasNext()) current.typeInfo = current.typeInfo.merge(hints.next())
     if (prev) prev.next = current
     if (elem.nextPathElement) buildRuleElem(current.typeInfo, hints, elem.nextPathElement, current)
     current
-  }
-
-  protected RuleElem applyHint(RuleElem elem, Iterator<TypeInfo> hints) {
-    if (!RootRuleElem.isInstance(elem) &&  hints?.hasNext()) {
-      def nextHint = hints.next()
-      if (nextHint) elem.typeInfo.merge nextHint
-    }
-    elem
   }
 
   protected Preprocessing[] preprocessings(MappingSide thiz, MappingSide that) {
