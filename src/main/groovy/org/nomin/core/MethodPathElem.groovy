@@ -12,10 +12,10 @@ class MethodPathElem extends PathElem {
   String methodPathElementMethodName
   List methodPathElementInvocationParameters
 
-  RuleElem createMappingRuleElement(TypeInfo typeInfo, RuleElem prev) {
+  RuleElem createMappingRuleElement(TypeInfo ownerTypeInfo, TypeInfo hint, RuleElem prev) {
     MethodInvocation invocation = pathElementMappingEntry.introspector
-            .invocation(methodPathElementMethodName, typeInfo.type, *methodPathElementInvocationParameters)
-    new MethodRuleElem(invocation.typeInfo, invocation)
+            .invocation(methodPathElementMethodName, ownerTypeInfo.type, *methodPathElementInvocationParameters)
+    new MethodRuleElem(invocation.typeInfo.merge(hint), invocation)
   }
 
   String toString() {

@@ -82,8 +82,8 @@ class MappingEntry {
   }
 
   protected RuleElem buildRuleElem(TypeInfo ti, Iterator<TypeInfo> hints, PathElem elem, RuleElem prev = null) {
-    RuleElem current = elem.createMappingRuleElement(ti, prev)
-    if (!RootPathElem.isInstance(elem) && hints.hasNext()) current.typeInfo = current.typeInfo.merge(hints.next())
+    RuleElem current = elem.createMappingRuleElement(ti,
+            !RootPathElem.isInstance(elem) && hints.hasNext() ? hints.next() : null, prev)
     if (prev) prev.next = current
     if (elem.nextPathElement) buildRuleElem(current.typeInfo, hints, elem.nextPathElement, current)
     current

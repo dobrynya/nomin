@@ -51,5 +51,5 @@ abstract class PathElem {
     }
   }
 
-  abstract RuleElem createMappingRuleElement(TypeInfo typeInfo, RuleElem prev);
+  abstract RuleElem createMappingRuleElement(TypeInfo ownerTypeInfo, TypeInfo hint, RuleElem prev);
 }

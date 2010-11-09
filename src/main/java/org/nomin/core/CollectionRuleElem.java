@@ -14,7 +14,7 @@ import static java.util.Arrays.*;
  */
 @SuppressWarnings({"unchecked"})
 public class CollectionRuleElem extends PropRuleElem {
-    public CollectionRuleElem(PropertyAccessor property) { super(property); }
+    public CollectionRuleElem(PropertyAccessor property, TypeInfo typeInfo) { super(property, typeInfo); }
 
     public Object set(Object instance, Object value) throws Exception {
         if (instance == null) instance = property.newOwner();

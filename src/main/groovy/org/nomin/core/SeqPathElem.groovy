@@ -11,12 +11,12 @@ import static java.text.MessageFormat.format
 class SeqPathElem extends PathElem {
   Object seqPathElementIndex
 
-  RuleElem createMappingRuleElement(TypeInfo typeInfo, RuleElem prev) {
-    if (typeInfo.container) {
-      if (!typeInfo.map && !Integer.isInstance(seqPathElementIndex))
+  RuleElem createMappingRuleElement(TypeInfo ownerTypeInfo, TypeInfo hint, RuleElem prev) {
+    if (ownerTypeInfo.container) {
+      if (!ownerTypeInfo.map && !Integer.isInstance(seqPathElementIndex))
         throw new NominException(format("{0}: Mapping rule {1} is invalid because the index of {2} should be an integer value!",
                 pathElementMappingEntry.mapping.mappingName, pathElementMappingEntry, prev))
-      new SeqRuleElem(seqPathElementIndex, prev.containerHelper)
+      new SeqRuleElem(seqPathElementIndex, prev.containerHelper.elementType.merge(hint), prev.containerHelper)
     } else throw new NominException(format("{0}: Mapping rule {1} is invalid because property {2} isn''t indexable!",
             pathElementMappingEntry.mapping.mappingName, pathElementMappingEntry, prev));
   }

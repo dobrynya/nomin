@@ -1,6 +1,8 @@
 package org.nomin.core;
 
 import org.nomin.util.PropertyAccessor;
+import org.nomin.util.TypeInfo;
+
 import static java.text.MessageFormat.format;
 import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 
@@ -12,8 +14,8 @@ import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 public class PropRuleElem extends RuleElem {
     final PropertyAccessor property;
 
-    public PropRuleElem(PropertyAccessor property) {
-        super(property.getTypeInfo());
+    public PropRuleElem(PropertyAccessor property, TypeInfo typeInfo) {
+        super(typeInfo);
         this.property = property;
     }
 

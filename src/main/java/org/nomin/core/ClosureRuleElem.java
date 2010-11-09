@@ -2,6 +2,7 @@ package org.nomin.core;
 
 import groovy.lang.Closure;
 import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.util.TypeInfo;
 import org.nomin.util.TypeInfoFactory;
 
 /**
@@ -12,8 +13,8 @@ import org.nomin.util.TypeInfoFactory;
 public class ClosureRuleElem extends RuleElem {
     final Closure closure;
 
-    public ClosureRuleElem(Closure closure) {
-        super(TypeInfoFactory.typeInfo(Undefined.class));
+    public ClosureRuleElem(Closure closure, TypeInfo typeInfo) {
+        super(typeInfo);
         this.closure = closure;
     }
 

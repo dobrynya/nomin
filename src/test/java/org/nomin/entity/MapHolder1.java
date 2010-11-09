@@ -10,7 +10,7 @@ import java.util.Map;
 public class MapHolder1 {
     private Map<String, String> strings;
     private Map<String, Person> persons;
-    private Map<Object, Object> objects;
+    private Object objects;
 
     public Map<String, String> getStrings() { return strings; }
 
@@ -20,7 +20,7 @@ public class MapHolder1 {
 
     public void setPersons(Map<String, Person> persons) { this.persons = persons; }
 
-    public Map<Object, Object> getObjects() { return objects; }
+    public Object getObjects() { return objects; }
 
-    public void setObjects(Map<Object, Object> objects) { this.objects = objects; }
+    public void setObjects(Object objects) { this.objects = objects; }
 }

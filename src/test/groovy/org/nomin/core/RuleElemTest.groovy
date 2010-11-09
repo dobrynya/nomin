@@ -11,8 +11,8 @@ class RuleElemTest implements MappingConsts {
 
   @org.junit.Test
   void testDeepProperty() {
-    PropRuleElem birth = new PropRuleElem(jb.property("birth", Details))
-    PropRuleElem details = new PropRuleElem(jb.property("details", Employee))
+    PropRuleElem birth = new PropRuleElem(jb.property("birth", Details), jb.property("birth", Details).typeInfo)
+    PropRuleElem details = new PropRuleElem(jb.property("details", Employee), jb.property("details", Employee).typeInfo)
     details.next = birth
 
     assert !details.get(null) && !birth.get(null)
@@ -25,8 +25,8 @@ class RuleElemTest implements MappingConsts {
 
   @org.junit.Test
   void testDeepCollectionProperty() {
-    CollectionRuleElem kids = new CollectionRuleElem(jb.property("kids", Details))
-    PropRuleElem details = new PropRuleElem(jb.property("details", Employee))
+    CollectionRuleElem kids = new CollectionRuleElem(jb.property("kids", Details), jb.property("kids", Details).typeInfo)
+    PropRuleElem details = new PropRuleElem(jb.property("details", Employee), jb.property("details", Employee).typeInfo)
     details.next = kids
 
     assert !details.get(null) && !kids.get(null)
@@ -39,7 +39,7 @@ class RuleElemTest implements MappingConsts {
 
   @org.junit.Test
   void testArrayProperty() {
-    CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order))
+    CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order), jb.property("items", Order).typeInfo)
 
     assert !items.get(null)
     def result = items.set(null, [new OrderItem(description: "d1"), new OrderItem(description: "d2")])
@@ -50,7 +50,7 @@ class RuleElemTest implements MappingConsts {
 
   @org.junit.Test
   void testMapProperty() {
-    CollectionRuleElem options = new CollectionRuleElem(jb.property("options", Person))
+    CollectionRuleElem options = new CollectionRuleElem(jb.property("options", Person), jb.property("options", Person).typeInfo)
 
     assert !options.get(null)
     def result = options.set(null, [a: "Option A", b: "Option B"])
@@ -61,8 +61,8 @@ class RuleElemTest implements MappingConsts {
 
   @org.junit.Test
   void testSeqRuleElemOnArray() {
-    CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order))
-    SeqRuleElem seq = new SeqRuleElem(0, items.containerHelper)
+    CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order), jb.property("items", Order).typeInfo)
+    SeqRuleElem seq = new SeqRuleElem(0, items.containerHelper.elementType, items.containerHelper)
     items.next = seq
 
     assert !items.get(null) && !seq.get(null)

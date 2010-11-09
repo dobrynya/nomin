@@ -1,6 +1,7 @@
 package org.nomin.core
 
 import org.nomin.util.TypeInfo
+import org.nomin.util.TypeInfoFactory
 
 /**
  * Contains an expression or arbitrary value.
@@ -10,8 +11,10 @@ import org.nomin.util.TypeInfo
 class ExprPathElem extends PathElem {
   def exprPathElementExpr
 
-  RuleElem createMappingRuleElement(TypeInfo typeInfo, RuleElem prev) {
-    Closure.isInstance(exprPathElementExpr) ? new ClosureRuleElem(exprPathElementExpr) : new ValueRuleElem(exprPathElementExpr);
+  RuleElem createMappingRuleElement(TypeInfo ownerTypeInfo, TypeInfo hint, RuleElem prev) {
+    Closure.isInstance(exprPathElementExpr) ?
+      new ClosureRuleElem(exprPathElementExpr, TypeInfoFactory.typeInfo(Undefined).merge(hint)) :
+      new ValueRuleElem(exprPathElementExpr);
   }
 
   String toString() { Closure.isInstance(exprPathElementExpr) ? "{ expression }" : exprPathElementExpr }

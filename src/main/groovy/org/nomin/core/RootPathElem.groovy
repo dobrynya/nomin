@@ -11,8 +11,8 @@ class RootPathElem extends PathElem {
   String rootPathElementSide
   Class<?> rootPathElementClass
 
-  RuleElem createMappingRuleElement(TypeInfo typeInfo, RuleElem prev) {
-    new RootRuleElem(typeInfo, pathElementMappingEntry.mapping.mapper, pathElementMappingEntry.mappingCase)
+  RuleElem createMappingRuleElement(TypeInfo ownerTypeInfo, TypeInfo hint, RuleElem prev) {
+    new RootRuleElem(ownerTypeInfo, pathElementMappingEntry.mapping.mapper, pathElementMappingEntry.mappingCase)
   }
 
   String toString() { nextPathElement ? "${rootPathElementSide}${nextPathElement}" : rootPathElementSide }

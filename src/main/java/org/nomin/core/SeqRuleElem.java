@@ -1,6 +1,8 @@
 package org.nomin.core;
 
 import org.nomin.util.ContainerHelper;
+import org.nomin.util.TypeInfo;
+
 import static java.text.MessageFormat.format;
 
 /**
@@ -11,8 +13,8 @@ import static java.text.MessageFormat.format;
 public class SeqRuleElem extends RuleElem {
     final Object index;
 
-    public SeqRuleElem(Object index, ContainerHelper containerHelper) {
-        super(containerHelper.getElementType());
+    public SeqRuleElem(Object index, TypeInfo typeInfo, ContainerHelper containerHelper) {
+        super(typeInfo);
         this.index = index;
         this.containerHelper = containerHelper;
     }
