@@ -16,5 +16,10 @@ class MapHolder1ToMapHolder2 extends Mapping {
     a.objects = b.objects
     hint a: Map[{ it.matches("\\d+") ? Integer : String }, { DetailedPerson }],
             b: Map[{ it.matches("\\d+") ? Integer : String }, { LinearManager }]
+    a.persons2 = b.employees
+    convert to_a: {
+      println(it)
+      it
+    }
   }
 }

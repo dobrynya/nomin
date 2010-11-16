@@ -30,7 +30,7 @@ Context management
 
 +---
   a.calculatedPropertyA = { component1.calculatePropertyA(b) }
-  b.calculatedPropertyB = { component2.calculatePropertyA(a) }
+  b.calculatedPropertyB = { component2.calculatePropertyB(a) }
 +---
 
   So, components are identified by its keys in the map and used like as they are defined locally.

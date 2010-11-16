@@ -9,7 +9,7 @@
     <url>http://nomin.sourceforge.net</url>
 
     <description>
-        Nomin is a mapping engine for Java platform. It provides abilities to transform object trees according to
+        Nomin is a mapping engine for the Java platform. It provides abilities to transform object trees according to
         declarative mapping rules. Main features of Nomin are no XML configuration, intuitively looking mapping,
         using arbitrary expressions and method invocations in mappings, pre and postprocessing right in a mapping listing,
         customizations. It's applicable for any Java compatible classes, not only JavaBeans.
@@ -138,13 +138,6 @@
             </exclusions>
         </dependency>
 
-        <!--<dependency>
-            <groupId>asm</groupId>
-            <artifactId>asm-all</artifactId>
-            <version>3.2</version>
-            <scope>provided</scope>
-        </dependency>-->
-
         <dependency>
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
@@ -178,19 +171,14 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                </configuration>
+                <configuration><source>1.5</source><target>1.5</target></configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
                 <version>2.1.1</version>
-                <configuration>
-                    <templateFile>${basedir}/src/site/nomin-template.vm</templateFile>
-                </configuration>
+                <configuration><templateFile>${basedir}/src/site/nomin-template.vm</templateFile></configuration>
             </plugin>
 
             <plugin>
@@ -242,12 +230,7 @@
 
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals><goal>jar</goal></goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
+                <executions><execution><goals><goal>jar</goal></goals><phase>package</phase></execution></executions>
             </plugin>
 
             <plugin>
@@ -257,9 +240,7 @@
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <descriptors><descriptor>src/assembly/all.xml</descriptor></descriptors>
-                </configuration>
+                <configuration><descriptors><descriptor>src/assembly/all.xml</descriptor></descriptors></configuration>
             </plugin>
 
             <plugin>
@@ -272,10 +253,7 @@
                     </instructions>
                 </configuration>
                 <executions>
-                    <execution>
-                        <goals><goal>manifest</goal></goals>
-                        <phase>prepare-package</phase>
-                    </execution>
+                    <execution><goals><goal>manifest</goal></goals><phase>prepare-package</phase></execution>
                 </executions>
             </plugin>
 
@@ -287,25 +265,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>verify</phase>
-                                <goals><goal>sign</goal></goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
     <reporting>
         <plugins>
