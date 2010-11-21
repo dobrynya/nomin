@@ -3,6 +3,8 @@ package org.nomin.util;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
  * Tests SunInstanceCreator.
  * @author Dmitry Dobrynin
@@ -18,16 +20,10 @@ public class SunInstanceCreatorTest {
     @Test
     public void testUsingInstanceCreator() throws Exception {
         WithoutDefaultConstructor wdc = new SunInstanceCreator().create(WithoutDefaultConstructor.class);
-        Assert.assertNotNull(wdc);
-        Assert.assertNull(wdc.name);
+        assertNotNull(wdc);
     }
 
     static class WithoutDefaultConstructor {
-        public final String name;
-
-        public WithoutDefaultConstructor(String name) {
-            this.name = name;
-            System.out.println("Hello, " + name);
-        }
+        public WithoutDefaultConstructor(String stuff) { throw new IllegalArgumentException("!"); }
     }
 }
