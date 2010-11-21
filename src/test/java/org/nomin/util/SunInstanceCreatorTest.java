@@ -8,7 +8,7 @@ import org.junit.Test;
  * @author Dmitry Dobrynin
  *         Date: 26.10.2010 Time: 23:04:00
  */
-public class InstanceCreatorTest {
+public class SunInstanceCreatorTest {
 
     @Test (expected = InstantiationException.class)
     public void testUsingClassNewInstance() throws IllegalAccessException, InstantiationException {
