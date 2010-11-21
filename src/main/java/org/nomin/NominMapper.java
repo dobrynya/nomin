@@ -1,5 +1,7 @@
 package org.nomin;
 
+import org.nomin.util.InstanceCreator;
+
 import java.util.Map;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Map;
  *         Created 15.04.2010 11:06:56
  */
 public interface NominMapper {
-    // TODO: Implement a method to load all scripts in specified directory
+    // TODO: Implement a method to load all scripts in the specified directory
     // TODO: Implement a method to load scripts from specified files which are not on the classpath
 
     /**
@@ -131,6 +133,22 @@ public interface NominMapper {
      * Provides Nomin with the context to use.
      * @param context the context to use
      * @return this
+     * @deprecated use {@link #context(java.util.Map)} instead.
      */
+    @Deprecated
     NominMapper setContext(Map<String, Object> context);
+
+    /**
+     * Provides Nomin with the context to use.
+     * @param context the context to use
+     * @return this
+     */
+    NominMapper context(Map<String, Object> context);
+
+    /**
+     * Provides Nomin with the service to be used for creating object instances.
+     * @param instanceCreator specifies the instance creator
+     * @return this
+     */
+    NominMapper instanceCreator(InstanceCreator instanceCreator);
 }

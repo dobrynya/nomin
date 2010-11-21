@@ -18,7 +18,9 @@ class PropPathElem extends PathElem {
       throw new NominException(format("{0}: Mapping rule {1} is invalid because of missing property {2}.{3}!",
               pathElementMappingEntry.mapping.mappingName, pathElementMappingEntry, ownerTypeInfo.type.simpleName, propPathElementPropertyName))
     def merged = property.typeInfo.merge(hint)
-    merged.container ? new CollectionRuleElem(property, merged) : new PropRuleElem(property, merged)
+    merged.container ?
+      new CollectionRuleElem(property, merged, pathElementMappingEntry.mapping.mapper.instanceCreator) : 
+      new PropRuleElem(property, merged, pathElementMappingEntry.mapping.mapper.instanceCreator)
   }
 
   String toString() { nextPathElement ?

@@ -2,6 +2,7 @@ package org.nomin.core;
 
 import org.nomin.Mapping;
 import org.nomin.NominMapper;
+import org.nomin.util.*;
 import org.slf4j.*;
 import java.util.*;
 
@@ -22,6 +23,7 @@ public class Nomin implements NominMapper {
     ScriptLoader scriptLoader = new ScriptLoader();
     Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
     boolean automappingEnabled = false;
+    protected InstanceCreator instanceCreator = new ReflectionInstanceCreator();
 
     public Nomin() {}
 
@@ -46,9 +48,7 @@ public class Nomin implements NominMapper {
 
     public Nomin(String... mappingScripts) { parse(mappingScripts); }
 
-    public boolean isAutomappingEnabled() {
-        return automappingEnabled;
-    }
+    public boolean isAutomappingEnabled() { return automappingEnabled; }
 
     public NominMapper enableAutomapping() {
         this.automappingEnabled = true;
@@ -67,9 +67,17 @@ public class Nomin implements NominMapper {
         return this;
     }
 
-    public List<ParsedMapping> getMappings() {
-        return Collections.unmodifiableList(mappings);
+    public NominMapper context(Map<String, Object> context) {
+        contextManager.setSharedContext(context);
+        return this;
     }
+
+    public NominMapper instanceCreator(InstanceCreator instanceCreator) {
+        this.instanceCreator = instanceCreator;
+        return this;
+    }
+
+    public List<ParsedMapping> getMappings() { return Collections.unmodifiableList(mappings); }
 
     public NominMapper parse(String... mappingScripts) {
         for (String mappingScript : mappingScripts) parse(scriptLoader.load(mappingScript));
@@ -77,10 +85,7 @@ public class Nomin implements NominMapper {
     }
 
     public NominMapper parse(Class<? extends Mapping>... mappingClasses) {
-        for (Class<? extends Mapping> mc : mappingClasses)
-            try { parse(mc.newInstance()); }
-            catch (NominException ne) { throw ne; }
-            catch (Exception e) { throw new NominException(format("Could not parse {0}!", mc.getName()), e); }
+        for (Class<? extends Mapping> mc : mappingClasses) parse(new ReflectionInstanceCreator().create(mc));
         return this;
     }
 
@@ -96,16 +101,7 @@ public class Nomin implements NominMapper {
     }
 
     public <T> T map(Object source, Class<T> targetClass, Object mappingCase) {
-        if (source == null || targetClass == null) return null;
-        try {
-            T target = targetClass.newInstance();
-            map(source, target, targetClass, mappingCase);
-            return target;
-        } catch (NominException ne) {
-            throw ne;
-        } catch (Exception e) {
-            throw new NominException(format("Could not perform mapping {0} to {1}!", source, targetClass.getName()), e);
-        }
+        return source != null && targetClass != null ? map(source, instanceCreator.create(targetClass), mappingCase) : null;
     }
 
     public <T> T map(Object source, Class<T> targetClass, Map<String, Object> context) {

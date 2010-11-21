@@ -13,14 +13,9 @@ import org.nomin.entity.*
  * Created: 02.05.2010 15:38:23
  */
 class MappingRootsTest {
-  NominMapper mapper = new Nomin()
+  NominMapper mapper = new Nomin(Person2EmployeeAndDetails, Person2Details, Child2Kid)
   Person person = new Person(birthDate: new Date(), gender: Gender.MALE, children: [new Child(name: "Andrew")])
   Employee employee = new Employee(details: new Details(birth: new Date(), sex: true, kids: [new Kid(kidName: "Ariel")]))
-
-  @org.junit.Before
-  void before() {
-    mapper.parse(Person2EmployeeAndDetails, Person2Details, Child2Kid)
-  }
 
   @org.junit.Test
   void testDirectRootMapping() {

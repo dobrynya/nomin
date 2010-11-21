@@ -4,8 +4,7 @@ import org.nomin.core.*;
 import java.lang.reflect.Field;
 
 /**
- * Documentation.
- *
+ * Accesses a property using a class field.
  * @author Dmitry Dobrynin
  *         Created: 21.05.2010 0:52:28
  */
@@ -21,27 +20,13 @@ public class FieldPropertyAccessor implements PropertyAccessor {
         if (!property.isAccessible()) property.setAccessible(true);
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public TypeInfo getTypeInfo() {
-        return typeInfo;
-    }
+    public TypeInfo getTypeInfo() { return typeInfo; }
 
-    public void setTypeInfo(TypeInfo typeInfo) {
-        this.typeInfo = typeInfo;
-    }
+    public void setTypeInfo(TypeInfo typeInfo) { this.typeInfo = typeInfo; }
 
-    public Object newOwner() throws Exception {
-        return property.getDeclaringClass().newInstance();
-    }
+    public Object get(Object instance) throws Exception { return property.get(instance); }
 
-    public Object get(Object instance) throws Exception {
-        return property.get(instance);
-    }
-
-    public void set(Object instance, Object value) throws Exception {
-        property.set(instance, value);
-    }
+    public void set(Object instance, Object value) throws Exception { property.set(instance, value); }
 }

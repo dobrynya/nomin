@@ -18,7 +18,7 @@ public class CglibTest2 implements MappingConsts {
         final PropertyAccessor pa = jb.property("name", Person.class);
         Callable refl = new Callable<Object>() {
             public Object call() throws Exception {
-                Person p = (Person) pa.newOwner();
+                Person p = (Person) Person.class.newInstance();
                 pa.set(p, "Name");
                 return Person.class.newInstance(); }
         };

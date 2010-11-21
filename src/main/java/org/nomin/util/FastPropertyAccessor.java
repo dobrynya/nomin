@@ -32,10 +32,6 @@ public class FastPropertyAccessor implements PropertyAccessor {
 
     }
 
-    public Object newOwner() throws Exception {
-        return null;
-    }
-
     public Object get(Object instance) throws Exception {
         try {
             return getter.invoke(instance, new Object[0]);

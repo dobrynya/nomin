@@ -14,10 +14,11 @@ import static java.util.Arrays.*;
  */
 @SuppressWarnings({"unchecked"})
 public class CollectionRuleElem extends PropRuleElem {
-    public CollectionRuleElem(PropertyAccessor property, TypeInfo typeInfo) { super(property, typeInfo); }
+    public CollectionRuleElem(PropertyAccessor property, TypeInfo typeInfo, InstanceCreator instanceCreator) {
+        super(property, typeInfo, instanceCreator);
+    }
 
     public Object set(Object instance, Object value) throws Exception {
-        if (instance == null) instance = property.newOwner();
         if (next == null) {
             Collection<Object> source = asCollection(value);
             property.set(instance, source == null || source.size() == 0 ? null : containerHelper.convert(source, preprocessings));

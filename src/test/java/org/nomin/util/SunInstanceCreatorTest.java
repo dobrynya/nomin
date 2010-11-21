@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Tests InstanceCreator.
+ * Tests SunInstanceCreator.
  * @author Dmitry Dobrynin
  *         Date: 26.10.2010 Time: 23:04:00
  */
@@ -17,7 +17,7 @@ public class InstanceCreatorTest {
 
     @Test
     public void testUsingInstanceCreator() throws Exception {
-        WithoutDefaultConstructor wdc = InstanceCreator.create(WithoutDefaultConstructor.class);
+        WithoutDefaultConstructor wdc = new SunInstanceCreator().create(WithoutDefaultConstructor.class);
         Assert.assertNotNull(wdc);
         Assert.assertNull(wdc.name);
     }

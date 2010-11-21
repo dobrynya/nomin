@@ -1,8 +1,6 @@
 package org.nomin.core;
 
-import org.nomin.util.PropertyAccessor;
-import org.nomin.util.TypeInfo;
-
+import org.nomin.util.*;
 import static java.text.MessageFormat.format;
 import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
 
@@ -13,10 +11,13 @@ import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
  */
 public class PropRuleElem extends RuleElem {
     final PropertyAccessor property;
+    final InstanceCreator instanceCreator;
 
-    public PropRuleElem(PropertyAccessor property, TypeInfo typeInfo) {
+
+    public PropRuleElem(PropertyAccessor property, TypeInfo typeInfo, InstanceCreator instanceCreator) {
         super(typeInfo);
         this.property = property;
+        this.instanceCreator = instanceCreator;
     }
 
     public Object get(Object instance) throws Exception {
@@ -24,9 +25,12 @@ public class PropRuleElem extends RuleElem {
     }
 
     public Object set(Object instance, Object value) throws Exception {
-        if (instance == null) instance = property.newOwner();
         if (next == null) property.set(instance, preprocess(value, preprocessings, 0));
-        else property.set(instance, next.set(property.get(instance), value));
+        else {
+            Object ov = property.get(instance), nv =
+                    next.set(ov == null ? instanceCreator.create(typeInfo.determineTypeDynamically(value)) : ov, value);
+            if (ov != nv) property.set(instance, nv);
+        }
         return instance;
     }
 

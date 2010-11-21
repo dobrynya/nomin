@@ -70,10 +70,6 @@ public class NominPerformanceTest {
         PropertyAccessor refl = MappingConsts.jb.property("name", Person.class);
         PropertyAccessor asm = new AsmJbIntrospector().property("name", Person.class);
         PropertyAccessor impl = new PropertyAccessor() {
-            public Object newOwner() throws Exception {
-                return null;
-            }
-
             public String getName() { return null; }
             public TypeInfo getTypeInfo() { return null; }
             public void setTypeInfo(TypeInfo typeInfo) {}
