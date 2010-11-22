@@ -4,7 +4,7 @@ import java.util.Map;
 import groovy.lang.Closure;
 
 /**
- * Document please.
+ * Performs simple conversions using supplied map with values.
  * @author Dmitry Dobrynin
  *         Created 26.05.2010 12:44:25
  */

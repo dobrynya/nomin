@@ -1,9 +1,7 @@
 package org.nomin.core;
 
-import org.apache.commons.beanutils.ConvertUtils;
 import org.nomin.core.preprocessing.*;
-import org.nomin.util.ContainerHelper;
-import org.nomin.util.TypeInfo;
+import org.nomin.util.*;
 import static java.text.MessageFormat.format;
 
 /**
@@ -24,11 +22,11 @@ public abstract class RuleElem {
 
     public ContainerHelper getContainerHelper() { return containerHelper; }
 
+    public void setPreprocessings(Preprocessing[] preprocessings) { this.preprocessings = preprocessings; }
+
+    public String path() { return next != null ? format("{0}->{1}", this, next.path()) : toString(); }
+
     public abstract Object get(Object instance) throws Exception;
 
     public abstract Object set(Object instance, Object value) throws Exception;
-
-    public String path() { return next != null ? format("{0}->{1}", this, next.path()) : this.toString(); }
-
-    public void setPreprocessings(Preprocessing[] preprocessings) { this.preprocessings = preprocessings; }
 }

@@ -1,7 +1,8 @@
 package org.nomin.core
 
 import org.nomin.entity.*
-import org.nomin.util.ReflectionInstanceCreator
+import static org.mockito.Mockito.*
+import org.nomin.util.*
 
 /**
  * Tests all the rule elements.
@@ -9,68 +10,111 @@ import org.nomin.util.ReflectionInstanceCreator
  * Date: 22.10.2010 Time: 9:10:24
  */
 class RuleElemTest implements MappingConsts {
-  def ic = new ReflectionInstanceCreator()
+  InstanceCreator ic = mock(InstanceCreator)
+  PropertyAccessor pa = mock(PropertyAccessor)
+  RuleElem next = mock(RuleElem)
+  Object instance = new Object()
+  Object result = new Object()
+  Object nextResult = new Object()
+  Object value = new Object()
 
   @org.junit.Test
-  void testDeepProperty() {
-    PropRuleElem birth = new PropRuleElem(jb.property("birth", Details), jb.property("birth", Details).typeInfo, ic)
-    PropRuleElem details = new PropRuleElem(jb.property("details", Employee), jb.property("details", Employee).typeInfo, ic)
-    details.next = birth
+  void testPropElemGet() {
+    PropRuleElem propElem = new PropRuleElem(pa, TypeInfoFactory.typeInfo(Details), ic)
+    verifyZeroInteractions(pa)
 
-    assert !details.get(null) && !birth.get(null)
-    def now = new Date()
-    def result = details.set(null, now)
-    assert Employee.isInstance(result)
-    Employee e = result
-    assert e.details && e.details.birth == now
+    when(pa.get(instance)).thenReturn(result)
+    assert propElem.get(null) == null && propElem.get(instance) == result
+
+    propElem.next = next
+    when(next.get(result)).thenReturn(nextResult)
+    assert propElem.get(instance) == nextResult
   }
 
   @org.junit.Test
-  void testDeepCollectionProperty() {
-    CollectionRuleElem kids = new CollectionRuleElem(jb.property("kids", Details), jb.property("kids", Details).typeInfo, ic)
-    PropRuleElem details = new PropRuleElem(jb.property("details", Employee), jb.property("details", Employee).typeInfo, ic)
-    details.next = kids
+  void testPropElemSet() {
+    PropRuleElem propElem = new PropRuleElem(pa, TypeInfoFactory.typeInfo(Details), ic)
+    assert instance == propElem.set(instance, result)
+    verify(pa).set(instance, result)
 
-    assert !details.get(null) && !kids.get(null)
-    def result = details.set(null, [new Kid("John"), new Kid("Mary"), new Kid("Andrew")])
-    assert Employee.isInstance(result)
-    Employee e = result
-    assert e.details && e.details.kids && e.details.kids.size() == 3 &&
-            e.details.kids.findAll { ["John", "Mary", "Andrew"].contains(it.kidName) }.size() == 3
+    propElem.next = next
+    when(pa.get(instance)).thenReturn(result)
+    when(next.set(result, value)).thenReturn(result)
+    doThrow(new RuntimeException()).when(pa).set(instance, result)
+    assert propElem.set(instance, value) == instance
+    when(next.set(result, value)).thenReturn(nextResult)
+    assert propElem.set(instance, value) == instance
+    verify(pa).set(instance, nextResult)
+
+    when(ic.create(Details)).thenReturn(result)
+    when(pa.get(instance)).thenReturn(null)
+    assert propElem.set(instance, value) == instance
+    verify(pa).set(instance, result)
   }
 
   @org.junit.Test
-  void testArrayProperty() {
-    CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order), jb.property("items", Order).typeInfo, ic)
+  void testCollectionElemSet() {
+    CollectionRuleElem collElem = new CollectionRuleElem(pa, TypeInfoFactory.typeInfo(List), ic)
 
-    assert !items.get(null)
-    def result = items.set(null, [new OrderItem(description: "d1"), new OrderItem(description: "d2")])
-    assert Order.isInstance(result)
-    Order o = result
-    assert o.items && o.items.length == 2 && o.items[0].description == "d1" && o.items[1].description == "d2"
+    assert collElem.asCollection([1, 2, 3] as Object[]) == [1, 2, 3]
+    assert collElem.asCollection([1, 2, 3]) == [1, 2, 3]
+    Set set = collElem.asCollection([a : 1, b: 2])
+    for (Map.Entry e : set)
+      assert (e.getKey() == "a" && e.getValue() == 1) || (e.getKey() == "b" && e.getValue() == 2)
+
+    try { collElem.asCollection("Not collection!"); assert false }
+    catch (NominException e) {
+      assert e.getMessage().startsWith("Could not process not a collection/array value")
+    }
+
+    assert collElem.set(instance, null) == instance
+    assert collElem.set(instance, []) == instance
+    verify(pa, times(2)).set instance, null
+
+    assert collElem.set(instance, [1, 2, 3]) == instance
+    verify(pa).set instance, [1, 2, 3]
+
+    collElem.next = next
+    when(pa.get(instance)).thenReturn(null)
+    when(pa.get(instance)).thenReturn(null)
+    when(next.set(null, value)).thenReturn(nextResult)
+    assert collElem.set(instance, value) == instance
+    verify(pa).set(instance, nextResult)
+
+    when(pa.get(instance)).thenReturn(result)
+    when(next.set(result, value)).thenReturn(result)
+    assert collElem.set(instance, value) == instance
+    verify(pa).set(instance, nextResult)
   }
 
   @org.junit.Test
-  void testMapProperty() {
-    CollectionRuleElem options = new CollectionRuleElem(jb.property("options", Person), jb.property("options", Person).typeInfo, ic)
-
-    assert !options.get(null)
-    def result = options.set(null, [a: "Option A", b: "Option B"])
-    assert Person.isInstance(result)
-    Person p = result
-    assert p.options?.size() == 2 && p.options["a"] == "Option A" && p.options["b"] == "Option B"
+  void testSeqElemGet() {
+    ContainerHelper ch = ContainerHelper.create(List[Person])
+    SeqRuleElem seq = new SeqRuleElem(0, ch.elementType, ch, ic)
+    assert seq.get(null) == null
+    assert seq.get([1, 2, 3]) == 1
+    seq.next = next
+    when(next.get(1)).thenReturn(11)
+    assert seq.get([1, 2, 3]) == 11
   }
 
   @org.junit.Test
-  void testSeqRuleElemOnArray() {
-    CollectionRuleElem items = new CollectionRuleElem(jb.property("items", Order), jb.property("items", Order).typeInfo, ic)
-    SeqRuleElem seq = new SeqRuleElem(0, items.containerHelper.elementType, items.containerHelper, ic)
-    items.next = seq
+  void testSeqElemSet() {
+    ContainerHelper ch = ContainerHelper.create(List[Person])
+    SeqRuleElem seq = new SeqRuleElem(0, ch.elementType, ch, ic)
+    assert seq.set(null, value) == [value]
 
-    assert !items.get(null) && !seq.get(null)
-    def result = items.set(null, new OrderItem(description: "orderItem"))
-    assert Order.isInstance(result)
-    Order o = result
-    assert o.items?.length == 1 && o.items[0].description == "orderItem"
+    seq.next = next
+    when(ic.create(Person)).thenReturn(result)
+    when(next.set(result, value)).thenReturn(result)
+    assert seq.set(null, value) == [result]
+
+    when(next.set(result, value)).thenReturn(result)
+    assert seq.set([result], value) == [result]
+
+    when(next.set(result, value)).thenReturn(nextResult)
+    assert seq.set([result], value) == [nextResult]
   }
+
+  static { ClassImprover }
 }
