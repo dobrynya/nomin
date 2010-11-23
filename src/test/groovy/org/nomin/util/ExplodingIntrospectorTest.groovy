@@ -10,7 +10,17 @@ import org.nomin.core.MappingConsts
  */
 class ExplodingIntrospectorTest implements MappingConsts {
   @org.junit.Test
+  void testProperty() {
+    def pa = exploding.property("a", this.class)
+    assert pa && pa.get(this) == "a"
+    pa.set(this, "newA")
+    assert a == "newA"
+  }
+
+  @org.junit.Test
   void testProperties() {
     assert ["name", "lastName", "birthDate", "gender", "children", "strDate", "options"].containsAll(exploding.properties(Person))
   }
+
+  private String a = "a"
 }

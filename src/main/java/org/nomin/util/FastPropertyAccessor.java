@@ -28,23 +28,11 @@ public class FastPropertyAccessor implements PropertyAccessor {
         return typeInfo;
     }
 
-    public void setTypeInfo(TypeInfo typeInfo) {
-
-    }
-
-    public Object get(Object instance) throws Exception {
-        try {
-            return getter.invoke(instance, new Object[0]);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException("", e);
-        }
-    }
+    public Object get(Object instance) throws Exception { return getter.invoke(instance, empty); }
 
     public void set(Object instance, Object value) throws Exception {
-        try {
-            setter.invoke(instance, new Object[] { value });
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException("",e );
-        }
+        setter.invoke(instance, new Object[] { value });
     }
+
+    private static Object[] empty = new Object[0];
 }

@@ -10,8 +10,6 @@ public interface PropertyAccessor {
 
     TypeInfo getTypeInfo();
 
-    void setTypeInfo(TypeInfo typeInfo);
-
     Object get(Object instance) throws Exception;
 
     void set(Object instance, Object value) throws Exception;

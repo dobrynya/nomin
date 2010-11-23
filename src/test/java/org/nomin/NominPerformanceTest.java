@@ -72,7 +72,6 @@ public class NominPerformanceTest {
         PropertyAccessor impl = new PropertyAccessor() {
             public String getName() { return null; }
             public TypeInfo getTypeInfo() { return null; }
-            public void setTypeInfo(TypeInfo typeInfo) {}
             public Object get(Object instance) throws Exception { return ((Person) instance).getName(); }
             public void set(Object instance, Object value) throws Exception { ((Person) instance).setName((String) value); }
         };

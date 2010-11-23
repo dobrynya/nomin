@@ -23,8 +23,6 @@ public class ReflectionPropertyAccessor implements PropertyAccessor {
 
     public TypeInfo getTypeInfo() { return typeInfo; }
 
-    public void setTypeInfo(TypeInfo typeInfo) { this.typeInfo = typeInfo; }
-
     public Object get(Object instance) throws Exception { return getter.invoke(instance); }
 
     public void set(Object instance, Object value) throws Exception { setter.invoke(instance, value); }

@@ -3,18 +3,18 @@ package org.nomin.util
 import java.lang.reflect.Field
 
 /**
- * Uses fields to change state of an instance. It's useful when the type of an instance isn't satisfied to JavaBeans
+ * Uses fields to change state of an instance. It's useful when the class of the instance isn't satisfied to the JavaBeans
  * convention.
  * @author Dmitry Dobrynin
  * Created 16.04.2010 11:03:42
  */
 class ExplodingIntrospector extends BaseReflectionIntrospector {
-  def PropertyAccessor property(String name, Class<?> targetClass) {
+  PropertyAccessor property(String name, Class<?> targetClass) {
     def field = searchField(targetClass, name)
-    new FieldPropertyAccessor(name, TypeInfo.typeInfo(field.genericType), field)
+    new FieldPropertyAccessor(name, TypeInfoFactory.typeInfo(field.genericType), field)
   }
 
-  def Set<String> properties(Class<?> targetClass) {
+  Set<String> properties(Class<?> targetClass) {
     Set<String> properties = new HashSet()
     collectFields(targetClass).each { properties.add(it.name) }
     return properties;
