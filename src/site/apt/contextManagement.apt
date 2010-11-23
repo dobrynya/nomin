@@ -4,12 +4,16 @@ Context management
 
 Context management
 
-  As you will see later Nomin's expressions, hooks and conversions have access to the configured context.
-  What is a context in terms of Nomin? Just a map of shared components/services between all the mappings.
-  And any of Groovy closures defined in Nomin's mappings has access to that.
+  As you saw Nomin's expressions, hooks and conversions have access to the configured context.
+  What is a context in terms of Nomin? Just a service supplying named resources, shared components/services across the mappings.
+  And any of Groovy closures defined in Nomin's mappings has access to the context service.
 
   If you plan to use Nomin in a concurrent environment notice that all the components used in Nomin's mappings should be
-  thread-safe or externally synchronized, Nomin doesn't manage it by itself.
+  thread-safe or externally synchronized, Nomin doesn't manage components' concurrency by itself.
+
+  At the moment there are several available context adapters such as MapContext, SpringContext and
+  JndiContext. The first one just adapts a Map instance to be a context.
+  They can be found at the org.nomin.context package. It's quite easy to implement an adapter to the required container.
 
   Well, let's look at the examples.
 
@@ -21,7 +25,7 @@ Context management
       ctx.put("component1", component1);
       ctx.put("component2", component2);
       // and so on
-      nomin = new Nomin(ctx, "theSnipet.groovy");
+      nomin = new Nomin(new MapContext(ctx), "theSnipet.groovy");
     }
   }
 +---
@@ -33,7 +37,7 @@ Context management
   b.calculatedPropertyB = { component2.calculatePropertyB(a) }
 +---
 
-  So, components are identified by its keys in the map and used like as they are defined locally.
+  So, resources/components identified by its keys in the context are used like as they are defined locally.
 
   Now I'll introduce the features that are available for using only in Groovy code.
 
@@ -44,7 +48,7 @@ Context management
                calcA: { b -> component1.calculatePropertyA(b) },
                calcB: { a-> component2.calculatePropertyA(a) }]
 
-    def nomin = new Nomin(ctx, "theSnipet.groovy")
+    def nomin = new Nomin(new MapContext(ctx), "theSnipet.groovy")
   }
 +---
 
@@ -57,6 +61,3 @@ Context management
   a.calculatedPropertyA = { calcA(b) }
   b.calculatedPropertyB = { calcB(a) }
 +---
-
-  In the next release I plan to replace Map as context interface with more specific interface and make integrations with
-  containers such as Spring, Guice, JNDI registry.

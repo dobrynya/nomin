@@ -4,7 +4,7 @@ import org.nomin.core.NominException;
 import org.nomin.core.preprocessing.Preprocessing;
 import java.util.*;
 import static java.text.MessageFormat.format;
-import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
+import static org.nomin.core.preprocessing.Preprocessing.preprocess;
 
 /**
  * Assists to manipulate with maps.

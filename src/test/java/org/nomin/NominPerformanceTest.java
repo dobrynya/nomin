@@ -67,7 +67,7 @@ public class NominPerformanceTest {
     @Test
     public void testIntrospectors() {
         Person p = new Person();
-        PropertyAccessor refl = MappingConsts.jb.property("name", Person.class);
+        PropertyAccessor refl = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy).property("name", Person.class);
 
         PropertyAccessor impl = new PropertyAccessor() {
             public String getName() { return null; }

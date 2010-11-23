@@ -2,7 +2,6 @@ package org.nomin.core;
 
 import static java.text.MessageFormat.format;
 import static java.util.Arrays.asList;
-
 import org.slf4j.*;
 
 /**

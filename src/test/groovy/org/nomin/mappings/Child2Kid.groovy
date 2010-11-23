@@ -12,7 +12,6 @@ import org.nomin.entity.Kid
 class Child2Kid extends Mapping {
   protected void build() {
     mappingFor a: Child, b: Kid
-//    introspector asm
     a.name = b.kidName
   }
 }

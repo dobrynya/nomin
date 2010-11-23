@@ -2,7 +2,7 @@ package org.nomin.core;
 
 import org.nomin.util.*;
 import static java.text.MessageFormat.format;
-import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
+import static org.nomin.core.preprocessing.Preprocessing.preprocess;
 
 /**
  * Provides access to a property.

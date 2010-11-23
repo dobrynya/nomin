@@ -25,6 +25,7 @@
             <item name="Automapping facility" href="automapping.html"/>
             <item name="Error handling" href="errorHandling.html"/>
             <item name="Using the mapper in mappings" href="usingMapper.html"/>
+            <item name="Customizing introspectors" href="introspectors.html"/>
         </menu>
         <menu ref="reports"/>
     </body>

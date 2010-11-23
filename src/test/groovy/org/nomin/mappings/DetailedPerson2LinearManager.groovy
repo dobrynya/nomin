@@ -12,7 +12,6 @@ import org.nomin.entity.LinearManager
 class DetailedPerson2LinearManager extends Mapping {
   protected void build() {
     mappingFor a: DetailedPerson, b: LinearManager
-//    introspector asm
     a.description = b.characteristics
     a.educationName = b.details.educations[0].name
     a.educationDescription = b.details.educations[0].description

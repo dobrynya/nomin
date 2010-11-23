@@ -1,11 +1,11 @@
 package org.nomin
 
-import static java.text.MessageFormat.*
 import org.nomin.core.*
 import org.nomin.util.*
 import org.slf4j.*
 import java.text.SimpleDateFormat
-import static org.nomin.util.TypeInfoFactory.*
+import static java.text.MessageFormat.*
+import static org.nomin.util.TypeInfoFactory.typeInfo;
 
 /**
  * Stores and parses mapping entries defined in method build body. It also provides a number of operations to control
@@ -13,8 +13,12 @@ import static org.nomin.util.TypeInfoFactory.*
  * @author Dmitry Dobrynin
  * Created 06.04.2010 16:53:38
  */
-class Mapping implements MappingConsts {
+class Mapping {
   protected static final Logger logger = LoggerFactory.getLogger(Mapping)
+
+  static final String DEFAULT = "default";
+  static final Introspector jb = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy)
+  static final Introspector exploding = new ExplodingIntrospector()
 
   Map<String, Class> side = [:]
   Object mappingCase
@@ -27,10 +31,11 @@ class Mapping implements MappingConsts {
   private Map<String, Closure> hooks = [ throwableHandler: {} ]
   private List<Class<? extends Throwable>> throwables
 
-  def Mapping() {}
+  Mapping() {}
 
-  def Mapping(Class<?> sideA, Class<?> sideB, Nomin mapper) {
-    this.sideA = sideA; this.sideB = sideB; this.mapper = mapper;
+  Mapping(Class<?> a, Class<?> b, Nomin mapper) {
+    mappingFor a: a, b: b
+    this.mapper = mapper;
   }
 
   ParsedMapping parse() {
@@ -140,7 +145,7 @@ class Mapping implements MappingConsts {
     if (hints) {
       hints = List.isInstance(hints) ? hints : [hints]
       hints = hints.collect {
-        TypeInfo typeInfo = TypeInfo.isInstance(it) ? it : it != MappingConsts.DEFAULT ? typeInfo(it) : null
+        TypeInfo typeInfo = TypeInfo.isInstance(it) ? it : it != DEFAULT ? typeInfo(it) : null
         if (typeInfo?.isDynamic()) mapper.contextManager.makeContextAware(typeInfo.dynamicType)
         typeInfo
       }

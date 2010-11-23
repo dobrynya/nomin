@@ -23,7 +23,7 @@ Working with Maps
 
 +---
   a.options = b.details.properties // Map<Object, Object> <-> Map<Object, Object>
-  hint a: Map[String, Person], b: Map[Integer, Employee] // using hint to specify types
+  hint a: Map[String, Person], b: Map[Integer, Employee] // use hint to specify types
   // or
   hint a: Map[String, {
     it instanceof LinearManager ? DetailedPerson : Person // Person is returned if it is an Employee

@@ -4,7 +4,7 @@ import org.nomin.core.NominException;
 import org.nomin.core.preprocessing.Preprocessing;
 import java.util.*;
 import java.util.concurrent.*;
-import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
+import static org.nomin.core.preprocessing.Preprocessing.preprocess;
 import static java.text.MessageFormat.format;
 
 /**

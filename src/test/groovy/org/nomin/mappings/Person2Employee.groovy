@@ -13,7 +13,6 @@ import org.nomin.entity.Person
 class Person2Employee extends Mapping {
   void build() {
     mappingFor a: Person, b: Employee
-//    introspector asm
     a.name = b.name
     a.lastName = b.last
     a.birthDate = b.details.birth

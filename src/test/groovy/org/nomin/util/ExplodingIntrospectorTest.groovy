@@ -1,14 +1,15 @@
 package org.nomin.util
 
 import org.nomin.entity.Person
-import org.nomin.core.MappingConsts
 
 /**
  * Tests ExplodingIntrospector.
  * @author Dmitry Dobrynin
  * Created 21.05.2010 13:15:35
  */
-class ExplodingIntrospectorTest implements MappingConsts {
+class ExplodingIntrospectorTest {
+  Introspector exploding = new ExplodingIntrospector();
+
   @org.junit.Test
   void testProperty() {
     def pa = exploding.property("a", this.class)

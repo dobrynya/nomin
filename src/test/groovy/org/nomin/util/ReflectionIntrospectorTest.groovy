@@ -3,14 +3,15 @@ package org.nomin.util
 import org.nomin.entity.Child
 import org.nomin.entity.LegacyDetails
 import org.nomin.entity.Person
-import org.nomin.core.MappingConsts
 
 /**
  * Tests ReflectionIntrospector.
  * @author Dmitry Dobrynin
  * Created 14.04.2010 17:51:18
  */
-class ReflectionIntrospectorTest implements MappingConsts {
+class ReflectionIntrospectorTest {
+  Introspector jb = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy);
+
   @org.junit.Test
   void testProperty() {
     def pa = jb.property("a", this.class)

@@ -2,7 +2,7 @@ package org.nomin.util;
 
 import java.util.*;
 import org.nomin.core.preprocessing.Preprocessing;
-import static org.nomin.core.preprocessing.PreprocessingHelper.preprocess;
+import static org.nomin.core.preprocessing.Preprocessing.preprocess;
 
 /**
  * Assists to manipulate with arrays.

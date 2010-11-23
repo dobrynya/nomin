@@ -8,7 +8,7 @@ import org.nomin.core.MappingCase;
  * @author Dmitry Dobrynin
  *         Created 28.04.2010 15:44:50
  */
-public class MapperPreprocessing implements Preprocessing {
+public class MapperPreprocessing extends Preprocessing {
     private NominMapper mapper;
     private Class<?> targetClass;
     private MappingCase mappingCase;

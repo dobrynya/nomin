@@ -9,7 +9,7 @@ import org.nomin.util.*
  * @author Dmitry Dobrynin
  * Date: 22.10.2010 Time: 9:10:24
  */
-class RuleElemTest implements MappingConsts {
+class RuleElemTest {
   InstanceCreator ic = mock(InstanceCreator)
   PropertyAccessor pa = mock(PropertyAccessor)
   RuleElem next = mock(RuleElem)

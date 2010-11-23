@@ -10,7 +10,7 @@ import org.nomin.util.TypeInfo;
  * @author Dmitry Dobrynin
  *         Created: 12.05.2010 23:40:05
  */
-public class DynamicPreprocessing implements Preprocessing {
+public class DynamicPreprocessing extends Preprocessing {
     private TypeInfo typeInfo;
     private NominMapper mapper;
     private MappingCase mappingCase;
