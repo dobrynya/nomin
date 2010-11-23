@@ -23,7 +23,7 @@ public class Nomin implements NominMapper {
     ScriptLoader scriptLoader = new ScriptLoader();
     Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
     boolean automappingEnabled = false;
-    protected InstanceCreator instanceCreator = new ReflectionInstanceCreator();
+    protected InstanceCreator instanceCreator = MappingConsts.jb.instanceCreator();
 
     public Nomin() {}
 
@@ -85,7 +85,7 @@ public class Nomin implements NominMapper {
     }
 
     public NominMapper parse(Class<? extends Mapping>... mappingClasses) {
-        for (Class<? extends Mapping> mc : mappingClasses) parse(new ReflectionInstanceCreator().create(mc));
+        for (Class<? extends Mapping> mc : mappingClasses) parse(MappingConsts.jb.instanceCreator().create(mc));
         return this;
     }
 
