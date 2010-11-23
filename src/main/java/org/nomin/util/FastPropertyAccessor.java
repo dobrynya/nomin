@@ -2,9 +2,8 @@ package org.nomin.util;
 
 import net.sf.cglib.reflect.FastMethod;
 
-import java.lang.reflect.InvocationTargetException;
-
 /**
+ * Provides accessing a property using Cglib fast methods.
  * @author Dmitry Dobrynin
  *         Date: 21.10.2010 Time: 23:05:16
  */
@@ -20,13 +19,9 @@ public class FastPropertyAccessor implements PropertyAccessor {
         this.typeInfo = typeInfo;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public TypeInfo getTypeInfo() {
-        return typeInfo;
-    }
+    public TypeInfo getTypeInfo() { return typeInfo; }
 
     public Object get(Object instance) throws Exception { return getter.invoke(instance, empty); }
 

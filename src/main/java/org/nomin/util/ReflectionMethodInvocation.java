@@ -21,7 +21,7 @@ public class ReflectionMethodInvocation implements MethodInvocation {
         this.args = args;
     }
 
-    public Object invoke(Object instance) {
+    public Object invoke(Object instance) throws Exception {
         try { return method.invoke(instance, args); }
         catch (Exception e) { throw new NominException(format("Could not invoke {0} on {1}!", method, instance), e); }
     }

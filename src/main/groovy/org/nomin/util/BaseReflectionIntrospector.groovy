@@ -14,6 +14,10 @@ abstract class BaseReflectionIntrospector extends BaseIntrospector implements In
   MethodInvocation invocation(String name, Class<?> targetClass, Object... args) {
     Method method = findApplicableMethod(name, targetClass, args)
     if (!method) throw new NominException("Could not find method ${targetClass.simpleName}.${name}(${args})!")
+    createInvocation(method, args)
+  }
+
+  protected MethodInvocation createInvocation(Method method, Object[] args) {
     new ReflectionMethodInvocation(method, args);
   }
 

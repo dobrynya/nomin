@@ -6,7 +6,7 @@ package org.nomin.util;
  *         Created: 18.04.2010 14:55:24
  */
 public interface MethodInvocation {
-    Object invoke(Object instance);
+    Object invoke(Object instance) throws Exception;
 
     TypeInfo getTypeInfo();
 }
