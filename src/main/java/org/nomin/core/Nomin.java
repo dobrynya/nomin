@@ -2,11 +2,10 @@ package org.nomin.core;
 
 import org.nomin.Mapping;
 import org.nomin.NominMapper;
+import org.nomin.context.*;
 import org.nomin.util.*;
 import org.slf4j.*;
 import java.util.*;
-
-import static java.text.MessageFormat.format;
 
 /**
  * NominMapper implementation.
@@ -18,29 +17,38 @@ public class Nomin implements NominMapper {
     public static final String NOMIN_VERSION = "1.1.0";
     static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
-    List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
-    ContextManager contextManager = new ContextManager();
-    ScriptLoader scriptLoader = new ScriptLoader();
-    Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
-    boolean automappingEnabled = false;
+    protected ScriptLoader scriptLoader = new ScriptLoader();
+    protected ContextManager contextManager = new ContextManager();
+    protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
+    protected Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
+    protected boolean automappingEnabled = false;
     protected InstanceCreator instanceCreator = Mapping.getJb().instanceCreator();
 
     public Nomin() {}
 
-    public Nomin(Map<String, Object> context) { contextManager.setSharedContext(context); }
+    public Nomin(Map<String, Object> context) { contextManager.setSharedContext(new MapContext(context)); }
 
     public Nomin(Class<? extends Mapping>... mappingClasses) { parse(mappingClasses); }
 
+    /**
+     * Constructs a Nomin instance.
+     * @param context specifies the context to use
+     * @param mappingClasses specifies mapping classes to parse
+     * @deprecated use {@link #context(org.nomin.context.Context)} and {@link #parse(Class[])} to configure Nomin
+     */
+    @Deprecated
     public Nomin(Map<String, Object> context, Class<? extends Mapping>... mappingClasses) {
         this(context);
         parse(mappingClasses);
     }
 
+    @Deprecated
     public Nomin(Map<String, Object> context, Mapping... mappings) {
         this(context);
         for (Mapping mapping : mappings) parse(mapping);
     }
 
+    @Deprecated
     public Nomin(Map<String, Object> context, String... mappingScripts) {
         this(context);
         parse(mappingScripts);
@@ -62,12 +70,10 @@ public class Nomin implements NominMapper {
         return this;
     }
 
-    public NominMapper setContext(Map<String, Object> context) {
-        contextManager.setSharedContext(context);
-        return this;
-    }
+    @Deprecated
+    public NominMapper setContext(Map<String, Object> context) { return context(new MapContext(context)); }
 
-    public NominMapper context(Map<String, Object> context) {
+    public NominMapper context(Context context) {
         contextManager.setSharedContext(context);
         return this;
     }
@@ -105,16 +111,24 @@ public class Nomin implements NominMapper {
     }
 
     public <T> T map(Object source, Class<T> targetClass, Map<String, Object> context) {
-        contextManager.pushSharedContext(context);
+        return map(source, targetClass, new MapContext(context));
+    }
+
+    public <T> T map(Object source, Class<T> targetClass, Context context) {
+        contextManager.replaceShared(context);
         T target = map(source, targetClass);
-        contextManager.popSharedContext();
+        contextManager.restoreShared();
         return target;
     }
 
     public <T> T map(Object source, Class<T> targetClass, Object mappingCase, Map<String, Object> context) {
-        contextManager.pushSharedContext(context);
+        return map(source, targetClass, mappingCase, new MapContext(context));
+    }
+
+    public <T> T map(Object source, Class<T> targetClass, Object mappingCase, Context context) {
+        contextManager.replaceShared(context);
         T target = map(source, targetClass, mappingCase);
-        contextManager.popSharedContext();
+        contextManager.restoreShared();
         return target;
     }
 
@@ -128,16 +142,24 @@ public class Nomin implements NominMapper {
     }
 
     public <T> T map(Object source, T target, Map<String, Object> context) {
-        contextManager.pushSharedContext(context);
+        return map(source, target, new MapContext(context));
+    }
+
+    public <T> T map(Object source, T target, Context context) {
+        contextManager.replaceShared(context);
         map(source, target, (Object) null);
-        contextManager.popSharedContext();
+        contextManager.restoreShared();
         return target;
     }
 
     public <T> T map(Object source, T target, Object mappingCase, Map<String, Object> context) {
-        contextManager.pushSharedContext(context);
+        return map(source, target, mappingCase, new MapContext(context));
+    }
+
+    public <T> T map(Object source, T target, Object mappingCase, Context context) {
+        contextManager.replaceShared(context);
         map(source, target, mappingCase);
-        contextManager.popSharedContext();
+        contextManager.restoreShared();
         return target;
     }
 
@@ -149,9 +171,8 @@ public class Nomin implements NominMapper {
 
     protected List<MappingWithDirection> findCachedApplicable(Class<?> source, Class<?> target, Object mappingCase) {
         List<MappingWithDirection> result = cachedApplicable.get(new Key(source, target, mappingCase));
-        if (result == null) {
+        if (result == null)
             cachedApplicable.put(new Key(source, target, mappingCase), result = findApplicable(source, target, mappingCase));
-        }
         return result;
     }
 
@@ -247,7 +268,5 @@ public class Nomin implements NominMapper {
         }
     }
 
-    static {
-        logger.info("Nomin Mapping Engine version {}", NOMIN_VERSION);
-    }
+    static { logger.info("Nomin Mapping Engine version {}", NOMIN_VERSION); }
 }

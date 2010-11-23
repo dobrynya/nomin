@@ -2,6 +2,7 @@ package org.nomin.core;
 
 import groovy.lang.Closure;
 import static java.text.MessageFormat.format;
+import org.nomin.context.MapContext;
 import org.slf4j.*;
 import java.util.*;
 
@@ -70,7 +71,7 @@ public class ParsedMapping {
                     direction ? sideA.getName() : sideB.getName(), direction ? sideB.getName() : sideA.getName()));
 
         Map<String, Object> lc = direction ? lc(source, target, direction) : lc(target, source, direction);
-        mapper.contextManager.pushLocalContext(lc);
+        mapper.contextManager.pushLocal(new MapContext(lc));
 
         try { callHook("before"); }
         catch (Throwable throwable) { handle(throwable, lc, hooks.get("before"), "{0}: Hook ''before'' has failed!", mappingName); }
@@ -90,7 +91,7 @@ public class ParsedMapping {
         try { callHook("after"); }
         catch (Throwable throwable) { handle(throwable, lc, hooks.get("after"), "{0}: Hook ''after'' has failed!", mappingName); }
 
-        mapper.contextManager.popLocalContext();
+        mapper.contextManager.popLocal();
         return target;
     }
 
