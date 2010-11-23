@@ -9,7 +9,7 @@ import java.util.regex.Matcher
  * Date: 26.10.2010 Time: 8:38:54
  */
 class JbNamingPolicy implements NamingPolicy {
-  static final jbNamingPolicy = new JbNamingPolicy()
+  public static final jbNamingPolicy = new JbNamingPolicy()
 
   static Pattern propertyAccessorPattern = ~/((get)|(is)|(set))(\p{Upper}.*)+/
 

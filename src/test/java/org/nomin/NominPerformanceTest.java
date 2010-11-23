@@ -68,7 +68,7 @@ public class NominPerformanceTest {
     public void testIntrospectors() {
         Person p = new Person();
         PropertyAccessor refl = MappingConsts.jb.property("name", Person.class);
-        PropertyAccessor asm = new AsmJbIntrospector().property("name", Person.class);
+
         PropertyAccessor impl = new PropertyAccessor() {
             public String getName() { return null; }
             public TypeInfo getTypeInfo() { return null; }
@@ -76,21 +76,7 @@ public class NominPerformanceTest {
             public Object get(Object instance) throws Exception { return ((Person) instance).getName(); }
             public void set(Object instance, Object value) throws Exception { ((Person) instance).setName((String) value); }
         };
-        long s2 = System.nanoTime();
-        for (int i = 0; i < 500000; i++) {
-            try {
-                asm.get(p);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                asm.set(p, "value");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        long d2 = System.nanoTime() - s2;
-        System.out.println("Delta using generated accessor      " + d2);
+
         long s1 = System.nanoTime();
         for (int i = 0; i < 500000; i++) {
             try {

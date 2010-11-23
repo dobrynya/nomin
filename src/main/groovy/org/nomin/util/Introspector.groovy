@@ -30,4 +30,11 @@ public interface Introspector {
    * @return a set of property names
    */
   Set<String> properties(Class<?> targetClass);
+
+
+  /**
+   * Supplies the corresponding instance creator.
+   * @return the instance creator
+   */
+  InstanceCreator instanceCreator();
 }

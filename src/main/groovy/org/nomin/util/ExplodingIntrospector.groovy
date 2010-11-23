@@ -8,8 +8,7 @@ import java.lang.reflect.Field
  * @author Dmitry Dobrynin
  * Created 16.04.2010 11:03:42
  */
-class ExplodingIntrospector extends JbIntrospector {
-
+class ExplodingIntrospector extends BaseReflectionIntrospector {
   def PropertyAccessor property(String name, Class<?> targetClass) {
     def field = searchField(targetClass, name)
     new FieldPropertyAccessor(name, TypeInfo.typeInfo(field.genericType), field)

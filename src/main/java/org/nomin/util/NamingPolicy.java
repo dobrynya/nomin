@@ -25,7 +25,7 @@ public interface NamingPolicy {
     /**
      * Determines whether the specified method name is an propertyAccessor method for a property.
      * @param methodName specifies method name
-     * @return the property name or null if the method is not an propertyAccessor
+     * @return the property name or null if the method is not a property accessor
      */
     String propertyAccessor(String methodName);
 }

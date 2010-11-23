@@ -3,38 +3,37 @@ package org.nomin.util
 import org.nomin.entity.Child
 import org.nomin.entity.LegacyDetails
 import org.nomin.entity.Person
+import org.nomin.core.MappingConsts
 
 /**
- * Tests JbIntrospector.
+ * Tests ReflectionIntrospector.
  * @author Dmitry Dobrynin
  * Created 14.04.2010 17:51:18
  */
 @SuppressWarnings("GroovyVariableNotAssigned")
-class JbIntrospectorTest {
-  def intr = new JbIntrospector()
-
+class ReflectionIntrospectorTest implements MappingConsts {
   String methodToFind(String s, int i, String s2, long l) {
     "${s} ${i} ${s2} ${l}"
   }
 
   @org.junit.Test
   void testInvocation() {
-    def invocation = intr.invocation("methodToFind", getClass(), "String", 1, null, 1L)
+    def invocation = jb.invocation("methodToFind", getClass(), "String", 1, null, 1L)
     assert invocation && invocation.invoke(this) == "String 1 null 1"
   }
 
   @org.junit.Test
   void testCanApply() {
-    assert intr.canApply(null, String)
-    assert intr.canApply(String, String)
-    assert intr.canApply(Class.getPrimitiveClass("int"), Class.getPrimitiveClass("int"))
-    assert intr.canApply(Integer, Number)
-    assert !intr.canApply(Integer, String)
+    assert jb.canApply(null, String)
+    assert jb.canApply(String, String)
+    assert jb.canApply(Class.getPrimitiveClass("int"), Class.getPrimitiveClass("int"))
+    assert jb.canApply(Integer, Number)
+    assert !jb.canApply(Integer, String)
   }
 
   @org.junit.Test
   void testProperty() {
-    def prop = intr.property("name", Person)
+    def prop = jb.property("name", Person)
     assert prop
     assert "name" == prop.name
     assert String == prop.typeInfo.type
@@ -42,17 +41,17 @@ class JbIntrospectorTest {
     assert p.name == prop.get(p)
     prop.set(p, "New Name")
     assert "New Name" == p.name
-    prop = intr.property("sex", LegacyDetails)
+    prop = jb.property("sex", LegacyDetails)
     def ld = new LegacyDetails(sex: true)
     assert prop.get(ld)
-    prop = intr.property("children", Person)
+    prop = jb.property("children", Person)
     assert Child == prop.typeInfo.parameters[0].type
     assert List == prop.typeInfo.type
-    assert !intr.property("non-existent", Person)
+    assert !jb.property("non-existent", Person)
   }
 
   @org.junit.Test
   void testProperties() {
-    assert intr.properties(Person).containsAll(["name", "lastName", "birthDate", "gender", "children", "strDate"])
+    assert jb.properties(Person).containsAll(["name", "lastName", "birthDate", "gender", "children", "strDate"])
   }
 }

@@ -9,7 +9,6 @@ import org.nomin.util.*;
  */
 public interface MappingConsts {
     String DEFAULT = "default";
-    Introspector jb = new JbIntrospector();
+    Introspector jb = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy);
     Introspector exploding = new ExplodingIntrospector();
-//    Introspector asm = new AsmJbIntrospector();
 }

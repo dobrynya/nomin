@@ -3,16 +3,16 @@ package org.nomin.util;
 import java.lang.reflect.Method;
 
 /**
- * Contains propertyAccessor methods.
+ * Contains property accessor methods and provides accessing a property.
  * @author Dmitry Dobrynin
  *         Created: 18.04.2010 14:28:28
  */
-public class JbPropertyAccessor implements PropertyAccessor {
+public class ReflectionPropertyAccessor implements PropertyAccessor {
     private String name;
     private Method setter, getter;
     private TypeInfo typeInfo;
 
-    public JbPropertyAccessor(String name, Method getter, Method setter, TypeInfo typeInfo) {
+    public ReflectionPropertyAccessor(String name, Method getter, Method setter, TypeInfo typeInfo) {
         this.name = name;
         this.getter = getter;
         this.setter = setter;

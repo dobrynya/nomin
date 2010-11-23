@@ -2,16 +2,19 @@ package org.nomin.util
 
 /**
  * Introspects a JavaBeans class. No matter whether specified class is a concrete class or interface.
- * JbIntrospector is restricted to work only with public methods.
+ * ReflectionIntrospector is restricted to work only with public methods. It creates property accessors using the supplied
+ * naming policy.
  * @author Dmitry Dobrynin
  * Created 14.04.2010 17:11:13
  */
-class JbIntrospector extends BaseIntrospector {
-  private NamingPolicy namingPolicy = JbNamingPolicy.jbNamingPolicy
+class ReflectionIntrospector extends BaseReflectionIntrospector {
+  private NamingPolicy namingPolicy;
+
+  def ReflectionIntrospector(namingPolicy) { this.namingPolicy = namingPolicy; }
 
   PropertyAccessor property(String name, Class<?> targetClass) {
     def (getter, setter, typeInfo) = findAccessorMethods(namingPolicy.getters(name), namingPolicy.setters(name), targetClass)
-    if (getter || setter) new JbPropertyAccessor(name, getter, setter, typeInfo)
+    if (getter || setter) new ReflectionPropertyAccessor(name, getter, setter, typeInfo)
   }
 
   public Set<String> properties(Class<?> targetClass) {

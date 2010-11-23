@@ -19,8 +19,8 @@ class PropPathElem extends PathElem {
               pathElementMappingEntry.mapping.mappingName, pathElementMappingEntry, ownerTypeInfo.type.simpleName, propPathElementPropertyName))
     def merged = property.typeInfo.merge(hint)
     merged.container ?
-      new CollectionRuleElem(property, merged, pathElementMappingEntry.mapping.mapper.instanceCreator) : 
-      new PropRuleElem(property, merged, pathElementMappingEntry.mapping.mapper.instanceCreator)
+      new CollectionRuleElem(property, merged, pathElementMappingEntry.introspector.instanceCreator()) :
+      new PropRuleElem(property, merged, pathElementMappingEntry.introspector.instanceCreator())
   }
 
   String toString() { nextPathElement ?
