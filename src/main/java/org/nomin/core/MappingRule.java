@@ -24,7 +24,7 @@ public class MappingRule {
 
     public Object map(Object source, Object target, RuleElem srcElem, RuleElem targetElem) throws Exception {
         Object result = srcElem.get(source);
-        if (logger.isTraceEnabled()) logger.trace("{} = {}", srcElem.path(), result);
+        if (logger.isTraceEnabled()) logger.trace(format("{0}: {1} = {2}", mapping.mappingName, srcElem.path(), result));
         if (result != null || mapping.mapNulls) return targetElem.set(target, result);
         return target;
     }

@@ -13,7 +13,7 @@ class MethodPathElem extends PathElem {
   List methodPathElementInvocationParameters
 
   RuleElem createMappingRuleElement(TypeInfo ownerTypeInfo, TypeInfo hint, RuleElem prev) {
-    MethodInvocation invocation = pathElementMappingEntry.introspector
+    MethodInvocation invocation = pathElementMappingEntry.mapping.introspector
             .invocation(methodPathElementMethodName, ownerTypeInfo.type, *methodPathElementInvocationParameters)
     new MethodRuleElem(invocation.typeInfo.merge(hint), invocation)
   }

@@ -3,6 +3,7 @@ package org.nomin.core;
 import groovy.lang.Closure;
 import static java.text.MessageFormat.format;
 import org.nomin.context.MapContext;
+import org.nomin.util.InstanceCreator;
 import org.slf4j.*;
 import java.util.*;
 
@@ -17,23 +18,26 @@ public class ParsedMapping {
 
     final String mappingName;
     final Class<?> sideA, sideB; // TODO: Extract to the separate structure
+    final boolean mapNulls; // TODO: Extract to the separate structure
     final Object mappingCase;
     final MappingRule[] rules; // using an array is necessary for optimizing performance
     final Map<String, Closure> hooks;
     private List<Class<? extends Throwable>> throwables;
-    final boolean mapNulls; // TODO: Extract to the separate structure
+    final InstanceCreator instanceCreator;
     final Nomin mapper;
 
     public ParsedMapping(String mappingName, Class<?> sideA, Class<?> sideB, Object mappingCase, List<MappingRule> rules,
-                         Map<String, Closure> hooks, boolean mapNulls, List<Class<? extends Throwable>> throwables, Nomin mapper) {
+                         Map<String, Closure> hooks, boolean mapNulls, List<Class<? extends Throwable>> throwables,
+                         InstanceCreator instanceCreator, Nomin mapper) {
         this.mappingName = mappingName;
         this.sideB = sideB;
         this.sideA = sideA;
+        this.mapNulls = mapNulls;
         this.mappingCase = mappingCase;
         this.rules = rules.toArray(new MappingRule[rules.size()]);
         this.hooks = hooks;
         this.throwables = throwables;
-        this.mapNulls = mapNulls;
+        this.instanceCreator = instanceCreator;
         this.mapper = mapper;
         for (MappingRule rule : this.rules) rule.mapping = this;
     }
@@ -93,6 +97,13 @@ public class ParsedMapping {
 
         mapper.contextManager.popLocal();
         return target;
+    }
+
+    public Object map(Object source, Class<?> targetClass, boolean direction) {
+        try { return map(source, instanceCreator.create(targetClass), direction); }
+        catch (Exception e) {
+            throw new NominException(format("{0}: Could not instantiate {1}!", mappingName, targetClass.getName()), e);
+        }
     }
 
     public String toString() {

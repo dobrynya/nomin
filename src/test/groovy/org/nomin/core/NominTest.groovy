@@ -1,6 +1,5 @@
 package org.nomin.core
 
-import org.nomin.core.NominException
 import org.nomin.entity.*
 
 /**
@@ -9,16 +8,16 @@ import org.nomin.entity.*
  * Created: 18.05.2010 0:36:40
  */
 class NominTest {
-  Nomin nomin = new Nomin()
+  Nomin nomin = new Nomin().disableAutomapping()
 
   @org.junit.Test
   void testFindApplicable() {
     ParsedMapping m1, m2, m3, m4
     nomin.mappings = [
-            m1 = new ParsedMapping("", Person, Employee, null, [], [:], false, null, nomin),
-            m2 = new ParsedMapping("", Person, Employee, "1", [], [:], false, null, nomin),
-            m3 = new ParsedMapping("", LinearManager, DetailedPerson, null, [], [:], false, null, nomin),
-            m4 = new ParsedMapping("", LinearManager, DetailedPerson, "1", [], [:], false, null, nomin)
+            m1 = new ParsedMapping("", Person, Employee, null, [], [:], false, null, null, nomin),
+            m2 = new ParsedMapping("", Person, Employee, "1", [], [:], false, null, null, nomin),
+            m3 = new ParsedMapping("", LinearManager, DetailedPerson, null, [], [:], false, null, null, nomin),
+            m4 = new ParsedMapping("", LinearManager, DetailedPerson, "1", [], [:], false, null, null, nomin)
     ]
 
     def res = nomin.findApplicable(Person, Employee, null)

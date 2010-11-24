@@ -22,10 +22,10 @@ public class NominMappingReplacementTest {
 
     @Test
     public void testMappingReplacement() {
-        ParsedMapping p1 = new ParsedMapping("", p, e, null, mrl, hm, false, null, nomin);
-        ParsedMapping p2 = new ParsedMapping("", e, p, null, mrl, hm, false, null, nomin);
-        ParsedMapping p3 = new ParsedMapping("", e, p, "The first", mrl, hm, false, null, nomin);
-        ParsedMapping p4 = new ParsedMapping("", p, e, "The first", mrl, hm, false, null, nomin);
+        ParsedMapping p1 = new ParsedMapping("", p, e, null, mrl, hm, false, null, null, nomin);
+        ParsedMapping p2 = new ParsedMapping("", e, p, null, mrl, hm, false, null, null, nomin);
+        ParsedMapping p3 = new ParsedMapping("", e, p, "The first", mrl, hm, false, null, null, nomin);
+        ParsedMapping p4 = new ParsedMapping("", p, e, "The first", mrl, hm, false, null, null, nomin);
         Mapping m1 = Mockito.mock(Mapping.class), m2 = Mockito.mock(Mapping.class), m3 = Mockito.mock(Mapping.class),
                 m4 = Mockito.mock(Mapping.class);
         Mockito.when(m1.parse()).thenReturn(p1);

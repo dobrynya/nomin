@@ -42,7 +42,7 @@ public interface NominMapper {
      * @param source specifies source object
      * @param targetClass specifies target class to map to
      * @param <T> specifies target class
-     * @return mapped instance of a target class
+     * @return mapped instance of a target class or null if appropriate mappings are not found and automapping is disabled
      */
     <T> T map(Object source, Class<T> targetClass);
 
@@ -52,7 +52,7 @@ public interface NominMapper {
      * @param targetClass specifies target class to map to
      * @param mappingCase specifies a mapping case
      * @param <T> specifies target class
-     * @return mapped instance of a target class
+     * @return mapped instance of a target class or null if appropriate mappings are not found and automapping is disabled
      */
     <T> T map(Object source, Class<T> targetClass, Object mappingCase);
 
@@ -62,7 +62,7 @@ public interface NominMapper {
      * @param targetClass specifies target class to map to
      * @param context specifies context replacing current context
      * @param <T> specifies target class
-     * @return mapped instance of a target class
+     * @return mapped instance of a target class or null if appropriate mappings are not found and automapping is disabled
      * @deprecated use {@link #map(Object, Class, org.nomin.context.Context)}
      */
     @Deprecated
@@ -85,7 +85,7 @@ public interface NominMapper {
      * @param mappingCase specifies a mapping case
      * @param context specifies the context replacing current context
      * @param <T> specifies target class
-     * @return mapped instance of a target class
+     * @return mapped instance of a target class or null if appropriate mappings are not found and automapping is disabled
      * @deprecated use {@link #map(Object, Class, Object, org.nomin.context.Context)}
      */
     @Deprecated
@@ -98,7 +98,7 @@ public interface NominMapper {
      * @param mappingCase specifies a mapping case
      * @param context specifies the context replacing current context
      * @param <T> specifies target class
-     * @return mapped instance of a target class
+     * @return mapped instance of a target class or null if appropriate mappings are not found and automapping is disabled
      */
     <T> T map(Object source, Class<T> targetClass, Object mappingCase, Context context);
 

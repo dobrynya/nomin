@@ -10,11 +10,7 @@ import static java.text.MessageFormat.format;
  *         Date: 23.11.2010 time: 10:57:45
  */
 public class FastInstanceCreator implements InstanceCreator {
-    public <T> T create(Class<T> clazz) {
-        try {
-            return clazz.cast(FastHelper.getOrCreateFastClass(clazz).newInstance());
-        } catch (InvocationTargetException e) {
-            throw new NominException(format("Could not create an instance of {0}!", clazz));
-        }
+    public <T> T create(Class<T> clazz) throws Exception {
+        return clazz.cast(FastHelper.getOrCreateFastClass(clazz).newInstance());
     }
 }

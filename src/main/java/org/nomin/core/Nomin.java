@@ -6,10 +6,11 @@ import org.nomin.context.*;
 import org.nomin.util.*;
 import org.slf4j.*;
 import java.util.*;
+import static java.text.MessageFormat.format;
 
 /**
  * NominMapper implementation.
- * Automapping facility is disabled by default.
+ * Automapping facility is enabled by default.
  * @author Dmitry Dobrynin
  *         Created 28.04.2010 17:10:24
  */
@@ -21,7 +22,7 @@ public class Nomin implements NominMapper {
     protected ContextManager contextManager = new ContextManager();
     protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
     protected Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
-    protected boolean automappingEnabled = false;
+    protected boolean automappingEnabled = true;
     protected InstanceCreator instanceCreator = Mapping.getJb().instanceCreator();
 
     public Nomin() {}
@@ -58,13 +59,13 @@ public class Nomin implements NominMapper {
 
     public boolean isAutomappingEnabled() { return automappingEnabled; }
 
-    public NominMapper enableAutomapping() {
+    public Nomin enableAutomapping() {
         this.automappingEnabled = true;
         logger.debug("Nomin's automapping facility is enabled");
         return this;
     }
 
-    public NominMapper disableAutomapping() {
+    public Nomin disableAutomapping() {
         this.automappingEnabled = false;
         logger.debug("Nomin's automapping facility is disabled");
         return this;
@@ -73,41 +74,44 @@ public class Nomin implements NominMapper {
     @Deprecated
     public NominMapper setContext(Map<String, Object> context) { return context(new MapContext(context)); }
 
-    public NominMapper context(Context context) {
+    public Nomin context(Context context) {
         contextManager.setSharedContext(context);
         return this;
     }
 
-    public NominMapper instanceCreator(InstanceCreator instanceCreator) {
+    public Nomin instanceCreator(InstanceCreator instanceCreator) {
         this.instanceCreator = instanceCreator;
         return this;
     }
 
     public List<ParsedMapping> getMappings() { return Collections.unmodifiableList(mappings); }
 
-    public NominMapper parse(String... mappingScripts) {
+    public Nomin parse(String... mappingScripts) {
         for (String mappingScript : mappingScripts) parse(scriptLoader.load(mappingScript));
         return this;
     }
 
-    public NominMapper parse(Class<? extends Mapping>... mappingClasses) {
-        for (Class<? extends Mapping> mc : mappingClasses) parse(Mapping.getJb().instanceCreator().create(mc));
+    public Nomin parse(Class<? extends Mapping>... mappingClasses) {
+        for (Class<? extends Mapping> mc : mappingClasses) {
+            Mapping mapping;
+            try { mapping = instanceCreator.create(mc); }
+            catch (Exception e) { throw new NominException(format("Could not instantiate mapping {0}!", mc), e); }
+            parse(mapping);
+        }
         return this;
     }
 
-    public synchronized NominMapper parse(Mapping mapping) {
+    public synchronized Nomin parse(Mapping mapping) {
         cachedApplicable.clear(); // the cache is cleared before parsing a mapping
         mapping.setMapper(this);
         addOrReplace(mapping.parse());
         return this;
     }
 
-    public <T> T map(Object source, Class<T> targetClass) {
-        return map(source, targetClass, (Object) null);
-    }
+    public <T> T map(Object source, Class<T> targetClass) { return map(source, targetClass, (Object) null); }
 
     public <T> T map(Object source, Class<T> targetClass, Object mappingCase) {
-        return source != null && targetClass != null ? map(source, instanceCreator.create(targetClass), mappingCase) : null;
+        return source != null && targetClass != null ? (T) map(source, null, targetClass, mappingCase) : null;
     }
 
     public <T> T map(Object source, Class<T> targetClass, Map<String, Object> context) {
@@ -163,10 +167,12 @@ public class Nomin implements NominMapper {
         return target;
     }
 
-    protected void map(Object source, Object target, Class<?> targetClass, Object mappingCase) {
+    protected Object map(Object source, Object target, Class<?> targetClass, Object mappingCase) {
         for (MappingWithDirection mwd : findCachedApplicable(source.getClass(), targetClass, mappingCase)) {
-            mwd.mapping.map(source, target, mwd.direction);
+            if (target != null) mwd.mapping.map(source, target, mwd.direction);
+            else target = mwd.mapping.map(source, targetClass, mwd.direction);
         }
+        return target;
     }
 
     protected List<MappingWithDirection> findCachedApplicable(Class<?> source, Class<?> target, Object mappingCase) {

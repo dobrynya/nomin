@@ -36,5 +36,16 @@ Introspectors
 
   []
 
+  Predefined introspectors are exploding and jb. In a mapping we can choose any introspector as follows
+
++---
+  mappingFor a: Class1, b: Class2
+  introspector exploding // or jb
+  // or FastIntrospector based on CGLIB
+  introspector new FastIntrospector(JbNamingPolicy.jbNamingPolicy)
++---
+
+
+
   You are absolutely free to implement an introspector/instance creator for your own needs.
 

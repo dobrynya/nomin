@@ -26,7 +26,7 @@ class Mapping {
   Boolean mapNulls = false
   Nomin mapper
 
-  private Introspector introspector = jb
+  protected Introspector introspector = jb
   private List<MappingEntry> entries = []
   private Map<String, Closure> hooks = [ throwableHandler: {} ]
   private List<Class<? extends Throwable>> throwables
@@ -40,7 +40,8 @@ class Mapping {
 
   ParsedMapping parse() {
     build()
-    new ParsedMapping(mappingName, side.a, side.b, mappingCase, entries*.parse(), hooks, mapNulls, throwables, mapper)
+    new ParsedMapping(mappingName, side.a, side.b, mappingCase, entries*.parse(), hooks, mapNulls, throwables,
+            introspector.instanceCreator(), mapper)
   }
 
   /** Defines mapping information: classes of the sides and mapping case */
@@ -129,8 +130,8 @@ class Mapping {
 
   /** Uses specified class introspector. */
   void introspector(Introspector introspector) {
-    this.introspector = introspector
-    entry().introspector = introspector
+    if (introspector) this.introspector = introspector
+    else throw new NominException("${mappingName}: introspector should not be null!")
   }
 
   /** Creates mapping entries with properties of the same names. */
@@ -155,7 +156,7 @@ class Mapping {
 
   /** Returns current mapping entry or newly created entry if the previous entry is full */
   private def entry() {
-    if (!entries || entries.last().completed()) entries << new MappingEntry(mapping: this, introspector: introspector)
+    if (!entries || entries.last().completed()) entries << new MappingEntry(mapping: this)
     entries.last()
   }
 

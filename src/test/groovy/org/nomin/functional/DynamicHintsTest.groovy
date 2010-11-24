@@ -10,10 +10,7 @@ import org.nomin.entity.*
  * Created: 13.05.2010 0:42:07
  */
 class DynamicHintsTest {
-  def mapper = new Nomin()
-
-  @org.junit.Before
-  void before() { mapper.parse Zoo2AnimalContainer }
+  def mapper = new Nomin(Zoo2AnimalContainer)
 
   @org.junit.Test
   void test() {

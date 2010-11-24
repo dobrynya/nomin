@@ -33,7 +33,6 @@ class ContextManager {
 
   def propertyMissing(String name) {
     def result = local.get().last().getResource(name) ?: shared.get().getResource(name)
-    // TODO: Consider not to throw the exception but rather to return null and warn with logging!
     if (result == null) throw new MissingPropertyException("There is no resource/component '${name}' in the context!")
     result
   }
