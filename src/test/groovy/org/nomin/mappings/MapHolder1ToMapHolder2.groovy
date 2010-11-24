@@ -17,9 +17,7 @@ class MapHolder1ToMapHolder2 extends Mapping {
     hint a: Map[{ it.matches("\\d+") ? Integer : String }, { DetailedPerson }],
             b: Map[{ it.matches("\\d+") ? Integer : String }, { LinearManager }]
     a.persons2 = b.employees
-    convert to_a: {
-      println(it)
-      it
-    }
+    convert to_a: { e -> [e.key.toString(), e.value.toString()] },
+            to_b: { e -> [Integer.valueOf(e.key), new Employee(name: e.value)] }
   }
 }

@@ -17,8 +17,8 @@ public class ParsedMapping {
     private static final Logger logger = LoggerFactory.getLogger(ParsedMapping.class);
 
     final String mappingName;
-    final Class<?> sideA, sideB; // TODO: Extract to the separate structure
-    final boolean mapNulls; // TODO: Extract to the separate structure
+    final Class<?> sideA, sideB;
+    final boolean mapNulls;
     final Object mappingCase;
     final MappingRule[] rules; // using an array is necessary for optimizing performance
     final Map<String, Closure> hooks;
@@ -61,7 +61,8 @@ public class ParsedMapping {
                     return;
                 }
         }
-        throw throwable instanceof NominException ? (NominException) throwable : new NominException(format(message, params), throwable);
+        throw throwable instanceof NominException && !((NominException) throwable).shouldWrap ?
+                (NominException) throwable : new NominException(format(message, params), throwable);
     }
 
     protected void callHook(String hookName) {
@@ -69,10 +70,15 @@ public class ParsedMapping {
         if (hook != null) hook.call();
     }
 
-    public Object map(Object source, Object target, boolean direction) {
+    public Object map(Object source, Object target, Class<?> targetClass, boolean direction) {
         if (logger.isTraceEnabled())
-            logger.trace(format("{0}{1}: {2} is being mapped to {3}", mappingName, mappingCase != null ? ":" + mappingCase : "",
-                    direction ? sideA.getName() : sideB.getName(), direction ? sideB.getName() : sideA.getName()));
+            logger.trace(format("{0}: {1} is being mapped to {2}",
+                    mappingCase == null ? mappingName : mappingName + ":" + mappingCase,
+                    source.getClass().getName(), targetClass.getName()));
+
+        if (target == null)
+            try { target = instanceCreator.create(targetClass); }
+            catch (Exception e) { throw new NominException(true, format("Could not instantiate {0}!", targetClass), e); }
 
         Map<String, Object> lc = direction ? lc(source, target, direction) : lc(target, source, direction);
         mapper.contextManager.pushLocal(new MapContext(lc));
@@ -80,30 +86,15 @@ public class ParsedMapping {
         try { callHook("before"); }
         catch (Throwable throwable) { handle(throwable, lc, hooks.get("before"), "{0}: Hook ''before'' has failed!", mappingName); }
 
-        for (MappingRule rule : rules) {
-            try {
-                Object newTarget = direction ? rule.mapAtoB(source, target) : rule.mapBtoA(source, target);
-                if (newTarget != target) {
-                    target = newTarget;
-                    lc.put(direction ? "b" : "a", target);
-                }
-            } catch (Throwable throwable) {
-                handle(throwable, lc, rule, "{0}: Mapping rule {1} has failed!", mappingName, rule);
-            }
-        }
+        for (MappingRule rule : rules)
+            try { if (direction) rule.mapAtoB(source, target); else rule.mapBtoA(source, target); }
+            catch (Throwable throwable) { handle(throwable, lc, rule, "{0}: Mapping rule {1} has failed!", mappingName, rule); }
 
         try { callHook("after"); }
         catch (Throwable throwable) { handle(throwable, lc, hooks.get("after"), "{0}: Hook ''after'' has failed!", mappingName); }
 
         mapper.contextManager.popLocal();
         return target;
-    }
-
-    public Object map(Object source, Class<?> targetClass, boolean direction) {
-        try { return map(source, instanceCreator.create(targetClass), direction); }
-        catch (Exception e) {
-            throw new NominException(format("{0}: Could not instantiate {1}!", mappingName, targetClass.getName()), e);
-        }
     }
 
     public String toString() {

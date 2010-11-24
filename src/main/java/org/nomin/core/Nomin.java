@@ -14,6 +14,7 @@ import static java.text.MessageFormat.format;
  * @author Dmitry Dobrynin
  *         Created 28.04.2010 17:10:24
  */
+@SuppressWarnings({"unchecked"})
 public class Nomin implements NominMapper {
     public static final String NOMIN_VERSION = "1.1.0";
     static final Logger logger = LoggerFactory.getLogger(Nomin.class);
@@ -169,8 +170,7 @@ public class Nomin implements NominMapper {
 
     protected Object map(Object source, Object target, Class<?> targetClass, Object mappingCase) {
         for (MappingWithDirection mwd : findCachedApplicable(source.getClass(), targetClass, mappingCase)) {
-            if (target != null) mwd.mapping.map(source, target, mwd.direction);
-            else target = mwd.mapping.map(source, targetClass, mwd.direction);
+            target = mwd.mapping.map(source, target, targetClass, mwd.direction);
         }
         return target;
     }

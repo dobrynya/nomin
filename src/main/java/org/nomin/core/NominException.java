@@ -6,17 +6,21 @@ package org.nomin.core;
  *         Created: 09.05.2010 21:42:46
  */
 public class NominException extends RuntimeException {
-    public NominException() {}
+    protected boolean shouldWrap = false;
 
-    public NominException(String message) {
+    public NominException(String message) { super(message); }
+
+    public NominException(boolean shouldWrap, String message) {
         super(message);
+        this.shouldWrap = shouldWrap;
     }
 
-    public NominException(String message, Throwable cause) {
+    public NominException(String message, Throwable cause) { super(message, cause); }
+
+    public NominException(boolean shouldWrap, String message, Throwable cause) {
         super(message, cause);
+        this.shouldWrap = shouldWrap;
     }
 
-    public NominException(Throwable cause) {
-        super(cause);
-    }
+    public boolean shouldWrap() { return shouldWrap; }
 }

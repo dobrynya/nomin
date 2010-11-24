@@ -11,7 +11,7 @@ public class MapHolder1 {
     private Map<String, String> strings;
     private Map<String, Person> persons;
     private Object objects;
-    private Map<String, Person> persons2;
+    private Map<String, String> persons2;
 
     public Map<String, String> getStrings() { return strings; }
 
@@ -25,7 +25,7 @@ public class MapHolder1 {
 
     public void setObjects(Object objects) { this.objects = objects; }
 
-    public Map<String, Person> getPersons2() { return persons2; }
+    public Map<String, String> getPersons2() { return persons2; }
 
-    public void setPersons2(Map<String, Person> persons2) { this.persons2 = persons2; }
+    public void setPersons2(Map<String, String> persons2) { this.persons2 = persons2; }
 }

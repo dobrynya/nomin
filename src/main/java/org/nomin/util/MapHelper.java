@@ -1,7 +1,7 @@
 package org.nomin.util;
 
 import org.nomin.core.NominException;
-import org.nomin.core.preprocessing.Preprocessing;
+import org.nomin.core.preprocessing.*;
 import java.util.*;
 import static java.text.MessageFormat.format;
 import static org.nomin.core.preprocessing.Preprocessing.preprocess;
@@ -23,10 +23,15 @@ public class MapHelper extends ContainerHelper {
 
     public Object convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
         Map<Object, Object> target = createContainer(source.size());
-        for (Object e : source) {
-            Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>) e;
-            target.put(preprocess(entry.getKey(), preprocessings, 0), preprocess(entry.getValue(), preprocessings, 1));
-        }
+        boolean conv = preprocessings != null && preprocessings.length == 1 && preprocessings[0] instanceof ConversionPreprocessing;
+        for (Object e : source)
+            if (conv) {
+                List tuple = (List) preprocess(e, preprocessings, 0);
+                target.put(tuple.get(0), tuple.get(1));
+            } else {
+                Map.Entry<Object, Object> entry = (Map.Entry<Object, Object>) e;
+                target.put(preprocess(entry.getKey(), preprocessings, 0), preprocess(entry.getValue(), preprocessings, 1));
+            }
         return target;
     }
 

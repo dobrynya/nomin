@@ -197,7 +197,7 @@ public interface NominMapper {
     NominMapper context(Context context);
 
     /**
-     * Provides Nomin with the service to be used for creating object instances.
+     * Provides Nomin with the service to be used for creating Mapping instances when calling {@link #parse(Class[])}.
      * @param instanceCreator specifies the instance creator
      * @return this
      */

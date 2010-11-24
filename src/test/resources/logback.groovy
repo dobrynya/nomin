@@ -9,12 +9,12 @@ import static ch.qos.logback.classic.Level.*
 
 appender("STDOUT", ConsoleAppender) {
   encoder(PatternLayoutEncoder) {
-    pattern = "%d{HH:mm:ss.SSS} %-5level %logger{c} - %msg%n"
+    pattern = "%d{HH:mm:ss.SSS} %-5level %logger{15} - %msg%n"
   }
 }
 
 root(DEBUG, ["STDOUT"])
-logger("org.nomin", TRACE)
+logger("org.nomin", DEBUG)
 
 
 

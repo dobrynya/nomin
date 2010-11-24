@@ -30,3 +30,11 @@ Working with Maps
   }]
 +---
 
+  Here is a special case when a custom conversion is used with map properties. A closure gets a Map.Entry value as the
+  only parameter and should result exactly with a tuple [key, value]. The next sample shows the idea.
+
++---
+  a.options = b.properties // options is Map<String, String>
+  // just convert keys and values to strings
+  convert to_a: { e -> [ String.valueOf(e.key), String.valueOf(e.value) ] }
++---

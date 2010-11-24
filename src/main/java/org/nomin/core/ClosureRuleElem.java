@@ -1,9 +1,7 @@
 package org.nomin.core;
 
 import groovy.lang.Closure;
-import org.nomin.core.preprocessing.Preprocessing;
 import org.nomin.util.TypeInfo;
-import org.nomin.util.TypeInfoFactory;
 
 /**
  * Calculates an expression.
@@ -21,7 +19,7 @@ public class ClosureRuleElem extends RuleElem {
     public Object get(Object instance) throws Exception { return closure.call(); }
 
     public Object set(Object instance, Object value) throws Exception {
-        throw new NominException("Could not set the closure!");
+        throw new NominException(true, "Could not assign a value to the closure!");
     }
 
     public String toString() { return "{ expression }"; }

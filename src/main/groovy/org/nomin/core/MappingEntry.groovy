@@ -90,22 +90,22 @@ class MappingEntry {
   }
 
   protected Preprocessing[] preprocessings(MappingSide thiz, MappingSide that) {
-      if (thiz.conversion != null) [new ConversionPreprocessing(thiz.conversion)] as Preprocessing[]
-      else if (!thiz.lastRuleElem.typeInfo.container)
-        [preprocessing(thiz.lastRuleElem.typeInfo, that.lastRuleElem.typeInfo)] as Preprocessing[]
-      else {
-        def result = []
-        for (i in 0..<thiz.lastRuleElem.typeInfo.parameters.size())
-          result[i] = preprocessing(thiz.lastRuleElem.typeInfo.getParameter(i), that.lastRuleElem.typeInfo.getParameter(i))
-        result as Preprocessing[]
-      }
+    if (thiz.conversion != null) [new ConversionPreprocessing(thiz.conversion)] as Preprocessing[]
+    else if (!thiz.lastRuleElem.typeInfo.container)
+      [preprocessing(thiz.lastRuleElem.typeInfo, that.lastRuleElem.typeInfo)] as Preprocessing[]
+    else {
+      def result = []
+      for (i in 0..<thiz.lastRuleElem.typeInfo.parameters.size())
+        result[i] = preprocessing(thiz.lastRuleElem.typeInfo.getParameter(i), that.lastRuleElem.typeInfo.getParameter(i))
+      result as Preprocessing[]
     }
+  }
 
-    protected Preprocessing preprocessing(TypeInfo thiz, TypeInfo that) {
-      if (thiz.dynamic || that.isUndefined()) new DynamicPreprocessing(thiz, mapping.mapper, mappingCase)
-      else if (ConvertUtils.lookup(that.type, thiz.type) != null) new ConvertUtilsPreprocessing(thiz.type)
-      else if (!thiz.type.isAssignableFrom(that.type)) new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
-    }
+  protected Preprocessing preprocessing(TypeInfo thiz, TypeInfo that) {
+    if (thiz.dynamic || that.isUndefined()) new DynamicPreprocessing(thiz, mapping.mapper, mappingCase)
+    else if (ConvertUtils.lookup(that.type, thiz.type) != null) new ConvertUtilsPreprocessing(thiz.type)
+    else if (!thiz.type.isAssignableFrom(that.type)) new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
+  }
 
   String toString() { format("{0} = {1}", sides[0].pathElem, sides[1].pathElem) }
 }

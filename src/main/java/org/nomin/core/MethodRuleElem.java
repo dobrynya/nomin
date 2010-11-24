@@ -22,7 +22,7 @@ public class MethodRuleElem extends RuleElem {
     }
 
     public Object set(Object instance, Object value) throws Exception {
-        throw new NominException("!");
+        throw new NominException(true, "Could not assign a value to the method invocation!");
     }
 
     public String toString() { return invocation.toString(); }
