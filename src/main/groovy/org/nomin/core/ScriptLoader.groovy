@@ -19,8 +19,6 @@ class ScriptLoader {
 
   /** Processes loaded Groovy script to integrate it with a mapping instance. */
   Mapping load(Script script, String scriptName) {
-    // TODO: Don't delegate method invocation directly to a mapping instance. Users should be able to define several
-    // mappings in one script, so method mappingFor should produce and configure new mapping
     Mapping mapping = new Mapping()
     mapping.mappingName = scriptName
     script.metaClass.methodMissing = mapping.&invokeMethod

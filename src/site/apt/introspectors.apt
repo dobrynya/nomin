@@ -42,7 +42,7 @@ Introspectors
   mappingFor a: Class1, b: Class2
   introspector exploding // or jb
   // or FastIntrospector based on CGLIB
-  introspector new FastIntrospector(JbNamingPolicy.jbNamingPolicy)
+  introspector new FastIntrospector()
 +---
 
 

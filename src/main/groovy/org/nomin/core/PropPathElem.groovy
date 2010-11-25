@@ -15,8 +15,7 @@ class PropPathElem extends PathElem {
   RuleElem createMappingRuleElement(TypeInfo ownerTypeInfo, TypeInfo hint, RuleElem prev) {
     PropertyAccessor property = pathElementMappingEntry.mapping.introspector.property(propPathElementPropertyName, ownerTypeInfo.type)
     if (!property)
-      throw new NominException(format("{0}: Mapping rule {1} is invalid because of missing property {2}.{3}!",
-              pathElementMappingEntry.mapping.mappingName, pathElementMappingEntry, ownerTypeInfo.type.simpleName, propPathElementPropertyName))
+      throw new NominException("${pathElementMappingEntry.mapping.mappingName}: Mapping rule ${pathElementMappingEntry} is invalid because of missing property ${ownerTypeInfo}.${propPathElementPropertyName}!")
     def merged = property.typeInfo.merge(hint)
     merged.container ?
       new CollectionRuleElem(property, merged, pathElementMappingEntry.mapping.introspector.instanceCreator()) :

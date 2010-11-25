@@ -37,28 +37,19 @@ public class TypeInfo {
     public TypeInfo(Closure dynamicType) { this(null, dynamicType, Collections.<TypeInfo>emptyList()); }
 
     public TypeInfo getParameter(int i) {
-        return parameters != null && i < parameters.size() ? parameters.get(i) : TypeInfoFactory.typeInfo(Object.class);
+        return i < parameters.size() ? parameters.get(i) : TypeInfoFactory.typeInfo(Object.class);
     }
 
     public boolean isContainer() { return collection || array || map; }
 
     public boolean isUndefined() { return type == Undefined.class; }
 
-    public boolean isDynamic() {
-        for (TypeInfo ti : parameters) if (ti.isDynamic()) return true;
-        return dynamicType != null;
-    }
+    public boolean isDynamic() { return dynamicType != null; }
 
     public TypeInfo merge(TypeInfo typeInfo) { return typeInfo != null ? TypeInfoFactory.merge(this, typeInfo) : this; }
 
     public Class<?> determineTypeDynamically(Object instance) {
-        if (array || collection)
-            return parameters.size() == 1 ? parameters.get(0).determineTypeDynamically(instance) : Object.class;
-        else if (map)
-            return parameters.size() == 2 ? parameters.get(0).determineTypeDynamically(instance) : Object.class;
-        else if (dynamicType != null)
-            return (Class<?>) dynamicType.call(instance);
-        return type;
+        return dynamicType != null ? (Class<?>) dynamicType.call(instance) : type;
     }
 
     public String toString() {

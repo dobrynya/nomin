@@ -14,7 +14,7 @@ class ReflectionIntrospector extends BaseReflectionIntrospector {
 
   ReflectionIntrospector(namingPolicy) { this.namingPolicy = namingPolicy; }
 
-  PropertyAccessor property(String name, Class<?> targetClass) {
+  protected PropertyAccessor createAccessor(String name, Class<?> targetClass) {
     def (getter, setter, typeInfo) = findAccessorMethods(namingPolicy.getters(name), namingPolicy.setters(name), targetClass)
     if (getter || setter) createAccessor(name, getter, setter, typeInfo)
   }

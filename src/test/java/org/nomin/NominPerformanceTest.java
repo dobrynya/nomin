@@ -63,48 +63,4 @@ public class NominPerformanceTest {
         long d = System.nanoTime() - times.remove(times.size() - 1);
         times.add(d);
     }
-
-    @Test
-    public void testIntrospectors() {
-        Person p = new Person();
-        PropertyAccessor refl = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy).property("name", Person.class);
-
-        PropertyAccessor impl = new PropertyAccessor() {
-            public String getName() { return null; }
-            public TypeInfo getTypeInfo() { return null; }
-            public Object get(Object instance) throws Exception { return ((Person) instance).getName(); }
-            public void set(Object instance, Object value) throws Exception { ((Person) instance).setName((String) value); }
-        };
-
-        long s1 = System.nanoTime();
-        for (int i = 0; i < 500000; i++) {
-            try {
-                refl.get(p);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                refl.set(p, "value");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        long d1 = System.nanoTime() - s1;
-        System.out.println("Delta using reflection              " + d1);
-        long s3 = System.nanoTime();
-        for (int i = 0; i < 500000; i++) {
-            try {
-                impl.get(p);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                impl.set(p, "value");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        long d3 = System.nanoTime() - s3;
-        System.out.println("Delta using direct method call      " + d3);
-    }
 }

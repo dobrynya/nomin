@@ -9,9 +9,9 @@ import java.lang.reflect.Field
  * Created 16.04.2010 11:03:42
  */
 class ExplodingIntrospector extends BaseReflectionIntrospector {
-  PropertyAccessor property(String name, Class<?> targetClass) {
+  PropertyAccessor createAccessor(String name, Class<?> targetClass) {
     def field = searchField(targetClass, name)
-    new FieldPropertyAccessor(name, TypeInfoFactory.typeInfo(field.genericType), field)
+    if (field) new FieldPropertyAccessor(name, TypeInfoFactory.typeInfo(field.genericType), field)
   }
 
   Set<String> properties(Class<?> targetClass) {

@@ -54,6 +54,6 @@ class TypeInfoFactoryTest {
     TypeInfo ti = typeInfo(c)
     assert ti && ti.isDynamic() && ti.dynamicType == c
     ti = List[c]
-    assert ti && ti.isDynamic() && ti.parameters[0].dynamicType == c
+    assert ti && ti.parameters[0].isDynamic() && ti.parameters[0].dynamicType == c
   }
 }

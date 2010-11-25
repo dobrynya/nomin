@@ -137,7 +137,8 @@ class Mapping {
   /** Creates mapping entries with properties of the same names. */
   void automap() {
     checkSides()
-    logger.debug "{}: Automapping facility is enabled", mappingName
+    if (logger.isDebugEnabled()) logger.debug format("{0}: Building a mapping between {1} and {2} automatically",
+            mappingName, side.a.name, side.b.name)
     Set<String> b = introspector.properties(side.b)
     for (String property : introspector.properties(side.a)) if (b.contains(property)) this.a."${property}" = this.b."${property}"
   }

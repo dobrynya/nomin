@@ -12,27 +12,15 @@ public class Device {
     private String name;
     private List<Device> integrated;
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
-    public String getModel() {
-        return model;
-    }
+    public String getModel() { return model; }
 
-    public void setModel(String model) {
-        this.model = model;
-    }
+    public void setModel(String model) { this.model = model; }
 
-    public List<Device> getIntegrated() {
-        return integrated;
-    }
+    public List<Device> getIntegrated() { return integrated; }
 
-    public void setIntegrated(List<Device> integrated) {
-        this.integrated = integrated;
-    }
+    public void setIntegrated(List<Device> integrated) { this.integrated = integrated; }
 }

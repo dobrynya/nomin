@@ -10,6 +10,8 @@ import java.lang.reflect.Method
 class FastIntrospector extends ReflectionIntrospector {
   private static final InstanceCreator instanceCreator = new FastInstanceCreator()
 
+  FastIntrospector() { super(JbNamingPolicy.jbNamingPolicy) }
+
   FastIntrospector(policy) { super(policy) }
 
   InstanceCreator instanceCreator() { instanceCreator }
@@ -21,7 +23,7 @@ class FastIntrospector extends ReflectionIntrospector {
             typeInfo)
   }
 
-  protected MethodInvocation createInvocation(Method method, Object[] args) {
+  protected MethodInvocation createInvocation(Method method, Object... args) {
     new FastMethodInvocation(FastHelper.getOrCreateFastClass(method.getDeclaringClass()).getMethod(method), args)
   }
 }

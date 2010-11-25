@@ -1,7 +1,8 @@
 package org.nomin.core
 
-import static org.junit.Assert.assertFalse
-import static org.junit.Assert.assertTrue
+import org.nomin.Mapping
+import org.nomin.core.preprocessing.*
+import static org.nomin.util.TypeInfoFactory.typeInfo
 
 /**
  * Document please.
@@ -10,14 +11,106 @@ import static org.junit.Assert.assertTrue
  */
 class MappingEntryTest {
 
-  def me = new MappingEntry()
+  def e = new MappingEntry(mapping: new Mapping())
 
   @org.junit.Test
   void testCompleted() {
-    assert !me.completed()
-    me.pathElem new RootPathElem()
-    assert !me.completed()
-    me.pathElem new RootPathElem()
-    assert me.completed()
+    assert !e.completed()
+    e.pathElem new RootPathElem()
+    assert !e.completed()
+    e.pathElem new RootPathElem()
+    assert e.completed()
+  }
+
+  @org.junit.Test
+  void testNoNeedPreprocessing() {
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)))[0] == null
+
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, List[String], null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[String], null)))[0] == null
+  }
+
+  @org.junit.Test
+  void testConversionPreprocessing() {
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null), conversion: { it }),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null), conversion: { it }))[0] instanceof ConversionPreprocessing
+
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, List[String], null), conversion: { it }),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[String], null), conversion: { it }))[0] instanceof ConversionPreprocessing
+  }
+
+  @org.junit.Test
+  void testConvertUtilsPreprocessing() {
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(Integer), null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)))[0] instanceof ConvertUtilsPreprocessing
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(Integer), null)))[0] instanceof ConvertUtilsPreprocessing
+
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, List[Integer], null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[String], null)))[0] instanceof ConvertUtilsPreprocessing
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, List[String], null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[Integer], null)))[0] instanceof ConvertUtilsPreprocessing
+  }
+
+  @org.junit.Test
+  void testDynamicPreprocessing() {
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(Undefined), null)))[0] instanceof DynamicPreprocessing
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo({ String }), null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)))[0] instanceof DynamicPreprocessing
+
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, List[String], null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(Undefined), null)))[0] instanceof DynamicPreprocessing
+    assert e.preprocessings(
+            new MappingSide(lastRuleElem: new PropRuleElem(null, List[{ String }], null)),
+            new MappingSide(lastRuleElem: new PropRuleElem(null, List[String], null)))[0] instanceof DynamicPreprocessing
   }
 }
+
+/*
+class A {
+  String propA1, propA2, propA3
+  List<String> propA4, propA5, propA6
+  List<Object> propA7
+}
+
+class B {
+  String propB1, propB2
+  List<String> propB4, propB5
+  List<Object> propB7
+}
+
+class A2B extends Mapping {
+  protected void build() {
+    mappingFor a: A, b: B
+    a.propA1 = b.propB1 // the types are defined
+
+    a.propA2 = b.propB2
+    convert to_a: { it }, to_b: { it } // the conversions are given
+
+    a.propA3 = { "just a string" } // undefined result type
+
+    a.propA4 = b.propB4 // the types are defined
+
+    a.propA5 = b.propB5
+    convert to_a: { it }, to_b: { it } // the conversions are given
+
+    a.propA6 = { ["just", "a", "string"] } // undefined result type
+
+    a.propA7 = b.propB7
+    hint a: List[{ it.class }], b: List[{ it.class }]
+  }
+}
+*/

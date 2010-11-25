@@ -8,9 +8,31 @@ import org.nomin.core.NominException
  * @author Dmitry Dobrynin
  * Created 24.05.2010 12:50:52
  */
-// TODO: Is it a candidate to make a helper instead of base class?
-@SuppressWarnings("GroovyAssignabilityCheck")
-class BaseIntrospector {
+@SuppressWarnings("GroovyAssignabilityCheck") abstract
+class BaseIntrospector implements Introspector {
+  protected Map icache = [:], pacache = [:]
+
+  MethodInvocation invocation(String name, Class<?> targetClass, Object... args) {
+    MethodInvocation mi = icache[[targetClass, name]]
+    if (!mi) {
+      Method method = findApplicableMethod(name, targetClass, args)
+      if (method) icache[[targetClass, name]] = (mi = createInvocation(method, args))
+    }
+    mi
+  }
+
+  def PropertyAccessor property(String name, Class<?> targetClass) {
+    PropertyAccessor pa = pacache[[targetClass, name]]
+    if (!pa) {
+      pacache[[targetClass, name]] = (pa = createAccessor(name, targetClass))
+    }
+    pa
+  }
+
+  protected abstract MethodInvocation createInvocation(Method method, Object... args);
+
+  protected abstract PropertyAccessor createAccessor(String name, Class<?> targetClass);
+
   protected Method findApplicableMethod(String name, Class targetClass, Object... args) {
     List<Class> argTypes = args.collect { it?.class }
     targetClass.methods.find {

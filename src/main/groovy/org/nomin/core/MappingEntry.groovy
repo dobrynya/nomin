@@ -31,8 +31,8 @@ class MappingEntry {
   /** Defines left or right conversion.  */
   void conversion(conversion) {
     sides.each {
-      if (it.sideA) it.conversion = conversion.to_a
-      if (it.sideB) it.conversion = conversion.to_b
+      if (it.sideA && conversion.to_a) it.conversion = conversion.to_a
+      if (it.sideB && conversion.to_b) it.conversion = conversion.to_b
     }
   }
 
@@ -60,8 +60,8 @@ class MappingEntry {
       it.lastRuleElem = findLast(it.firstRuleElem)
     }
     validate sides[0].lastRuleElem, sides[1].lastRuleElem
-    sides[0].lastRuleElem.preprocessings = preprocessings(sides[0], sides[1])
-    sides[1].lastRuleElem.preprocessings = preprocessings(sides[1], sides[0])
+    sides[0].lastRuleElem.preprocessings = preprocessings(sides[0], sides[1]) as Preprocessing[]
+    sides[1].lastRuleElem.preprocessings = preprocessings(sides[1], sides[0]) as Preprocessing[]
     new MappingRule(sides[0].firstRuleElem, sides[1].firstRuleElem, allowed(sides[1].lastRuleElem), allowed(sides[0].lastRuleElem))
   }
 
@@ -89,22 +89,25 @@ class MappingEntry {
     current
   }
 
-  protected Preprocessing[] preprocessings(MappingSide thiz, MappingSide that) {
-    if (thiz.conversion != null) [new ConversionPreprocessing(thiz.conversion)] as Preprocessing[]
+  protected List<Preprocessing> preprocessings(MappingSide thiz, MappingSide that) {
+    if (thiz.conversion != null) [new ConversionPreprocessing(thiz.conversion)]
     else if (!thiz.lastRuleElem.typeInfo.container)
-      [preprocessing(thiz.lastRuleElem.typeInfo, that.lastRuleElem.typeInfo)] as Preprocessing[]
+      [preprocessing(thiz.lastRuleElem.typeInfo, that.lastRuleElem.typeInfo)]
     else {
       def result = []
       for (i in 0..<thiz.lastRuleElem.typeInfo.parameters.size())
-        result[i] = preprocessing(thiz.lastRuleElem.typeInfo.getParameter(i), that.lastRuleElem.typeInfo.getParameter(i))
-      result as Preprocessing[]
+        result[i] = preprocessing(thiz.lastRuleElem.typeInfo.getParameter(i),
+                that.lastRuleElem.typeInfo.undefined ?
+                  that.lastRuleElem.typeInfo : that.lastRuleElem.typeInfo.getParameter(i))
+      result
     }
   }
 
   protected Preprocessing preprocessing(TypeInfo thiz, TypeInfo that) {
     if (thiz.dynamic || that.isUndefined()) new DynamicPreprocessing(thiz, mapping.mapper, mappingCase)
+    else if (thiz.type.isAssignableFrom(that.type)) return null
     else if (ConvertUtils.lookup(that.type, thiz.type) != null) new ConvertUtilsPreprocessing(thiz.type)
-    else if (!thiz.type.isAssignableFrom(that.type)) new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
+    else new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
   }
 
   String toString() { format("{0} = {1}", sides[0].pathElem, sides[1].pathElem) }

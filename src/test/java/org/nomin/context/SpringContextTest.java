@@ -14,8 +14,9 @@ public class SpringContextTest {
     @Test
     public void testGetResource() throws Exception {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-        Context nominContext = new SpringContext(ctx);
+        SpringContext nominContext = new SpringContext(ctx);
         assertEquals("My Resource", nominContext.getResource("myResource"));
         assertNull(nominContext.getResource("Non-existent"));
+        nominContext.setBeanFactory(ctx);
     }
 }

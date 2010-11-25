@@ -1,12 +1,19 @@
 package org.nomin.util
 
+import java.lang.reflect.Method
+
 /**
  * Tests BaseIntrospector.
  * @author Dmitry Dobrynin
  * Date: 23.11.2010 time: 9:20:28
  */
 class BaseIntrospectorTest {
-  BaseIntrospector bi = new BaseIntrospector()
+  BaseIntrospector bi = new BaseIntrospector() {
+    def Set<String> properties(Class<?> targetClass) { return null; }
+    def InstanceCreator instanceCreator() { return null; }
+    protected MethodInvocation createInvocation(Method method, Object... args) { return null; }
+    protected PropertyAccessor createAccessor(String name, Class<?> targetClass) {return null; }
+  }
 
   @org.junit.Test
   void testCanApply() {
