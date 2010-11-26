@@ -37,8 +37,5 @@ public class MappingRule {
         if (allowedToB) return map(a, b, this.a, this.b); else return b;
     }
 
-    public String toString() {
-        return format(asList(ValueRuleElem.class, ClosureRuleElem.class).contains(a.getClass()) ?
-                        "{1} = {0}" : "{0} = {1}", a.path(), b.path()); 
-    }
+    public String toString() { return format("{0} = {1}", a.path(), b.path()); }
 }

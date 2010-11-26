@@ -32,7 +32,8 @@ class ContextManager {
   }
 
   def propertyMissing(String name) {
-    def result = local.get().last().getResource(name) ?: shared.get().getResource(name)
+    def result = local.get().last().getResource(name)
+    if (result == null) result = shared.get().getResource(name)
     if (result == null) throw new MissingPropertyException("There is no resource/component '${name}' in the context!")
     result
   }

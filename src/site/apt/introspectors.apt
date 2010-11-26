@@ -4,7 +4,8 @@ Introspectors
 
 Introspectors
 
-  Introspectors provides such operations as getting/setting a property's value, invoking a method on an instance.
+  Introspector is just a factory of PropertyAccessor, MethodInvocation and InstanceCreator components. That components
+  provide such operations as getting/setting a property's value, invoking a method on an instance.
   InstanceCreator, as you guessed, creates an instance of the requested class. Each introspector supplies corresponding
   instance creator.
 
@@ -28,7 +29,7 @@ Introspectors
     It performs getting/setting properties and invoking methods using CGLIB FastMethods. 
     It uses supplied <<<NamingPolicy>>> instance to determine accessor methods.
     <<<FastInstanceCreator>> instantiates objects using CGLIB <<<FastConstructor>>>.
-    Using FastIntrospector/FastInstanceCreator ensure for increasing performance up to 20% approximately.
+    Using FastIntrospector/FastInstanceCreator ensure for increasing performance up to 50% approximately (depends on harware).
 
     FastIntrospector is not created for you automatically, you have to instantiate it and then you can use created
     instance in mapping. It was done so not to enforce users to depend on CGLIB. If you are intended to use
@@ -36,16 +37,14 @@ Introspectors
 
   []
 
-  Predefined introspectors are exploding and jb. In a mapping we can choose any introspector as follows
+  Predefined introspectors are <<<exploding>>>, <<<jb>>> and <<<fast>>>. In a mapping we can choose any introspector as follows
 
 +---
   mappingFor a: Class1, b: Class2
-  introspector exploding // or jb
-  // or FastIntrospector based on CGLIB
-  introspector new FastIntrospector()
+  introspector exploding // or jb or fast
+
+  introspector new SpecificIntrospector()
 +---
-
-
 
   You are absolutely free to implement an introspector/instance creator for your own needs.
 

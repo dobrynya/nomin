@@ -168,7 +168,7 @@ public interface NominMapper {
     <T> T map(Object source, T target, Object mappingCase, Context context);
 
     /**
-     * Enables automapping facility. When automapping facility was enabled and the mapper didn't find appropriate
+     * Enables automapping facility. When automapping facility is enabled and the mapper have not found appropriate
      * mappings to apply it creates a mapping automatically to map properties of the same names.
      * @return this
      */
@@ -195,11 +195,4 @@ public interface NominMapper {
      * @return this
      */
     NominMapper context(Context context);
-
-    /**
-     * Provides Nomin with the service to be used for creating Mapping instances when calling {@link #parse(Class[])}.
-     * @param instanceCreator specifies the instance creator
-     * @return this
-     */
-    NominMapper instanceCreator(InstanceCreator instanceCreator);
 }

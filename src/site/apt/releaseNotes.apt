@@ -8,7 +8,7 @@ Release Notes
 
   Changes
 
-  * Changed the use of dateFormat conversion, details at the {{{/conversions.html}conversions page}}.
+  * Changed the use of dateFormat conversion, details at the {{{conversions.html}conversions page}}.
 
   * Some components were refactored.
 
@@ -16,13 +16,13 @@ Release Notes
 
   Improvements
 
-  * <<<java.util.Map>>> type is now supported by Nomin, for details see the {{{/workingWithMaps.html}page dedicated to maps}}.
+  * <<<java.util.Map>>> type is now supported by Nomin, for details see the {{{workingWithMaps.html}page dedicated to maps}}.
 
   * Using a Map as the context is changed to using separate the Context interface, details at the
-    {{{/contextManagement.html}context management page}}.
+    {{{contextManagement.html}context management page}}.
 
   * FastIntrospector and FastInstanceCreator were created to create objects, get/set properties and invoke methods. They
-    use CGLIB to provide such functionality. Details at {{{/introspectors.html}this page}}.  
+    use CGLIB to provide such functionality. Details at {{{introspectors.html}this page}}.
 
   []
 

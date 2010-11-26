@@ -10,27 +10,22 @@
             <a>name</a>
             <b>name</b>
         </field>
-
         <field>
             <a>lastName</a>
             <b>last</b>
         </field>
-
         <field>
             <a>birthDate</a>
             <b>details.birth</b>
         </field>
-
         <field custom-converter="org.nomin.dozer.Gender2Boolean">
             <a>gender</a>
             <b>details.sex</b>
         </field>
-
         <field>
             <a>children</a>
             <b>details.kids</b>
         </field>
-
         <field>
             <a date-format="dd-MM-yyyy">strDate</a>
             <b>details.birth</b>
@@ -62,5 +57,4 @@
             <b>kidName</b>
         </field>
     </mapping>
-
 </mappings>

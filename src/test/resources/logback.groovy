@@ -13,7 +13,7 @@ appender("STDOUT", ConsoleAppender) {
   }
 }
 
-root(DEBUG, ["STDOUT"])
+root(INFO, ["STDOUT"])
 logger("org.nomin", DEBUG)
 
 

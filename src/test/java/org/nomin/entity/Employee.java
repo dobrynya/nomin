@@ -12,39 +12,31 @@ public class Employee {
 
     private Details details;
 
-    public String getName() {
-        return name;
-    }
+    public Employee() {}
 
-    public void setName(String name) {
+    public Employee(String name, String last, String properties, Details details) {
         this.name = name;
-    }
-
-    public String getLast() {
-        return last;
-    }
-
-    public void setLast(String last) {
         this.last = last;
-    }
-
-    public String getProperties() {
-        return properties;
-    }
-
-    public void setProperties(String properties) {
         this.properties = properties;
-    }
-
-    public Details getDetails() {
-        return details;
-    }
-
-    public void setDetails(Details details) {
         this.details = details;
     }
 
-    @Override
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getLast() { return last; }
+
+    public void setLast(String last) { this.last = last; }
+
+    public String getProperties() { return properties; }
+
+    public void setProperties(String properties) { this.properties = properties; }
+
+    public Details getDetails() { return details; }
+
+    public void setDetails(Details details) { this.details = details; }
+
     public String toString() {
         return MessageFormat.format("Employee [ name = {0} last = {1} details = {2} ]", name, last, details);
     }

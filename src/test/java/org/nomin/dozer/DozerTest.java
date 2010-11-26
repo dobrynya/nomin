@@ -4,6 +4,7 @@ import org.dozer.*;
 import org.junit.Test;
 import org.nomin.entity.*;
 import java.util.*;
+import static java.util.Arrays.asList;
 
 /**
  * Document please.
@@ -16,25 +17,12 @@ public class DozerTest {
 
     @Test
     public void testDozer() {
-        DetailedPerson dp = new DetailedPerson();
-        dp.setName("Person's Name");
-        dp.setLastName("Person's Last Name");
-        dp.setBirthDate(new Date());
-        dp.setGender(Gender.MALE);
-        dp.setChildren(Arrays.asList(new Child("Child's Name")));
-        dp.setDescription("Just some textual description");
-        dp.setEducationName("MIT");
-        dp.setEducationDescription("High");
+        DetailedPerson dp = new DetailedPerson("Person's Name", "Person's Last Name", new Date(), Gender.MALE,
+                asList(new Child("Child's Name")), "Just some textual description", "MIT", "High");
 
-        LinearManager lm = new LinearManager();
-        lm.setName("Manager's Name");
-        lm.setLast("Manager's Lst Name");
-        lm.setDetails(new Details());
-        lm.getDetails().setBirth(new Date());
-        lm.getDetails().setSex(true);
-        lm.getDetails().setKids(new HashSet<Kid>(Arrays.asList(new Kid("Kid's Name"))));
-        lm.setCharacteristics("Just an employee");
-        lm.getDetails().setEducations(Arrays.asList(new Education("MIT", "High")));
+        LinearManager lm = new LinearManager("Manager's Name", "Manager's Lst Name", null,
+                new Details(new Date(), true, new HashSet<Kid>(asList(new Kid("Kid's Name"))), asList(new Education("MIT", "High"))),
+                "Just an employee");
 
         for (int i = 0; i < N; i++) {
             calcTime(dp, Employee.class);

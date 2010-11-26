@@ -10,15 +10,17 @@ import java.text.MessageFormat;
 public class LinearManager extends Employee {
     private String characteristics;
 
-    public String getCharacteristics() {
-        return characteristics;
-    }
+    public LinearManager() {}
 
-    public void setCharacteristics(String characteristics) {
+    public LinearManager(String name, String last, String properties, Details details, String characteristics) {
+        super(name, last, properties, details);
         this.characteristics = characteristics;
     }
 
-    @Override
+    public String getCharacteristics() { return characteristics; }
+
+    public void setCharacteristics(String characteristics) { this.characteristics = characteristics; }
+
     public String toString() {
         return MessageFormat.format("LinearManager [ name = {0} last = {1} details = {2} characteristics = {3}", getName(), getLast(), getDetails(), characteristics);
     }

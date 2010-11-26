@@ -1,5 +1,7 @@
 package org.nomin.entity;
 
+import java.util.Date;
+import java.util.List;
 import static java.text.MessageFormat.*;
 
 /**
@@ -11,6 +13,16 @@ public class DetailedPerson extends Person {
     private String description;
     private String educationName;
     private String educationDescription;
+
+    public DetailedPerson() {}
+
+    public DetailedPerson(String name, String lastName, Date birthDate, Gender gender, List<Child> children,
+                          String description, String educationName, String educationDescription) {
+        super(name, lastName, birthDate, gender, children);
+        this.description = description;
+        this.educationName = educationName;
+        this.educationDescription = educationDescription;
+    }
 
     public String getDescription() {
         return description;

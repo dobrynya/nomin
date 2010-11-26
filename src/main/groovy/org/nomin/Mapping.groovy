@@ -4,7 +4,6 @@ import org.nomin.core.*
 import org.nomin.util.*
 import org.slf4j.*
 import java.text.SimpleDateFormat
-import static java.text.MessageFormat.*
 import static org.nomin.util.TypeInfoFactory.typeInfo;
 
 /**
@@ -19,6 +18,7 @@ class Mapping {
   static final String DEFAULT = "default";
   static final Introspector jb = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy)
   static final Introspector exploding = new ExplodingIntrospector()
+  static final Introspector fast = new FastIntrospector()
 
   Map<String, Class> side = [:]
   Object mappingCase
@@ -81,8 +81,7 @@ class Mapping {
    */
   void swallow(boolean silent = false, Class<? extends Throwable>... throwables) {
     handle throwables: throwables.collect { it }, handler: silent ? null : {
-      LoggerFactory.getLogger(ParsedMapping).warn(format("{0}: {1} failed, but the failure is ignored!",
-                mapping.mappingName, Closure.isInstance(failed) ? "Hook" : failed), throwable)
+      LoggerFactory.getLogger(ParsedMapping).warn("${mapping.mappingName}: ${Closure.isInstance(failed) ? "Hook" : failed} failed, but the failure is ignored!", throwable)
     }
   }
 
@@ -135,12 +134,12 @@ class Mapping {
   }
 
   /** Creates mapping entries with properties of the same names. */
-  void automap() {
+  Mapping automap() {
     checkSides()
-    if (logger.isDebugEnabled()) logger.debug format("{0}: Building a mapping between {1} and {2} automatically",
-            mappingName, side.a.name, side.b.name)
+    if (logger.isDebugEnabled()) logger.debug "${mappingName}: Building a mapping between ${side.a.name} and ${side.b.name} automatically"
     Set<String> b = introspector.properties(side.b)
     for (String property : introspector.properties(side.a)) if (b.contains(property)) this.a."${property}" = this.b."${property}"
+    this
   }
 
   private def processHints(hints) {

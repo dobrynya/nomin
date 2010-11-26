@@ -16,6 +16,16 @@ public class Person {
     private List<Child> children;
     private Map<String, Object> options;
 
+    public Person() {}
+
+    public Person(String name, String lastName, Date birthDate, Gender gender, List<Child> children) {
+        this.name = name;
+        this.lastName = lastName;
+        this.birthDate = birthDate;
+        this.gender = gender;
+        this.children = children;
+    }
+
     public String getName() {
         return name;
     }

@@ -11,7 +11,13 @@ Features
 
   * intuitively looking mapping, even a non-developer can read it
 
-    In the majority of cases a mapping rule is looking as usual assignment.
+    In the majority of cases a mapping rule is looking as usual assignment. For example,
+
++---
+  a.name = b.firstName
++---
+
+    means "map property 'name' of the first class to property 'firstName' of the second class and vice versa"
 
   * map arbitrary expressions
 
@@ -44,12 +50,22 @@ Features
 
   * high performance and thread-safety
 
-    Nomin is developed for working in multithreading environments. Its performance exceeds performance of the frameworks 
-    with the same functionality.
-  
+    Nomin is developed for working in multithreading environments. Its performance exceeds performance of frameworks
+    with the same functionality, the following table show the comparison results.
+
+*--------------------------*-------------------------------------*----------------------------------*
+| test / framework         | Nomin 1.1.0                         | Dozer 5.3.1                      |
+*--------------------------*-------------------------------------*----------------------------------*
+| Mapping complex objects, | with ReflectionIntrospector ~5.51 s | with disabled statistics 65.93 s |
+| 400000 iterations        | with ExplodingIntrospector  ~4.96 s |                                  |
+|                          | with FastIntrospector       ~3.55 s |                                  |
+*--------------------------*-------------------------------------*----------------------------------*
+
+  []
+
   * recursive mapping of complex types
 
-  * full supporting collections and arrays
+  * full supporting collections, arrays and maps
 
   * implicit conversions of primitive/wrapper types
 

@@ -24,7 +24,6 @@ public class Nomin implements NominMapper {
     protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
     protected Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
     protected boolean automappingEnabled = true;
-    protected InstanceCreator instanceCreator = Mapping.getJb().instanceCreator();
 
     public Nomin() {}
 
@@ -80,11 +79,6 @@ public class Nomin implements NominMapper {
         return this;
     }
 
-    public Nomin instanceCreator(InstanceCreator instanceCreator) {
-        this.instanceCreator = instanceCreator;
-        return this;
-    }
-
     public List<ParsedMapping> getMappings() { return Collections.unmodifiableList(mappings); }
 
     public Nomin parse(String... mappingScripts) {
@@ -92,11 +86,17 @@ public class Nomin implements NominMapper {
         return this;
     }
 
+    /**
+     * Parses the specified mappings. Nomin uses {@link org.nomin.util.ReflectionIntrospector} to instantiate a mapping
+     * instance. Any way it's possible to parse already instantiated mapping instance calling {@link #parse(org.nomin.Mapping)}.
+     * @param mappingClasses specifies mapping classes
+     * @return this
+     */
     public Nomin parse(Class<? extends Mapping>... mappingClasses) {
         for (Class<? extends Mapping> mc : mappingClasses) {
             Mapping mapping;
-            try { mapping = instanceCreator.create(mc); }
-            catch (Exception e) { throw new NominException(format("Could not instantiate mapping {0}!", mc), e); }
+            try { mapping = Mapping.getJb().instanceCreator().create(mc); }
+            catch (Exception e) { throw new NominException(format("Could not instantiate a mapping {0}!", mc), e); }
             parse(mapping);
         }
         return this;
@@ -115,6 +115,7 @@ public class Nomin implements NominMapper {
         return source != null && targetClass != null ? (T) map(source, null, targetClass, mappingCase) : null;
     }
 
+    @Deprecated
     public <T> T map(Object source, Class<T> targetClass, Map<String, Object> context) {
         return map(source, targetClass, new MapContext(context));
     }
@@ -126,6 +127,7 @@ public class Nomin implements NominMapper {
         return target;
     }
 
+    @Deprecated
     public <T> T map(Object source, Class<T> targetClass, Object mappingCase, Map<String, Object> context) {
         return map(source, targetClass, mappingCase, new MapContext(context));
     }
@@ -146,6 +148,7 @@ public class Nomin implements NominMapper {
         return target;
     }
 
+    @Deprecated
     public <T> T map(Object source, T target, Map<String, Object> context) {
         return map(source, target, new MapContext(context));
     }
@@ -157,6 +160,7 @@ public class Nomin implements NominMapper {
         return target;
     }
 
+    @Deprecated
     public <T> T map(Object source, T target, Object mappingCase, Map<String, Object> context) {
         return map(source, target, mappingCase, new MapContext(context));
     }
@@ -194,15 +198,14 @@ public class Nomin implements NominMapper {
         if (!result.isEmpty()) {
             Collections.sort(result, new MappingComparator(target));
         } else if (automappingEnabled) {
-            logger.warn("Mappings between {} and {} were not found. A mapping will be created using automapping facility",
+            logger.info("Could not find applicable mappings between {} and {}. A mapping will be created using automapping facility",
                     source.getName(), target.getName());
-            Mapping automapping = new Mapping(source, target, this);
-            automapping.automap();
-            ParsedMapping pm = automapping.parse();
+            ParsedMapping pm = new Mapping(source, target, this).automap().parse();
+            logger.debug("Automatically created {}", pm);
             mappings.add(pm);
             result.add(new MappingWithDirection(pm, true));
         } else
-            logger.warn("Nomin could not find applicable mappings between {} and {}!", source.getName(), target.getName());
+            logger.warn("Could not find applicable mappings between {} and {}!", source.getName(), target.getName());
         return result;
     }
 

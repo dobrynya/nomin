@@ -10,9 +10,8 @@ import static org.nomin.core.preprocessing.Preprocessing.preprocess;
  *         Created: 27.04.2010 20:57:15
  */
 public class PropRuleElem extends RuleElem {
-    final PropertyAccessor property;
-    final InstanceCreator instanceCreator;
-
+    protected final PropertyAccessor property;
+    protected final InstanceCreator instanceCreator;
 
     public PropRuleElem(PropertyAccessor property, TypeInfo typeInfo, InstanceCreator instanceCreator) {
         super(typeInfo);
