@@ -53,13 +53,13 @@ Features
     Nomin is developed for working in multithreading environments. Its performance exceeds performance of frameworks
     with the same functionality, the following table show the comparison results.
 
-*--------------------------*-------------------------------------*----------------------------------*
-| test / framework         | Nomin 1.1.0                         | Dozer 5.3.1                      |
-*--------------------------*-------------------------------------*----------------------------------*
-| Mapping complex objects, | with ReflectionIntrospector ~5.51 s | with disabled statistics 65.93 s |
-| 400000 iterations        | with ExplodingIntrospector  ~4.96 s |                                  |
-|                          | with FastIntrospector       ~3.55 s |                                  |
-*--------------------------*-------------------------------------*----------------------------------*
+*--------------------------*--------------------------------------*----------------------------------*
+| test / framework         | Nomin 1.1.0                          | Dozer 5.3.1                      |
+*--------------------------*--------------------------------------*----------------------------------*
+| Mapping complex objects,\| with ReflectionIntrospector ~5.51 s\ | with disabled statistics 65.93 s |
+| 400000 iterations        | with ExplodingIntrospector  ~4.96 s\ |                                  |
+|                          | with FastIntrospector       ~3.55 s\ |                                  |
+*--------------------------*--------------------------------------*----------------------------------*
 
   []
 

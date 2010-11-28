@@ -18,7 +18,7 @@ public class MapHelper extends ContainerHelper {
     public Map<Object, Object> createContainer(int size) throws Exception {
         if (containerClass == Map.class) return new HashMap<Object, Object>();
         else if (!containerClass.isInterface()) return (Map<Object, Object>) containerClass.newInstance();
-        throw new NominException(format("Could not instantiate {0}!", containerClass.getName()));
+        throw new NominException(true, format("Could not instantiate {0}!", containerClass.getName()));
     }
 
     public Object convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {

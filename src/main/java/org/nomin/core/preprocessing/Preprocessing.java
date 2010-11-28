@@ -11,7 +11,7 @@ public abstract class Preprocessing {
      * @param source a source object
      * @return processed object
      */
-    abstract Object preprocess(Object source);
+    public abstract Object preprocess(Object source);
 
     /**
      * Applies the requested preprocessing if it exists.

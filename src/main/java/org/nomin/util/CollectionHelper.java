@@ -27,7 +27,7 @@ public class CollectionHelper extends ContainerHelper {
         else if (containerClass == BlockingDeque.class) return new LinkedBlockingDeque<Object>(size > 0 ? size : 1);
         else if (!containerClass.isInterface() && Collection.class.isAssignableFrom(containerClass))
             return (Collection<Object>) containerClass.newInstance();
-        throw new NominException(format("Could not instantiate {0}!", containerClass.getName()));
+        throw new NominException(true, format("Could not instantiate {0}!", containerClass.getName()));
     }
 
     public Collection<Object> convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
@@ -37,16 +37,18 @@ public class CollectionHelper extends ContainerHelper {
     }
 
     public Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessings) throws Exception {
-        if (target == null) target = createContainer((Integer) index + 1);
-        if (List.class.isInstance(target)) return setListElement((List<Object>) target, (Integer) index, element, preprocessings);
-        List<Object> list = new ArrayList<Object>((Collection<Object>) target);
+        int i = (Integer) index;
+        if (target == null) target = createContainer(i < 0 ? 1 : i + 1);
+        if (List.class.isInstance(target)) return setListElement((List<Object>) target, i, element, preprocessings);
         ((Collection<Object>) target).clear();
-        ((Collection<Object>) target).addAll(setListElement(list, (Integer) index, element, preprocessings));
+        ((Collection<Object>) target).addAll(setListElement(new ArrayList<Object>((Collection<Object>) target), i, element,
+                preprocessings));
         return target;
     }
 
     protected List<Object> setListElement(List<Object> list, int index, Object element, Preprocessing[] preprocessings) {
-        if (list.size() > index) list.set(index, preprocess(element, preprocessings, 0));
+        if (index < 0) list.add(preprocess(element, preprocessings, 0));
+        else if (list.size() > index) list.set(index, preprocess(element, preprocessings, 0));
         else for (int i = list.size(); i <= index; i++)
             list.add(i == index ? preprocess(element, preprocessings, 0) : null);
         return list;

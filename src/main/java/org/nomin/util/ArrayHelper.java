@@ -18,7 +18,7 @@ public class ArrayHelper extends ContainerHelper {
         return (Object[]) java.lang.reflect.Array.newInstance(containerClass, size);
     }
 
-    public Object convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
+    public Object[] convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
         Object[] target = createContainer(source.size());
         int index = 0;
         for (Object object : source) target[index++] = preprocess(object, preprocessings, 0);
@@ -28,9 +28,11 @@ public class ArrayHelper extends ContainerHelper {
     public Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessing) throws Exception {
         Integer i = (Integer) index;
         Object[] targetArray = (Object[]) target;
-        if (targetArray != null && i >= targetArray.length) targetArray = Arrays.copyOf(targetArray, i + 1);
-        else targetArray = createContainer(i + 1);
-        targetArray[i] = preprocessing != null ? preprocess(element, preprocessing, 0) : element;
+        if (targetArray != null && (i < 0 || i >= targetArray.length))
+            targetArray = Arrays.copyOf(targetArray, i < 0 ? targetArray.length + 1 : i + 1);
+        else
+            targetArray = createContainer(i < 0 ? 1 : i + 1);
+        targetArray[i < 0 ? targetArray.length - 1 : i] = preprocess(element, preprocessing, 0);
         return targetArray;
     }
 

@@ -19,7 +19,7 @@ Working with Maps
   a.options = b.details.properties // Map<String, Object> <-> Map<Integer, Object>
 +---
 
-  You can use {{{hints.html}hint or dynamic hint}} to specify needed types.
+  You can use {{{./hints.html}hint or dynamic hint}} to specify needed types.
 
 +---
   a.options = b.details.properties // Map<Object, Object> <-> Map<Object, Object>

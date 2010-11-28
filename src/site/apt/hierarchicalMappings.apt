@@ -4,7 +4,7 @@ Hierarchical mappings
 
 Hierarchical mappings
 
-  If you look at the {{{gettingStarted.html}diagram}} you will see that Employee and Person have descendants,
+  If you look at the {{{./gettingStarted.html}diagram}} you will see that Employee and Person have descendants,
   LinearManager and DetailedPerson respectively. Do we need to repeat mapping rules for Employee and Person in a mapping
   for LinearManager and DetailedPerson? Of course, no! All we need to describe specific mapping rules as shown in the
   next snippet.
