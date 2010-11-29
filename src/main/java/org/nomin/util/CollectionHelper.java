@@ -39,6 +39,10 @@ public class CollectionHelper extends ContainerHelper {
     public Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessings) throws Exception {
         int i = (Integer) index;
         if (target == null) target = createContainer(i < 0 ? 1 : i + 1);
+        if (i < 0) {
+            ((Collection) target).add(preprocess(element, preprocessings, 0));
+            return target;
+        }
         if (List.class.isInstance(target)) return setListElement((List<Object>) target, i, element, preprocessings);
         ((Collection<Object>) target).clear();
         ((Collection<Object>) target).addAll(setListElement(new ArrayList<Object>((Collection<Object>) target), i, element,
@@ -47,8 +51,7 @@ public class CollectionHelper extends ContainerHelper {
     }
 
     protected List<Object> setListElement(List<Object> list, int index, Object element, Preprocessing[] preprocessings) {
-        if (index < 0) list.add(preprocess(element, preprocessings, 0));
-        else if (list.size() > index) list.set(index, preprocess(element, preprocessings, 0));
+        if (list.size() > index) list.set(index, preprocess(element, preprocessings, 0));
         else for (int i = list.size(); i <= index; i++)
             list.add(i == index ? preprocess(element, preprocessings, 0) : null);
         return list;

@@ -26,6 +26,18 @@ Working with arrays, collection and maps
   a.options["lastName"] = b.lastName
 +---
 
+  A negative integer (I prefer -1) can be specified as an index of an array or collection. In this case Nomin adds an
+  element to the tail of an array/collection. The next snippet shows a possible usage.
+
++---
+  a.options[-1] = { if (condition1) new Option1(...) }
+  a.options[-1] = { if (condition2) new Option2(...) }
++---
+
+  If condition1 is false and condition2 is true we get the result as an array/collection with the only Option2 instance.
+  This feature can be applied for writing values because there is no meaning to read elements with a negative index,
+  so an exception will be thrown at runtime.
+
   You can use {{{./hints.html}hints or dynamic hints}} to specify needed types.
 
 +---
