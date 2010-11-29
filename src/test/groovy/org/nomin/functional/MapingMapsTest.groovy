@@ -14,12 +14,14 @@ class MapingMapsTest {
 
   def mh1 = new MapHolder1(strings: ["1": "1", "2": "2", "3": "3"],
           persons: ["1": new Person(name: "Name1", lastName: "LastName1"), "2": new Person(name: "Name2", lastName: "LastName2")],
-          objects: [abc: new Person(name: "Abc", lastName: "AbcLastName"), "4": new Person(name: "Name4", lastName: "LastName4")]
+          objects: [abc: new Person(name: "Abc", lastName: "AbcLastName"), "4": new Person(name: "Name4", lastName: "LastName4")],
+          strings2: [propertyName: "propertyValue"]
   )
 
   def mh2 = new MapHolder2(integers: [1: 1, 2: 2, 3: 3],
           employees: [(1): new Employee(name: "Name1", last: "Last1"), (2): new Employee(name: "Name2", last: "Last2")],
-          objects: [abc: new Employee(name: "AbcName", last: "AbcLastName"), "5": new Employee(name: "Name5", last: "LastName5")]
+          objects: [abc: new Employee(name: "AbcName", last: "AbcLastName"), "5": new Employee(name: "Name5", last: "LastName5")],
+          props: ["property1=value1"]
   )
 
   @org.junit.Test
@@ -31,6 +33,7 @@ class MapingMapsTest {
     assert mh2.objects?.size() == 2 && mh2.objects["abc"].name == "Abc" && mh2.objects["abc"].last == "AbcLastName"
     assert mh2.objects[4].name == "Name4" && mh2.objects[4].last == "LastName4"
     mh2.objects.each { k, v -> assert v instanceof LinearManager }
+    assert ["propertyName=propertyValue"] == mh2.props
   }
 
   @org.junit.Test
@@ -42,5 +45,6 @@ class MapingMapsTest {
     assert mh1.objects?.size() == 2 && mh1.objects[5].name == "Name5" && mh1.objects[5].lastName == "LastName5"
     assert mh1.objects["abc"].name == "AbcName" && mh1.objects["abc"].lastName == "AbcLastName"
     mh1.objects.each { k, v -> assert v instanceof DetailedPerson }
+    assert [property1: "value1"] == mh1.strings2
   }
 }

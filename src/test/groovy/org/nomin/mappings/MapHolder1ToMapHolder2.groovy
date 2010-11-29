@@ -19,5 +19,10 @@ class MapHolder1ToMapHolder2 extends Mapping {
     a.persons2 = b.employees
     convert to_a: { e -> [e.key.toString(), e.value.toString()] },
             to_b: { e -> [Integer.valueOf(e.key), new Employee(name: e.value)] }
+
+    // props contains properties as 'propertyName=propertyValue'
+    a.strings2 = b.props
+    convert to_a: { String listItem -> [listItem.split("=")[0], listItem.split("=")[1]] },
+            to_b: { e -> e.key + "=" + e.value }
   }
 }

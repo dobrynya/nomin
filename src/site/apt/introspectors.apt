@@ -28,7 +28,7 @@ Introspectors
 
     It performs getting/setting properties and invoking methods using CGLIB FastMethods. 
     It uses supplied <<<NamingPolicy>>> instance to determine accessor methods.
-    <<<FastInstanceCreator>> instantiates objects using CGLIB <<<FastConstructor>>>.
+    <<<FastInstanceCreator>>> instantiates objects using CGLIB <<<FastConstructor>>>.
     Using FastIntrospector/FastInstanceCreator ensure for increasing performance up to 50% approximately (depends on harware).
 
     FastIntrospector is not created for you automatically, you have to instantiate it and then you can use created

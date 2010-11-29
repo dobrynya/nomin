@@ -12,6 +12,7 @@ public class MapHolder1 {
     private Map<String, Person> persons;
     private Object objects;
     private Map<String, String> persons2;
+    private Map<String, String> strings2;
 
     public Map<String, String> getStrings() { return strings; }
 
@@ -28,4 +29,8 @@ public class MapHolder1 {
     public Map<String, String> getPersons2() { return persons2; }
 
     public void setPersons2(Map<String, String> persons2) { this.persons2 = persons2; }
+
+    public Map<String, String> getStrings2() { return strings2; }
+
+    public void setStrings2(Map<String, String> strings2) { this.strings2 = strings2; }
 }

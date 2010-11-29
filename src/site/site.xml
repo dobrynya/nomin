@@ -13,18 +13,18 @@
         </menu>
         <menu name="User guide">
             <item name="Simple mapping rules" href="simpleRules.html"/>
-            <item name="Working with Maps" href="workingWithMaps.html"/>
-            <item name="Using Object's methods in mappings" href="usingObjectMethods.html"/>
+            <item name="Working with arrays, Collections, Maps" href="workingWithArraysCollectionsMaps.html"/>
             <item name="Hierarchical mappings" href="hierarchicalMappings.html"/>
-            <item name="Context management" href="contextManagement.html"/>
-            <item name="Conversions" href="conversions.html"/>
             <item name="Hints" href="hints.html"/>
+            <item name="Conversions" href="conversions.html"/>
             <item name="Expressions and method invocations" href="expressions.html"/>
+            <item name="Using Object's methods in mappings" href="usingObjectMethods.html"/>
             <item name="Mapping cases" href="mappingCases.html"/>
+            <item name="Context management" href="contextManagement.html"/>
             <item name="Pre and postprocessing" href="hooks.html"/>
-            <item name="Automapping facility" href="automapping.html"/>
             <item name="Error handling" href="errorHandling.html"/>
             <item name="Using the mapper in mappings" href="usingMapper.html"/>
+            <item name="Automapping facility" href="automapping.html"/>
             <item name="Customizing introspectors" href="introspectors.html"/>
         </menu>
         <menu ref="reports"/>

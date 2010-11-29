@@ -35,10 +35,10 @@ Automapping facility
   The above mapping defines mapping rules between properties a, b, c of the sides automatically.
 
   Suppose the above structures, Entity and EntityDTO, have no differences. So in that case you don't have to define
-  a mapping between classes, Nomin can create it for you. Nomin's automapping facility is disabled by default, it should
-  be enabled through calling <<<NominMapper.enableAutomapping>>>.
+  a mapping between classes, Nomin can create it for you. Nomin's automapping facility is enabled by default, it can
+  be disabled through calling <<<NominMapper.disableAutomapping>>>.
 
 +---
-  NominMapper nomin = new Nomin().enableAutomapping();
+  NominMapper nomin = new Nomin();
   EntityA entityA = nomin.map(entityB, EntityA.class);
 +---

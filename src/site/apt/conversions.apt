@@ -29,7 +29,7 @@ Conversions
   simple (["A1", "B1"], ["A2", "B2"])
 +---
 
-  I think you got the idea :) Please don't confuse the order of elements in pairs, first value is from side <<a>> and <<b>> is
+  I think you got the idea :) Please don't confuse the order of elements in pairs, first value is from side <<<a>>> and <<<b>>> is
   the next.
 
   But it's not all what Nomin provides to you. You are able to define custom conversions using
@@ -45,8 +45,8 @@ Conversions
   convert to_a: { sex -> sex ? Gender.MALE : Gender.FEMALE }, to_b: { gender -> gender == Gender.MALE }
 +---
 
-  You can also make expressions more concise using Groovy implicit variable <<it>> which refers the only parameter
-  instead of declaring parameter list. To use or not to use <<it>> instead of defining the parameter depends on
+  You can also make expressions more concise using Groovy implicit variable <<<it>>> which refers the only parameter
+  instead of declaring parameter list. To use or not to use <<<it>>> instead of defining the parameter depends on
   a person's preferences.
 
 +---
@@ -56,13 +56,13 @@ Conversions
 
   The next example demonstrates how we can use a service to perform conversions. How to make available services and
   other components in closures will be discussed more detailed in the rest of this guide. Here you need to know that
-  you can access mapping sides referencing to <<a>> and <<b>>.
+  you can access mapping sides referencing to <<<a>>> and <<<b>>>.
 
 +---
   mappingFor a: Internal, b: External
   a.internalId = b.externalId
-  convert to_a: { extId -> idService.resolveExternalId(extId, b) }, // we pass an External b instance being mapped to the service
-  to_b: { intId -> idService.resolveInternalId(intId, a) } // here we pass an Internal a instance
+  convert to_a: { extId -> idService.resolveExternalId(extId, b) },
+  to_b: { intId -> idService.resolveInternalId(intId, a) }
 +---
 
   I hope these features help you a lot :)

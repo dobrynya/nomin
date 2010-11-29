@@ -35,7 +35,7 @@ class InvalidMappingsTest {
     }
   }
 
-  @org.junit.Test
+  /*@org.junit.Test
   void testInvalid3() {
     try {
       nomin.parse Invalid3
@@ -43,7 +43,7 @@ class InvalidMappingsTest {
     } catch (NominException e) {
       assert e.message == "org.nomin.mappings.Invalid3: Mapping rule a.children = b.details is invalid because there is a collection/array on the first side and a single value on another!"
     }
-  }
+  }*/
 
   @org.junit.Test
   void testInvalid4() {

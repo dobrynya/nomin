@@ -68,11 +68,12 @@ class MappingEntry {
   protected void validate(lastA, lastB) {
     if (RootRuleElem.isInstance(lastA) && RootRuleElem.isInstance(lastB))
       throw new NominException(format("{0}: Recursive mapping rule {1} causes infinite loop!", mapping.mappingName, this))
+    /*
     // TODO: Fix the following!
     if ((lastA.typeInfo.container ^ lastB.typeInfo.container) && PropRuleElem.isInstance(lastA) && PropRuleElem.isInstance(lastB))
       throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a collection/array on the first side and a single value on another!", mapping.mappingName, this))
     if (lastA.typeInfo.map ^ lastB.typeInfo.map)
-      throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a map on the first side and a non-map on another!", mapping.mappingName, this))
+      throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a map on the first side and a non-map on another!", mapping.mappingName, this))*/
   }
 
   protected RuleElem findLast(RuleElem elem) { elem.next ? findLast(elem.next) : elem }

@@ -29,11 +29,6 @@ class ClassImproverTest {
   @org.junit.Test
   void testerHintedMap() {
     def ti = Map[{ String }, { Person }]
-    switch (ti) {
-      case TypeInfo:
-        assert ti.parameters?.size() == 2 && ti.parameters[0]?.dynamic && ti.parameters[1]?.dynamic
-        break
-      default: assert false
-    }
+    assert ti.parameters.size() == 2 && ti.parameters[0]?.dynamic && ti.parameters[1]?.dynamic
   }
 }

@@ -54,11 +54,17 @@ Features
     with the same functionality, the following table show the comparison results.
 
 *--------------------------*--------------------------------------*----------------------------------*
-| test / framework         | Nomin 1.1.0                          | Dozer 5.3.1                      |
+| Environment / framework  | Nomin 1.1.0                          | Dozer 5.3.1                      |
 *--------------------------*--------------------------------------*----------------------------------*
-| Mapping complex objects,\| with ReflectionIntrospector ~5.51 s\ | with disabled statistics 65.93 s |
-| 400000 iterations        | with ExplodingIntrospector  ~4.96 s\ |                                  |
-|                          | with FastIntrospector       ~3.55 s\ |                                  |
+| Mapping complex objects, 400000 iterations                                                         |
+*--------------------------*--------------------------------------*----------------------------------*
+| Pentium Dual E2180 2GHz, | with ReflectionIntrospector ~5.51 s\ | with disabled statistics 60.93 s |
+| RAM 3 GB\Win 32 XP SP 3, | with ExplodingIntrospector  ~4.96 s\ |                                  |
+| JVM 1.6.0_18             | with FastIntrospector       ~3.49 s\ |                                  |
+*--------------------------*--------------------------------------*----------------------------------*
+| AMD x64 2GHz,            | with ReflectionIntrospector ~4.33 s\ | with disabled statistics 33.87 s |
+| RAM 2 GB\Win 7 x64,      | with ExplodingIntrospector  ~4.17 s\ |                                  |
+| JVM x64 1.6.0_22         | with FastIntrospector       ~3.68 s\ |                                  |
 *--------------------------*--------------------------------------*----------------------------------*
 
   []
