@@ -19,15 +19,14 @@ class ScriptLoader {
 
   /** Processes loaded Groovy script to integrate it with a mapping instance. */
   Mapping load(Script script, String scriptName) {
-    Mapping mapping = new Mapping()
+    Mapping mapping = new ScriptMapping(script)
     mapping.mappingName = scriptName
-    script.metaClass.methodMissing = mapping.&invokeMethod
+    script.metaClass.methodMissing = { name, args -> mapping.invokeMethod(name, args) }
     script.binding = new Binding() {
-      def Object getVariable(String name) { return mapping.getProperty(name) }
-
-      def void setVariable(String name, Object value) { mapping.setProperty(name, value) }
+      Object getVariable(String name) { mapping.getProperty(name) }
+      void setVariable(String name, Object value) { mapping.setProperty(name, value) }
     }
-    mapping.metaClass.build = script.&run
+
     mapping
   }
 }

@@ -24,7 +24,7 @@ class Mapping {
   Object mappingCase
   String mappingName = this.class.name
   Boolean mapNulls = false
-  Nomin mapper
+  NominMapper mapper
 
   protected Introspector introspector = jb
   private List<MappingEntry> entries = []
@@ -161,7 +161,7 @@ class Mapping {
   }
 
   private def checkSides() {
-    if (!side.a || !side.b) throw new NominException("${mappingName}: Mapping sides should be defined before defining mapping rules!")
+//    if (!side.a || !side.b) throw new NominException("${mappingName}: Mapping sides should be defined before defining mapping rules!")
   }
 
   /**

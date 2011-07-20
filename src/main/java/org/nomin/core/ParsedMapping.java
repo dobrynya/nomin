@@ -98,7 +98,8 @@ public class ParsedMapping {
     }
 
     public String toString() {
-        StringBuilder sb = new StringBuilder("Mapping a: ").append(sideA.getSimpleName()).append(" b: ").append(sideB.getSimpleName());
+        StringBuilder sb = new StringBuilder("Mapping a: ").append(sideA != null ? sideA.getSimpleName() : "")
+                .append(" b: ").append(sideB != null ? sideB.getSimpleName() : "");
         if (mappingCase != null) sb.append(" case: ").append(mappingCase);
         sb.append(" {\n");
         for (MappingRule rule : rules) sb.append("  ").append(rule).append("\n");

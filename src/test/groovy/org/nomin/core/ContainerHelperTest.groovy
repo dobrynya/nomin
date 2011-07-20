@@ -3,6 +3,7 @@ package org.nomin.core
 import java.util.concurrent.*
 import org.nomin.util.*
 import static org.nomin.util.ContainerHelper.*
+import org.junit.Test
 
 /**
  * Tests ContainerHelper and its factory.
@@ -35,9 +36,26 @@ class ContainerHelperTest {
   }
 
   @org.junit.Test
+  void testNegativeIndexesOnLists() {
+    def ch = create(List[Object])
+    def collection = ch.createContainer(1)
+    ch.setElement(collection, -1, "value_1", null)
+    ch.setElement(collection, -1, "value_2", null)
+    assert ["value_1", "value_2"] == collection
+  }
+
+  @org.junit.Test
   void testCreateArray() {
     def array = create(Array[Object]).createContainer(5)
     assert array instanceof Object[] && array.length == 5
+  }
+
+  @org.junit.Test
+  void testNegativeIndexesOnArrays() {
+    def ch = create(Array[Object])
+    def array = ch.createContainer(1)
+    array = ch.setElement(array, -1, "value", null)
+    assert [null, "value"] as Object[] == array
   }
 
   @org.junit.Test
@@ -45,6 +63,4 @@ class ContainerHelperTest {
     assert HashMap.isInstance(create(Map[Object, Object]).createContainer(0))
     assert Hashtable.isInstance(create(Hashtable[Object, Object]).createContainer(0))
   }
-
-
 }
