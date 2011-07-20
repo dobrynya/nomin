@@ -28,7 +28,7 @@ class Mapping {
 
   protected Introspector introspector = jb
   private List<MappingEntry> entries = []
-  private Map<String, Closure> hooks = [ throwableHandler: {} ]
+  private Map<String, Closure<Object>> hooks = [ throwableHandler: {} ]
   private List<Class<? extends Throwable>> throwables
 
   Mapping() {}
@@ -161,7 +161,7 @@ class Mapping {
   }
 
   private def checkSides() {
-//    if (!side.a || !side.b) throw new NominException("${mappingName}: Mapping sides should be defined before defining mapping rules!")
+    if (!side.a || !side.b) throw new NominException("${mappingName}: Mapping sides should be defined before defining mapping rules!")
   }
 
   /**

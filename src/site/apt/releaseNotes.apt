@@ -2,7 +2,13 @@
 Release Notes
    ---
 
-Release Notes   
+Release Notes
+
+* 1.1.1
+
+  Improvements
+
+  * Nomin has been updated to use Groovy 1.8.0 instead of 1.7.x. Please refer Groovy docs.
 
 * 1.1.0
 
