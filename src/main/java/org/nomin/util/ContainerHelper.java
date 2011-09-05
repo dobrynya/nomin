@@ -20,7 +20,7 @@ public abstract class ContainerHelper {
 
     public abstract Object createContainer(int size) throws Exception;
 
-    public abstract Object convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception;
+    public abstract Object convert(Collection<?> source, Preprocessing[] preprocessings) throws Exception;
 
     public abstract Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessing) throws Exception;
 

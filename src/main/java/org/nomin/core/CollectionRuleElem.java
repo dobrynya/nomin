@@ -20,7 +20,7 @@ public class CollectionRuleElem extends PropRuleElem {
 
     public Object set(Object instance, Object value) throws Exception {
         if (next == null) {
-            Collection<Object> source = (value == null ? null : asCollection(value));
+            Collection<?> source = (value == null ? null : asCollection(value));
             property.set(instance, source == null || source.size() == 0 ? null : containerHelper.convert(source, preprocessings));
         } else {
             Object ov = property.get(instance), nv = next.set(ov, value);
@@ -29,10 +29,10 @@ public class CollectionRuleElem extends PropRuleElem {
         return instance;
     }
 
-    protected Collection<Object> asCollection(Object value) {
-        if (Object[].class.isInstance(value)) return asList((Object[]) value);
-        if (Collection.class.isInstance(value)) return (Collection<Object>) value;
-        if (Map.class.isInstance(value)) return (Collection) ((Map<Object, Object>) value).entrySet();
+    protected Collection<?> asCollection(Object value) {
+        if (value instanceof Object[]) return asList((Object[]) value);
+        if (value instanceof Collection) return (Collection<Object>) value;
+        if (value instanceof Map) return (Collection) ((Map<Object, Object>) value).entrySet();
         throw new NominException(format("Could not process not a collection/array value: {0}!", value));
     }
 

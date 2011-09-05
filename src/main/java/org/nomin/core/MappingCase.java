@@ -12,5 +12,5 @@ public class MappingCase {
 
     public MappingCase(Object mappingCase) { this.mappingCase = mappingCase; }
 
-    public Object get() { return Closure.class.isInstance(mappingCase) ? ((Closure) mappingCase).call() : mappingCase; }
+    public Object get() { return mappingCase instanceof Closure ? ((Closure) mappingCase).call() : mappingCase; }
 }

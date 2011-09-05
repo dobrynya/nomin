@@ -30,7 +30,7 @@ public class CollectionHelper extends ContainerHelper {
         throw new NominException(true, format("Could not instantiate {0}!", containerClass.getName()));
     }
 
-    public Collection<Object> convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
+    public Collection<Object> convert(Collection<?> source, Preprocessing[] preprocessings) throws Exception {
         Collection<Object> target = createContainer(source.size());
         for (Object object : source) target.add(preprocess(object, preprocessings, 0));
         return target;
@@ -43,7 +43,7 @@ public class CollectionHelper extends ContainerHelper {
             ((Collection) target).add(preprocess(element, preprocessings, 0));
             return target;
         }
-        if (List.class.isInstance(target)) return setListElement((List<Object>) target, i, element, preprocessings);
+        if (target instanceof List) return setListElement((List<Object>) target, i, element, preprocessings);
         ((Collection<Object>) target).clear();
         ((Collection<Object>) target).addAll(setListElement(new ArrayList<Object>((Collection<Object>) target), i, element,
                 preprocessings));
@@ -58,10 +58,10 @@ public class CollectionHelper extends ContainerHelper {
     }
 
     public Object getElement(Object source, Object index) {
-        if (List.class.isInstance(source)) {
+        if (source instanceof List) {
             List<Object> list = (List<Object>) source;
             return list.size() > (Integer) index ? list.get((Integer) index) : null;
-        } else if (Collection.class.isInstance(source) && ((Collection) source).size() > (Integer) index) {
+        } else if (source instanceof Collection && ((Collection) source).size() > (Integer) index) {
             int i = 0;
             for (Object object : (Collection) source) if (i++ == (Integer) index) return object;
         }

@@ -21,7 +21,7 @@ public class MapHelper extends ContainerHelper {
         throw new NominException(true, format("Could not instantiate {0}!", containerClass.getName()));
     }
 
-    public Object convert(Collection<Object> source, Preprocessing[] preprocessings) throws Exception {
+    public Object convert(Collection<?> source, Preprocessing[] preprocessings) throws Exception {
         Map<Object, Object> target = createContainer(source.size());
         boolean conv = preprocessings != null && preprocessings.length == 1 && preprocessings[0] instanceof ConversionPreprocessing;
         for (Object e : source)

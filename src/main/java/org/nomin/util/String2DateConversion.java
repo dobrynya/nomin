@@ -20,8 +20,8 @@ public class String2DateConversion extends Closure {
     }
 
     public Object call(Object[] args) {
-        if (Date.class.isInstance(args[0])) return sdf.format(args[0]);
-        else if (String.class.isInstance(args[0])) try {
+        if (args[0] instanceof Date) return sdf.format(args[0]);
+        else if (args[0] instanceof String) try {
             return sdf.parse((String) args[0]);
         } catch (ParseException e) {
             throw new NominException(format("Could not parse a date from {0}!", args[0]), e);
