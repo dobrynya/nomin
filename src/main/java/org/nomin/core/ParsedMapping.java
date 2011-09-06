@@ -25,6 +25,12 @@ public class ParsedMapping {
     private List<Class<? extends Throwable>> throwables;
     final InstanceCreator instanceCreator;
     final Nomin mapper;
+    protected static ThreadLocal<WeakHashMap<Object, Map<Key, Object>>> cache =
+            new ThreadLocal<WeakHashMap<Object, Map<Key, Object>>>() {
+                protected WeakHashMap<Object, Map<Key, Object>> initialValue() {
+                    return new WeakHashMap<Object, Map<Key, Object>>();
+                }
+            };
 
     public ParsedMapping(String mappingName, Class<?> sideA, Class<?> sideB, Object mappingCase, List<MappingRule> rules,
                          Map<String, Closure> hooks, boolean mapNulls, List<Class<? extends Throwable>> throwables,
@@ -78,7 +84,19 @@ public class ParsedMapping {
 
         if (target == null)
             try { target = instanceCreator.create(targetClass); }
-            catch (Exception e) { throw new NominException(true, format("Could not instantiate {0}!", targetClass), e); }
+            catch (Throwable th) { throw new NominException(true, format("Could not instantiate {0}!", targetClass), th); }
+
+
+        // TODO: Fix the bug!
+        // In case f hierarchical mapping it maps only a base class. Upper level mappings are not being applied!
+        if (mapper.cacheEnabled) {
+            Map<Key, Object> keys = cache.get().get(source);
+            if (keys == null) cache.get().put(source, keys = new HashMap<Key, Object>(1));
+            Key key = new Key(source.getClass(), targetClass, mappingCase);
+            Object cached = keys.get(key);
+            if (cached == null) keys.put(key, target);
+            else return cached;
+        }
 
         Map<String, Object> lc = direction ? lc(source, target, direction) : lc(target, source, direction);
         mapper.contextManager.pushLocal(new MapContext(lc));

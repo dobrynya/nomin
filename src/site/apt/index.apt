@@ -41,7 +41,7 @@ Introduction
 
   My assumptions were to reduce mapping configuration, make it more intuitively looking and improve functionality giving
   a developer such abilities as mapping expressions, mapping method invocations and other nice features. In other words
-  to do simple things simplely.
+  to do simple things simply.
 
 * Why Nomin mappings are written in Groovy
 
@@ -57,7 +57,7 @@ Introduction
 
     Mappings will be compiled as the rest of your application. Please don't forget configure your build system to compile
     Groovy sources. To define a mapping create a Groovy class extending <<<org.nomin.Mapping>>> and implement <<<build>>>
-    method in there. It takes no time to parse Groovy scripts at runtime. Personally I prefer this way.
+    method in there. It takes no time to parse Groovy scripts at runtime.
 
   * write Groovy scripts in plain text and put these on the classpath
 

@@ -67,12 +67,12 @@ class NominTest {
 
   @org.junit.Test
   void testKey() {
-    assert new Nomin.Key(Person, Employee, null) == new Nomin.Key(Person, Employee, null)
-    assert new Nomin.Key(Person, Employee, "1") == new Nomin.Key(Person, Employee, "1")
-    assert new Nomin.Key(Person, Employee, null) != new Nomin.Key(Employee, Person, null)
-    assert new Nomin.Key(Person, Employee, "1") != new Nomin.Key(Employee, Person, "1")
-    assert new Nomin.Key(Person, Employee, null) != new Nomin.Key(Person, Employee, "1")
-    assert new Nomin.Key(Person, Employee, "1") != new Nomin.Key(Person, Employee, null)
+    assert new Key(Person, Employee, null) == new Key(Person, Employee, null)
+    assert new Key(Person, Employee, "1") == new Key(Person, Employee, "1")
+    assert new Key(Person, Employee, null) != new Key(Employee, Person, null)
+    assert new Key(Person, Employee, "1") != new Key(Employee, Person, "1")
+    assert new Key(Person, Employee, null) != new Key(Person, Employee, "1")
+    assert new Key(Person, Employee, "1") != new Key(Person, Employee, null)
   }
 
   @org.junit.Test

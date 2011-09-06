@@ -29,6 +29,13 @@ Conversions
   simple (["A1", "B1"], ["A2", "B2"])
 +---
 
+  Note, since Nomin 1.1.1 there is overloaded simple method to be more clearer.
+
++---
+  a.gender = b.details.sex
+  simple ([a: Gender.MALE, b: true], [a: Gender.FEMALE, b: false])
++---
+
   I think you got the idea :) Please don't confuse the order of elements in pairs, first value is from side <<<a>>> and <<<b>>> is
   the next.
 

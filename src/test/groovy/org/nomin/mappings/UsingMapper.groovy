@@ -14,7 +14,7 @@ import org.nomin.entity.Person
 class UsingMapper extends Mapping {
   protected void build() {
     mappingFor a: Person, b: Employee
-    a.children[0] = { mapper.map(new ArrayList(b.details.kids)[0], Child) }
+    a.children[0] = { mapper.map(b.details.kids.iterator().next(), Child) }
     a.children[1] = mapper.map(new Kid("The Second"), Child)
   }
 }

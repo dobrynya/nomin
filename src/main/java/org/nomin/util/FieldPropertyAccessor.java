@@ -1,6 +1,5 @@
 package org.nomin.util;
 
-import org.nomin.core.*;
 import java.lang.reflect.Field;
 
 /**

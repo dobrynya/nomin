@@ -26,6 +26,8 @@
             <item name="Using the mapper in mappings" href="usingMapper.html"/>
             <item name="Automapping facility" href="automapping.html"/>
             <item name="Customizing introspectors" href="introspectors.html"/>
+            <item name="Caching mapped instances" href="caching.html"/>
+            <item name="Logging" href="logging.html"/>
         </menu>
         <menu ref="reports"/>
     </body>

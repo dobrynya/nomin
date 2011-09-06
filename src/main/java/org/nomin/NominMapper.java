@@ -2,6 +2,7 @@ package org.nomin;
 
 import org.nomin.context.Context;
 import org.nomin.util.InstanceCreator;
+import org.nomin.util.Introspector;
 
 import java.util.Map;
 
@@ -181,6 +182,20 @@ public interface NominMapper {
     NominMapper disableAutomapping();
 
     /**
+     * Enables caching mapped instances to improve performance and make possible cycle detection. Caching is enabled by
+     * default.
+     * @return this
+     */
+    NominMapper enableCache();
+
+    /**
+     * Disables caching mapped instances. Beware of cycles in object graphs, cycles will
+     * cause {@link StackOverflowError StackOverflowError}.
+     * @return this
+     */
+    NominMapper disableCache();
+
+    /**
      * Provides Nomin with the context to use.
      * @param context specifies the context to use
      * @return this
@@ -195,4 +210,12 @@ public interface NominMapper {
      * @return this
      */
     NominMapper context(Context context);
+
+    /**
+     * Provides Nomin with the default introspector to use accross all mappings. Nomin uses
+     * {@link org.nomin.util.ReflectionIntrospector ReflectionIntrospector} by default.
+     * @param introspector specifies the introspector to use
+     * @return this
+     */
+    NominMapper defaultIntrospector(Introspector introspector);
 }

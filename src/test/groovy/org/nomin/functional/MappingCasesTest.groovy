@@ -1,13 +1,9 @@
 package org.nomin.functional
 
 import org.nomin.core.Nomin
-import org.nomin.entity.Employee
-import org.nomin.entity.Gender
-import org.nomin.entity.Person
-import org.nomin.mappings.Person2Details
-import org.nomin.mappings.Person2DetailsEmpty
-import org.nomin.mappings.Person2Employee
-import org.nomin.mappings.Person2EmployeeInverse
+import org.nomin.entity.*
+import org.nomin.mappings.*
+import org.nomin.NominMapper
 
 /**
  * Tests mapping with using mapping cases identifiers.
@@ -16,11 +12,8 @@ import org.nomin.mappings.Person2EmployeeInverse
  */
 class MappingCasesTest {
   String mappingCase = null;
-  def decision = { mappingCase }
-  Nomin mapper = new Nomin([decision: decision])
-
-  @org.junit.Before
-  void before() { mapper.parse Person2Employee, Person2EmployeeInverse, Person2Details, Person2DetailsEmpty }
+  NominMapper mapper = new Nomin([decision: { mappingCase }],
+          Person2Employee, Person2EmployeeInverse, Person2Details, Person2DetailsEmpty).disableCache()
 
   @org.junit.Test
   void test() {

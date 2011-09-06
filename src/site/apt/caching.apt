@@ -1,0 +1,11 @@
+   ---
+Caching mapped instances
+   ---
+
+Caching mapped instances
+
+  Nomin by default caches mapped instances. It allows to improve performance in case of frequently repeating values to be
+  mapped. Also caching mapped objects serves as a cycle detection mechanism to prevent infinite loop in case of bidirectional
+  references.
+
+  Caching can be disabled, this is required in rare cases.

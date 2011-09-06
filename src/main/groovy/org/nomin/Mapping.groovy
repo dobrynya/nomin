@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat
 import static org.nomin.util.TypeInfoFactory.typeInfo;
 
 /**
- * Stores and parses mapping entries defined in method build body. It also provides a number of operations to control
+ * Stores and parses mapping entries defined inside of the method build. It also provides a number of operations to control
  * parsing and mapping details.
  * @author Dmitry Dobrynin
  * Created 06.04.2010 16:53:38
@@ -26,9 +26,9 @@ class Mapping {
   Boolean mapNulls = false
   NominMapper mapper
 
-  protected Introspector introspector = jb
+  protected Introspector introspector
   private List<MappingEntry> entries = []
-  private Map<String, Closure<Object>> hooks = [ throwableHandler: {} ]
+  private Map<String, Closure> hooks = [ throwableHandler: {} ]
   private List<Class<? extends Throwable>> throwables
 
   Mapping() {}
@@ -36,6 +36,7 @@ class Mapping {
   Mapping(Class<?> a, Class<?> b, Nomin mapper) {
     mappingFor a: a, b: b
     this.mapper = mapper;
+    this.introspector = mapper.defaultIntrospector();
   }
 
   ParsedMapping parse() {
@@ -86,7 +87,7 @@ class Mapping {
   }
 
   /** Defines conversions between sides. */
-  void convert(Map<String, Closure> conversions, Closure block = null) {
+  void convert(Map<String, Closure> conversions) {
     if (!entries) entry()
     entries.last().conversion to_a: mapper.contextManager.makeContextAware(conversions.to_a),
             to_b: mapper.contextManager.makeContextAware(conversions.to_b)
@@ -109,7 +110,11 @@ class Mapping {
   }
 
   /**
-   * Applies a conversion between string and date values to the last mappung rule.
+   * Applies a conversion between string and date values to the last mapping rule as follows:
+   * <p><code>
+   *     a.date = b.dateAsString<br>
+   *     dateFormat "dd-MM-yyyy"
+   * </code></p>
    * As a formatter SimpleDateFormat is used.
    * @param pattern specifies SimpleDateFormat's pattern
    */
@@ -121,9 +126,19 @@ class Mapping {
   }
 
   /** Applies simple conversions to the last mapping rule. */
-  void simple(List... pairs) {
+  void simple(List... pairs) { simple(pairs.collect {[a: it[0], b: it[1]]}.toArray(new Map[pairs.size()])) }
+
+  /**
+   * Defines a simple conversion as follows:
+   * <p><code>
+   * a.sex = b.gender<br>
+   * simple([a: true, b: Gender.MALE], [a: false, b: Gender.FEMALE])
+   * </code></p>
+   * @param pairs specifies corresponding values from both sides
+   */
+  void simple(Map<String, Object>... pairs) {
     def (direct, reverse) = [new HashMap(), new HashMap()]
-    for (List p in pairs) { direct[p[0]] = p[1]; reverse[p[1]] = p[0] }
+    for (Map<String, Object> p in pairs) { direct[p.a] = p.b; reverse[p.b] = p.a }
     convert to_a: new SimpleConversionClosure(reverse), to_b: new SimpleConversionClosure(direct)
   }
 

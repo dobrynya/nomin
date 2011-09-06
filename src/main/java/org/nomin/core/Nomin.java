@@ -3,7 +3,7 @@ package org.nomin.core;
 import org.nomin.Mapping;
 import org.nomin.NominMapper;
 import org.nomin.context.*;
-import org.nomin.util.*;
+import org.nomin.util.Introspector;
 import org.slf4j.*;
 import java.util.*;
 import static java.text.MessageFormat.format;
@@ -16,7 +16,7 @@ import static java.text.MessageFormat.format;
  */
 @SuppressWarnings({"unchecked"})
 public class Nomin implements NominMapper {
-    public static final String NOMIN_VERSION = "1.1.0";
+    public static final String NOMIN_VERSION = "1.1.1";
     static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
     protected ScriptLoader scriptLoader = new ScriptLoader();
@@ -24,6 +24,8 @@ public class Nomin implements NominMapper {
     protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
     protected Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
     protected boolean automappingEnabled = true;
+    protected boolean cacheEnabled = true;
+    protected Introspector defaultIntrospector = Mapping.getJb();
 
     public Nomin() {}
 
@@ -71,6 +73,16 @@ public class Nomin implements NominMapper {
         return this;
     }
 
+    public NominMapper enableCache() {
+        cacheEnabled = true;
+        return this;
+    }
+
+    public NominMapper disableCache() {
+        cacheEnabled = false;
+        return this;
+    }
+
     @Deprecated
     public NominMapper setContext(Map<String, Object> context) { return context(new MapContext(context)); }
 
@@ -78,6 +90,13 @@ public class Nomin implements NominMapper {
         contextManager.setSharedContext(context);
         return this;
     }
+
+    public NominMapper defaultIntrospector(Introspector introspector) {
+        defaultIntrospector = introspector;
+        return this;
+    }
+
+    public Introspector defaultIntrospector() { return defaultIntrospector; }
 
     public List<ParsedMapping> getMappings() { return Collections.unmodifiableList(mappings); }
 
@@ -105,6 +124,7 @@ public class Nomin implements NominMapper {
     public synchronized Nomin parse(Mapping mapping) {
         cachedApplicable.clear(); // the cache is cleared before parsing a mapping
         mapping.setMapper(this);
+        mapping.introspector(defaultIntrospector);
         addOrReplace(mapping.parse());
         return this;
     }
@@ -173,9 +193,8 @@ public class Nomin implements NominMapper {
     }
 
     protected Object map(Object source, Object target, Class<?> targetClass, Object mappingCase) {
-        for (MappingWithDirection mwd : findCachedApplicable(source.getClass(), targetClass, mappingCase)) {
+        for (MappingWithDirection mwd : findCachedApplicable(source.getClass(), targetClass, mappingCase))
             target = mwd.mapping.map(source, target, targetClass, mwd.direction);
-        }
         return target;
     }
 
@@ -245,35 +264,6 @@ public class Nomin implements NominMapper {
 
         MappingWithDirection(ParsedMapping mapping, boolean direction) {
             this.mapping = mapping; this.direction = direction;
-        }
-    }
-
-    static class Key {
-        Class<?> source, target;
-        Object mappingCase;
-        boolean includeInverse = false;
-
-        Key(Class<?> source, Class<?> target, Object mappingCase) {
-            this.source = source; this.target = target; this.mappingCase = mappingCase;
-        }
-
-        Key(ParsedMapping parsedMapping) {
-            this(parsedMapping.sideA, parsedMapping.sideB, parsedMapping.mappingCase);
-            includeInverse = true;
-        }
-
-        public boolean equals(Object obj) {
-            if (obj == null || !(obj instanceof Key)) return false;
-            if (this == obj) return true;
-            Key another = (Key) obj;
-            return ((source == another.source && target == another.target) ^
-                    (includeInverse && source == another.target && target == another.source)) &&
-                    ((mappingCase == null && another.mappingCase == null) ^
-                            (mappingCase != null && mappingCase.equals(another.mappingCase)));
-        }
-
-        public int hashCode() {
-            return source.hashCode() * 13 + 31 * target.hashCode() + (mappingCase != null ? 71 * mappingCase.hashCode() : 0);
         }
     }
 
