@@ -20,59 +20,59 @@ class NominTest {
             m4 = new ParsedMapping("", LinearManager, DetailedPerson, "1", [], [:], false, null, null, nomin)
     ]
 
-    def res = nomin.findApplicable(Person, Employee, null)
+    def res = nomin.findApplicable(new MappingKey(Person, Employee, null))
     assert res.size() == 1 && res[0].mapping == m1 && res[0].direction
-    res = nomin.findApplicable(Person, LinearManager, null)
+    res = nomin.findApplicable(new MappingKey(Person, LinearManager, null))
     assert res.size() == 1 && res[0].mapping == m1 && res[0].direction
-    res = nomin.findApplicable(DetailedPerson, Employee, null)
+    res = nomin.findApplicable(new MappingKey(DetailedPerson, Employee, null))
     assert res.size() == 1 && res[0].mapping == m1 && res[0].direction
-    res = nomin.findApplicable(DetailedPerson, LinearManager, null)
+    res = nomin.findApplicable(new MappingKey(DetailedPerson, LinearManager, null))
     assert res.size() == 2 && res[0].mapping == m1 && res[1].mapping == m3 && res[0].direction && !res[1].direction
-    res = nomin.findApplicable(Employee, Person, null)
+    res = nomin.findApplicable(new MappingKey(Employee, Person, null))
     assert res.size() == 1 && res[0].mapping == m1 && !res[0].direction
-    res = nomin.findApplicable(LinearManager, Person, null)
+    res = nomin.findApplicable(new MappingKey(LinearManager, Person, null))
     assert res.size() == 1 && res[0].mapping == m1 && !res[0].direction
-    res = nomin.findApplicable(Employee, DetailedPerson, null)
+    res = nomin.findApplicable(new MappingKey(Employee, DetailedPerson, null))
     assert res.size() == 1 && res[0].mapping == m1 && !res[0].direction
-    res = nomin.findApplicable(LinearManager, DetailedPerson, null)
+    res = nomin.findApplicable(new MappingKey(LinearManager, DetailedPerson, null))
     assert res.size() == 2 && res[0].mapping == m1 && res[1].mapping == m3 && !res[0].direction && res[1].direction
 
     // Finds applicable using mappingCase
-    res = nomin.findApplicable(Person, Employee, "1")
+    res = nomin.findApplicable(new MappingKey(Person, Employee, "1"))
     assert res.size() == 1 && res[0].mapping == m2 && res[0].direction
-    res = nomin.findApplicable(Person, LinearManager, "1")
+    res = nomin.findApplicable(new MappingKey(Person, LinearManager, "1"))
     assert res.size() == 1 && res[0].mapping == m2 && res[0].direction
-    res = nomin.findApplicable(DetailedPerson, Employee, "1")
+    res = nomin.findApplicable(new MappingKey(DetailedPerson, Employee, "1"))
     assert res.size() == 1 && res[0].mapping == m2 && res[0].direction
-    res = nomin.findApplicable(DetailedPerson, LinearManager, "1")
+    res = nomin.findApplicable(new MappingKey(DetailedPerson, LinearManager, "1"))
     assert res.size() == 2 && res[0].mapping == m2 && res[1].mapping == m4 && res[0].direction && !res[1].direction
-    res = nomin.findApplicable(Employee, Person, "1")
+    res = nomin.findApplicable(new MappingKey(Employee, Person, "1"))
     assert res.size() == 1 && res[0].mapping == m2 && !res[0].direction
-    res = nomin.findApplicable(LinearManager, Person, "1")
+    res = nomin.findApplicable(new MappingKey(LinearManager, Person, "1"))
     assert res.size() == 1 && res[0].mapping == m2 && !res[0].direction
-    res = nomin.findApplicable(Employee, DetailedPerson, "1")
+    res = nomin.findApplicable(new MappingKey(Employee, DetailedPerson, "1"))
     assert res.size() == 1 && res[0].mapping == m2 && !res[0].direction
-    res = nomin.findApplicable(LinearManager, DetailedPerson, "1")
+    res = nomin.findApplicable(new MappingKey(LinearManager, DetailedPerson, "1"))
     assert res.size() == 2 && res[0].mapping == m2 && res[1].mapping == m4 && !res[0].direction && res[1].direction
 
     // Finds non-existent mappings
-    assert !nomin.findApplicable(Person, Person, null)
-    assert !nomin.findApplicable(Person, DetailedPerson, null)
-    assert !nomin.findApplicable(Employee, Employee, null)
-    assert !nomin.findApplicable(Employee, LinearManager, null)
-    assert !nomin.findApplicable(String, Integer, null)
-    assert !nomin.findApplicable(Person, Employee, "non-existent")
-    assert !nomin.findApplicable(DetailedPerson, LinearManager, "non-existent")
+    assert !nomin.findApplicable(new MappingKey(Person, Person, null))
+    assert !nomin.findApplicable(new MappingKey(Person, DetailedPerson, null))
+    assert !nomin.findApplicable(new MappingKey(Employee, Employee, null))
+    assert !nomin.findApplicable(new MappingKey(Employee, LinearManager, null))
+    assert !nomin.findApplicable(new MappingKey(String, Integer, null))
+    assert !nomin.findApplicable(new MappingKey(Person, Employee, "non-existent"))
+    assert !nomin.findApplicable(new MappingKey(DetailedPerson, LinearManager, "non-existent"))
   }
 
   @org.junit.Test
   void testKey() {
-    assert new Key(Person, Employee, null) == new Key(Person, Employee, null)
-    assert new Key(Person, Employee, "1") == new Key(Person, Employee, "1")
-    assert new Key(Person, Employee, null) != new Key(Employee, Person, null)
-    assert new Key(Person, Employee, "1") != new Key(Employee, Person, "1")
-    assert new Key(Person, Employee, null) != new Key(Person, Employee, "1")
-    assert new Key(Person, Employee, "1") != new Key(Person, Employee, null)
+    assert new MappingKey(Person, Employee, null) == new MappingKey(Person, Employee, null)
+    assert new MappingKey(Person, Employee, "1") == new MappingKey(Person, Employee, "1")
+    assert new MappingKey(Person, Employee, null) != new MappingKey(Employee, Person, null)
+    assert new MappingKey(Person, Employee, "1") != new MappingKey(Employee, Person, "1")
+    assert new MappingKey(Person, Employee, null) != new MappingKey(Person, Employee, "1")
+    assert new MappingKey(Person, Employee, "1") != new MappingKey(Person, Employee, null)
   }
 
   @org.junit.Test

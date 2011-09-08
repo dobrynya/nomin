@@ -52,11 +52,26 @@ class Mapping {
     if (mappingInfo.case) mappingCase = mappingInfo.case
   }
 
-  /** Hangs 'after mapping' hook. Closure 'after' has a, b and direction local variables */
+  /**
+   * Hangs 'before mapping' hook. Closure 'before' has a, b and direction local variables
+   * @deprecated use {@link #beforeForward(Closure} or {@link #beforeBackward(Closure)}
+   */
+  @Deprecated
+  void before(Closure before) { hook before: before }
+  /**
+   * Hangs <b>after</b> hook. Closure after has a, b and direction local variables
+   * @deprecated use {@link #afterForward(groovy.lang.Closure)}.
+   */
+  @Deprecated
   void after(Closure after) { hook after: after }
 
-  /** Hangs 'before mapping' hook. Closure 'before' has a, b and direction local variables */
-  void before(Closure before) { hook before: before }
+  void beforeForward(Closure beforeForward) { hook beforeForward: beforeForward }
+
+  void beforeBackward(Closure beforeBackward) { hook beforeBackward: beforeBackward }
+
+  void afterForward(Closure afterForward) { hook afterForward: afterForward }
+
+  void afterBackward(Closure afterBackward) { hook afterBackward: afterBackward }
 
   /**
    * Hangs 'throwable handler' hook. As the only parameter the method takes a map containing a list of 'throwables' and
@@ -153,7 +168,10 @@ class Mapping {
     checkSides()
     if (logger.isDebugEnabled()) logger.debug "${mappingName}: Building a mapping between ${side.a.name} and ${side.b.name} automatically"
     Set<String> b = introspector.properties(side.b)
-    for (String property : introspector.properties(side.a)) if (b.contains(property)) this.a."${property}" = this.b."${property}"
+    for (String property : introspector.properties(side.a)) if (b.contains(property)) {
+        logger.debug("a.{} = b.{}", property, property)
+        this.a."${property}" = this.b."${property}"
+    }
     this
   }
 

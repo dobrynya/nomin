@@ -22,7 +22,6 @@ class AutomappingTest {
 
   @org.junit.Test
   void testNominAutomappingFacility() {
-    nomin.enableAutomapping();
     Person p = new Person(name: "Automapped Name", lastName: "Last name")
     Employee e = nomin.map(p, Employee)
     assert e && e.name == "Automapped Name" && !e.last

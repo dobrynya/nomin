@@ -22,7 +22,7 @@ public class Nomin implements NominMapper {
     protected ScriptLoader scriptLoader = new ScriptLoader();
     protected ContextManager contextManager = new ContextManager();
     protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
-    protected Map<Key, List<MappingWithDirection>> cachedApplicable = new HashMap<Key, List<MappingWithDirection>>();
+    protected Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<MappingKey, List<MappingWithDirection>>();
     protected boolean automappingEnabled = true;
     protected boolean cacheEnabled = true;
     protected Introspector defaultIntrospector = Mapping.getJb();
@@ -193,45 +193,47 @@ public class Nomin implements NominMapper {
     }
 
     protected Object map(Object source, Object target, Class<?> targetClass, Object mappingCase) {
-        for (MappingWithDirection mwd : findCachedApplicable(source.getClass(), targetClass, mappingCase))
-            target = mwd.mapping.map(source, target, targetClass, mwd.direction);
+        boolean first = true;
+        for (MappingWithDirection mwd : findCachedApplicable(new MappingKey(source.getClass(), targetClass, mappingCase))) {
+            target = mwd.mapping.map(source, target, targetClass, mwd.direction, first);
+            if (first) first = false;
+        }
         return target;
     }
 
-    protected List<MappingWithDirection> findCachedApplicable(Class<?> source, Class<?> target, Object mappingCase) {
-        List<MappingWithDirection> result = cachedApplicable.get(new Key(source, target, mappingCase));
+    protected List<MappingWithDirection> findCachedApplicable(MappingKey key) {
+        List<MappingWithDirection> result = cachedApplicable.get(key);
         if (result == null)
-            cachedApplicable.put(new Key(source, target, mappingCase), result = findApplicable(source, target, mappingCase));
+            cachedApplicable.put(key, result = findApplicable(key));
         return result;
     }
 
-    protected List<MappingWithDirection> findApplicable(Class<?> source, Class<?> target, Object mappingCase) {
-        ArrayList<MappingWithDirection> result = new ArrayList<MappingWithDirection>(mappings.size());
+    protected List<MappingWithDirection> findApplicable(MappingKey key) {
+        ArrayList<MappingWithDirection> result = new ArrayList<MappingWithDirection>();
         for (ParsedMapping pm : mappings) {
-            if ((pm.mappingCase == null && mappingCase == null) ^
-                            (pm.mappingCase != null && pm.mappingCase.equals(mappingCase))) {
-                if (pm.sideA.isAssignableFrom(source) && pm.sideB.isAssignableFrom(target)) result.add(new MappingWithDirection(pm, true));
-                else if (pm.sideB.isAssignableFrom(source) && pm.sideA.isAssignableFrom(target)) result.add(new MappingWithDirection(pm, false));
+            if ((pm.mappingCase == null && key.mappingCase == null) ^ (pm.mappingCase != null && pm.mappingCase.equals(key.mappingCase))) {
+                if (pm.sideA.isAssignableFrom(key.source) && pm.sideB.isAssignableFrom(key.target)) result.add(new MappingWithDirection(pm, true));
+                else if (pm.sideB.isAssignableFrom(key.source) && pm.sideA.isAssignableFrom(key.target)) result.add(new MappingWithDirection(pm, false));
             }
         }
         if (!result.isEmpty()) {
-            Collections.sort(result, new MappingComparator(target));
+            Collections.sort(result, new MappingComparator(key.target));
         } else if (automappingEnabled) {
             logger.info("Could not find applicable mappings between {} and {}. A mapping will be created using automapping facility",
-                    source.getName(), target.getName());
-            ParsedMapping pm = new Mapping(source, target, this).automap().parse();
+                    key.source.getName(), key.target.getName());
+            ParsedMapping pm = new Mapping(key.source, key.target, this).automap().parse();
             logger.debug("Automatically created {}", pm);
             mappings.add(pm);
             result.add(new MappingWithDirection(pm, true));
         } else
-            logger.warn("Could not find applicable mappings between {} and {}!", source.getName(), target.getName());
+            logger.warn("Could not find applicable mappings between {} and {}!", key.source.getName(), key.target.getName());
         return result;
     }
 
     protected void addOrReplace(ParsedMapping parsedMapping) {
-        Key key = new Key(parsedMapping);
+        MappingKey key = new MappingKey(parsedMapping);
         for (int i = 0; i < mappings.size(); i++) {
-            if (key.equals(new Key(mappings.get(i)))) {
+            if (key.equals(new MappingKey(mappings.get(i)))) {
                 logger.warn("{}\nis replaced with\n{}", mappings.get(i), parsedMapping);
                 mappings.set(i, parsedMapping); return;
             }
@@ -259,8 +261,8 @@ public class Nomin implements NominMapper {
     }
 
     static class MappingWithDirection {
-        ParsedMapping mapping;
-        boolean direction;
+        final ParsedMapping mapping;
+        final boolean direction;
 
         MappingWithDirection(ParsedMapping mapping, boolean direction) {
             this.mapping = mapping; this.direction = direction;

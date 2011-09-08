@@ -26,6 +26,7 @@ public class PerformanceTest {
 
     @Test
     public void test() throws Exception {
+        // TODO: Implement hardcoded mapping!
         List<Measurement> measurements = asList(
                 new Measurement().measure(N, new Nomin(Person2Employee.class, DetailedPerson2LinearManager.class, Child2Kid.class).disableCache()),
                 new Measurement().measure(N, new Nomin(Person2Employee.class, DetailedPerson2LinearManager.class, Child2Kid.class)

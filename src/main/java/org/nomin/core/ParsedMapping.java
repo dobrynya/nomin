@@ -14,7 +14,12 @@ import java.util.*;
  *         Created 28.04.2010 12:57:58
  */
 public class ParsedMapping {
-    private static final Logger logger = LoggerFactory.getLogger(ParsedMapping.class);
+    static final Logger logger = LoggerFactory.getLogger(ParsedMapping.class);
+    static final ThreadLocal<WeakHashMap<Object, Map<MappingKey, Object>>> cache = new ThreadLocal<WeakHashMap<Object, Map<MappingKey, Object>>>() {
+        protected WeakHashMap<Object, Map<MappingKey, Object>> initialValue() {
+            return new WeakHashMap<Object, Map<MappingKey, Object>>();
+        }
+    };
 
     final String mappingName;
     final Class<?> sideA, sideB;
@@ -22,15 +27,9 @@ public class ParsedMapping {
     final Object mappingCase;
     final MappingRule[] rules; // using an array is necessary for optimizing performance
     final Map<String, Closure> hooks;
-    private List<Class<? extends Throwable>> throwables;
+    final List<Class<? extends Throwable>> throwables;
     final InstanceCreator instanceCreator;
     final Nomin mapper;
-    protected static ThreadLocal<WeakHashMap<Object, Map<Key, Object>>> cache =
-            new ThreadLocal<WeakHashMap<Object, Map<Key, Object>>>() {
-                protected WeakHashMap<Object, Map<Key, Object>> initialValue() {
-                    return new WeakHashMap<Object, Map<Key, Object>>();
-                }
-            };
 
     public ParsedMapping(String mappingName, Class<?> sideA, Class<?> sideB, Object mappingCase, List<MappingRule> rules,
                          Map<String, Closure> hooks, boolean mapNulls, List<Class<? extends Throwable>> throwables,
@@ -76,7 +75,7 @@ public class ParsedMapping {
         if (hook != null) hook.call();
     }
 
-    public Object map(Object source, Object target, Class<?> targetClass, boolean direction) {
+    public Object map(Object source, Object target, Class<?> targetClass, boolean direction, boolean stopMapping) {
         if (logger.isTraceEnabled())
             logger.trace(format("{0}: {1} is being mapped to {2}",
                     mappingCase == null ? mappingName : mappingName + ":" + mappingCase,
@@ -86,16 +85,13 @@ public class ParsedMapping {
             try { target = instanceCreator.create(targetClass); }
             catch (Throwable th) { throw new NominException(true, format("Could not instantiate {0}!", targetClass), th); }
 
-
-        // TODO: Fix the bug!
-        // In case f hierarchical mapping it maps only a base class. Upper level mappings are not being applied!
         if (mapper.cacheEnabled) {
-            Map<Key, Object> keys = cache.get().get(source);
-            if (keys == null) cache.get().put(source, keys = new HashMap<Key, Object>(1));
-            Key key = new Key(source.getClass(), targetClass, mappingCase);
+            Map<MappingKey, Object> keys = cache.get().get(source);
+            if (keys == null) cache.get().put(source, keys = new HashMap<MappingKey, Object>(1));
+            MappingKey key = new MappingKey(source.getClass(), targetClass, mappingCase);
             Object cached = keys.get(key);
             if (cached == null) keys.put(key, target);
-            else return cached;
+            else if (stopMapping) return cached;
         }
 
         Map<String, Object> lc = direction ? lc(source, target, direction) : lc(target, source, direction);
