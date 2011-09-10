@@ -25,7 +25,7 @@ public class Nomin implements NominMapper {
     protected Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<MappingKey, List<MappingWithDirection>>();
     protected boolean automappingEnabled = true;
     protected boolean cacheEnabled = true;
-    protected Introspector defaultIntrospector = Mapping.getJb();
+    protected Introspector defaultIntrospector = Mapping.jb;
 
     public Nomin() {}
 
@@ -114,7 +114,7 @@ public class Nomin implements NominMapper {
     public Nomin parse(Class<? extends Mapping>... mappingClasses) {
         for (Class<? extends Mapping> mc : mappingClasses) {
             Mapping mapping;
-            try { mapping = Mapping.getJb().instanceCreator().create(mc); }
+            try { mapping = Mapping.jb.instanceCreator().create(mc); }
             catch (Exception e) { throw new NominException(format("Could not instantiate a mapping {0}!", mc), e); }
             parse(mapping);
         }

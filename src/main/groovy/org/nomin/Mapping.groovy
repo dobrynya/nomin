@@ -16,9 +16,9 @@ class Mapping {
   protected static final Logger logger = LoggerFactory.getLogger(Mapping)
 
   static final String DEFAULT = "default";
-  static final Introspector jb = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy)
-  static final Introspector exploding = new ExplodingIntrospector()
-  static final Introspector fast = new FastIntrospector()
+  public static final Introspector jb = new ReflectionIntrospector(JbNamingPolicy.jbNamingPolicy)
+  public static final Introspector exploding = new ExplodingIntrospector()
+  public static final Introspector fast = new FastIntrospector()
 
   Map<String, Class> side = [:]
   Object mappingCase

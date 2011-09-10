@@ -5,6 +5,6 @@ package org.nomin.performance;
  * @author Dmitry Dobrynin
  *         Created 04.09.11 11:43
  */
-public interface Mapper {
+public interface MyMapper {
     Object map(Object source, Class<?> targetClass);
 }
