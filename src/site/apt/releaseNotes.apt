@@ -8,6 +8,14 @@ Release Notes
 
   Improvements
 
+  * {{{https://sourceforge.net/tracker/?func=detail&aid=3325318&group_id=316528&atid=1331420}Cycle detection and caching}}
+    has been implemented.
+
+  * {{{https://sourceforge.net/tracker/?func=detail&aid=3403303&group_id=316528&atid=1331420}Setting default introspector}}
+    has been implemented.
+
+  * Several additional hooks have been added. See the corresponding page.
+
   * Nomin has been updated to use Groovy 1.8.0 instead of 1.7.x. Please refer Groovy docs.
 
 * 1.1.0

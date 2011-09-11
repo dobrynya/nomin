@@ -23,9 +23,8 @@ abstract class PathElem {
   def getProperties() { propertyMissing("properties") }
 
   def propertyMissing(String name) {
-    def escapedMethod = ["hashCode", "toString", "getClass"].find { name.startsWith(it) && name.endsWith("()") }
-    escapedMethod ? methodMissing(escapedMethod, new Object[0]) :
-      (nextPathElement = new PropPathElem(propPathElementPropertyName: name, pathElementMappingEntry: pathElementMappingEntry))
+      ["hashCode()", "toString()", "getClass()"].contains(name) ? methodMissing(name[0..-3], new Object[0]) :
+          (nextPathElement = new PropPathElem(propPathElementPropertyName: name, pathElementMappingEntry: pathElementMappingEntry))
   }
 
   def propertyMissing(name, value) {

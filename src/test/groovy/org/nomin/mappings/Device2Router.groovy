@@ -17,14 +17,14 @@ class Device2Router extends Mapping {
       MappingExpressionsTest.counter -= 1
     }
 
-    before {
+    beforeAtoB {
       if (b.vendor || b.model || b.software || b.portCount || b.supportedProtocol || b.portNames || b.portModels || b.importDate || b.frequencies)
         throw new RuntimeException("b should not be mapped yet!")
       MappingExpressionsTest.isBeforeCalled = true
       throw new Exception("Just a checked exception in before hook!")
     }
 
-    after {
+    afterAtoB {
       if (!(b.vendor && b.model && b.software && b.portCount && b.supportedProtocol && b.portNames && b.portModels && b.importDate && b.frequencies))
         throw new RuntimeException("b should be mapped!")
       MappingExpressionsTest.isAfterCalled = true

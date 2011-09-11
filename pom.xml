@@ -63,6 +63,18 @@
         <developerConnection>scm:hg:ssh://nomin.hg.sourceforge.net/hgroot/nomin/nomin</developerConnection>
     </scm>
 
+    <issueManagement>
+        <system>source-forge</system>
+        <url>https://sourceforge.net/tracker/?group_id=316528</url>
+    </issueManagement>
+
+    <mailingLists>
+        <mailingList>
+            <name>nomin-support</name>
+            <post>nomin-support@lists.sourceforge.net</post>
+        </mailingList>
+    </mailingLists>
+
     <distributionManagement>
         <repository>
             <id>sonatype-nexus-staging</id>

@@ -1,12 +1,12 @@
    ---
-Nomin's abilities for error handling
+Error handling
    ---
 
 Error handling
 
   There is a couple of ways to enforce Nomin not to rethrow <<<Throwable>>>s.
   The first of them is to call <<<handle>>> method and pass a map containing Throwables to be catched and a 'handler'
-  closure. The handler has access to context variables such as <<<mapping>>>, <<<failed>>>, <<<throwable>>>.
+  closure. The handler has access to context variables such as <<mapping>>, <<failed>>, <<throwable>>, <<message>>.
   This is shown on the snippet below.
 
 +---
@@ -20,7 +20,7 @@ Error handling
   }
 +---
 
-  Here is a predefined handler <<<swallow>>> logging errors. Actually <<<swallow>>> method calls <<<handle>>> method to
+  Here is a predefined handler <<<swallow>>> just logging errors. Actually <<<swallow>>> method calls <<<handle>>> method to
   do its work.
 
 +---
@@ -33,3 +33,8 @@ Error handling
 
   Handling throwables is enabled only for that mapping where it's defined. It's not automatically propagated to
   aggregated mappings.
+
+---
+  Be careful not to throw any exception in the handler otherwise an exception there will cause infinite handler recursion
+  and <<<java.lang.StackOverflowError>>> as result.
+---

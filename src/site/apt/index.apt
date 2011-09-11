@@ -34,8 +34,8 @@ Introduction
 
   I was involved in development of several projects as an integration developer. My goal on that projects was
   to perform integration with external or legacy systems. So I looked for convenient and easy-to-use framework
-  for mapping different structures to each other. I've found {{{http://dozer.sourceforge.net}Dozer}}. Everything was
-  fine until the current project has happened. I encountered too legacy code that Dozer couldn't introspect.
+  for mapping different structures to each other. I've found {{{http://dozer.sourceforge.net}Dozer}}.
+  One day I encountered too legacy code that Dozer couldn't introspect.
   Then I decided to write my own mapping framework. I was inspired by Dozer but also I saw its disadvantages such as
   configuring mapping rules in XML documents (too much overhead coding), inabilities to apply expressions and so on.
 

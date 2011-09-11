@@ -53,31 +53,46 @@ class Mapping {
   }
 
   /**
-   * Hangs 'before mapping' hook. Closure 'before' has a, b and direction local variables
-   * @deprecated use {@link #beforeForward(Closure} or {@link #beforeBackward(Closure)}
+   * Hangs <b>before</b> mapping hook. Closure <b>before</b> has access to <b>a</b>, <b>b</b> and <b>direction</b> local variables.
+   * @param before specifies a closure to be called before mapping will be running
    */
-  @Deprecated
-  void before(Closure before) { hook before: before }
+  void before(Closure before) { beforeAtoB before; beforeBtoA before }
+
   /**
-   * Hangs <b>after</b> hook. Closure after has a, b and direction local variables
-   * @deprecated use {@link #afterForward(groovy.lang.Closure)}.
+   * Hangs <b>before a to b</b> hook.
+   * @param beforeAtoB specifies a closure to be called before mapping <b>a</b> to <b>b</b>
    */
-  @Deprecated
-  void after(Closure after) { hook after: after }
+  void beforeAtoB(Closure beforeAtoB) { hook beforeAtoB: beforeAtoB }
 
-  void beforeForward(Closure beforeForward) { hook beforeForward: beforeForward }
+  /**
+   * Hangs <b>before b to a</b> hook.
+   * @param beforeBtoA specifies a closure to be called before mapping <b>b</b> to <b>a</b>
+   */
+  void beforeBtoA(Closure beforeBtoA) { hook beforeBtoA: beforeBtoA }
 
-  void beforeBackward(Closure beforeBackward) { hook beforeBackward: beforeBackward }
+  /**
+   * Hangs <b>after</b> mapping hook. Closure <b>after</b> has access <b>a</b>, <b>b</b> and <b>direction</b> local variables.
+   * @param before specifies a closure to be called after mapping is done
+   */
+  void after(Closure after) { afterAtoB after; afterBtoA after }
 
-  void afterForward(Closure afterForward) { hook afterForward: afterForward }
+  /**
+   * Hangs <b>after a to b</b> hook.
+   * @param beforeBtoA specifies a closure to be called after mapping <b>a</b> to <b>b</b>
+   */
+  void afterAtoB(Closure afterAtoB) { hook afterAtoB: afterAtoB }
 
-  void afterBackward(Closure afterBackward) { hook afterBackward: afterBackward }
+  /**
+   * Hangs <b>after b to a</b> hook.
+   * @param beforeBtoA specifies a closure to be called after mapping <b>b</b> to <b>a</b>
+   */
+  void afterBtoA(Closure afterBtoA) { hook afterBtoA: afterBtoA }
 
   /**
    * Hangs 'throwable handler' hook. As the only parameter the method takes a map containing a list of 'throwables' and
-   * a 'handler' closure. 'Handler' closure can access 'mapping' and 'failed' objects.
-   * F.e. handle throwables: Exception, handler: { ... } or in case of a set of throwables
-   * handle throwables: [RuntimeException, IllegalArgumentException],  handler: { ... }
+   * a 'handler' closure. The handler can access <b>mapping</b>, <b>failed</b>, <b>message</b> and <b>throwable</b> objects.
+   * F.e. <p><code>handle throwables: Exception, handler: { ... }</code><p> or in case of a set of throwables
+   * <p><code>handle throwables: [RuntimeException, IllegalArgumentException],  handler: { ... }</code></p>
    */
   void handle(parameters) {
     if (List.isInstance(parameters.throwables)) this.throwables = parameters.throwables
@@ -97,7 +112,7 @@ class Mapping {
    */
   void swallow(boolean silent = false, Class<? extends Throwable>... throwables) {
     handle throwables: throwables.collect { it }, handler: silent ? null : {
-      LoggerFactory.getLogger(ParsedMapping).warn("${mapping.mappingName}: ${Closure.isInstance(failed) ? "Hook" : failed} failed, but the failure is ignored!", throwable)
+      LoggerFactory.getLogger(ParsedMapping).warn("${message} Ignored!", throwable)
     }
   }
 
@@ -110,7 +125,7 @@ class Mapping {
 
   /**
    * When applying a hint to collections there is the ability to specify the type of collection elements.
-   * For instance, hint a: List[Person].
+   * For instance, <p><code>hint a: List[Person]</code></p>
    */
   void hint(hints) {
     if (!entries) entry()

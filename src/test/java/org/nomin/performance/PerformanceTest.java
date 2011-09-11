@@ -21,7 +21,7 @@ import static java.util.Arrays.asList;
  */
 @SuppressWarnings({"unchecked"})
 public class PerformanceTest {
-    int N = 1000000;
+    int N = 10000;
 
     @Test
     public void test() throws Exception {

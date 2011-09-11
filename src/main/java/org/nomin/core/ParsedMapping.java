@@ -1,11 +1,11 @@
 package org.nomin.core;
 
 import groovy.lang.Closure;
-import static java.text.MessageFormat.format;
 import org.nomin.context.MapContext;
 import org.nomin.util.InstanceCreator;
 import org.slf4j.*;
 import java.util.*;
+import static java.lang.String.format;
 
 /**
  * Contains rule elements and provides mapping facility. Instead of doing mapping by itself a parsed mapping delegates
@@ -61,29 +61,31 @@ public class ParsedMapping {
                 if (thc.isInstance(throwable)) {
                     localContext.put("mapping", this);
                     localContext.put("failed", failedObject);
+                    localContext.put("message", message);
                     localContext.put("throwable", throwable);
-                    callHook("throwableHandler");
+                    callHook("throwableHandler", localContext);
                     return;
                 }
         }
         throw throwable instanceof NominException && !((NominException) throwable).shouldWrap ?
-                (NominException) throwable : new NominException(format(message, params), throwable);
+                (NominException) throwable : new NominException(message, throwable);
     }
 
-    protected void callHook(String hookName) {
+    protected void callHook(String hookName, Map<String, Object> lc) {
         Closure hook = hooks.get(hookName);
-        if (hook != null) hook.call();
+        if (hook != null) try { hook.call(); } catch (Throwable th) {
+            handle(th, lc, hook, format("%s: Hook '%s' has failed!", mappingName, hookName));
+        }
     }
 
     public Object map(Object source, Object target, Class<?> targetClass, boolean direction, boolean stopMapping) {
-        if (logger.isTraceEnabled())
-            logger.trace(format("{0}: {1} is being mapped to {2}",
-                    mappingCase == null ? mappingName : mappingName + ":" + mappingCase,
-                    source.getClass().getName(), targetClass.getName()));
+        if (logger.isTraceEnabled()) logger.trace(format("%s: %s is being mapped to %s",
+                mappingCase == null ? mappingName : mappingName + ":" + mappingCase,
+                source.getClass().getName(), targetClass.getName()));
 
         if (target == null)
             try { target = instanceCreator.create(targetClass); }
-            catch (Throwable th) { throw new NominException(true, format("Could not instantiate {0}!", targetClass), th); }
+            catch (Throwable th) { throw new NominException(true, format("Could not instantiate %s!", targetClass), th); }
 
         if (mapper.cacheEnabled) {
             Map<MappingKey, Object> keys = cache.get().get(source);
@@ -97,15 +99,14 @@ public class ParsedMapping {
         Map<String, Object> lc = direction ? lc(source, target, direction) : lc(target, source, direction);
         mapper.contextManager.pushLocal(new MapContext(lc));
 
-        try { callHook("before"); }
-        catch (Throwable throwable) { handle(throwable, lc, hooks.get("before"), "{0}: Hook ''before'' has failed!", mappingName); }
+        callHook(direction ? "beforeAtoB" : "beforeBtoA", lc);
 
-        for (MappingRule rule : rules)
-            try { if (direction) rule.mapAtoB(source, target); else rule.mapBtoA(source, target); }
-            catch (Throwable throwable) { handle(throwable, lc, rule, "{0}: Mapping rule {1} has failed!", mappingName, rule); }
+        if (direction) for (MappingRule rule : rules) try {  rule.mapAtoB(source, target); }
+        catch (Throwable throwable) { handle(throwable, lc, rule, format("%s: Mapping rule %s has failed!", mappingName, rule)); }
+        else for (MappingRule rule : rules) try {  rule.mapBtoA(source, target); }
+        catch (Throwable throwable) { handle(throwable, lc, rule, format("%s: Mapping rule %s has failed!", mappingName, rule)); }
 
-        try { callHook("after"); }
-        catch (Throwable throwable) { handle(throwable, lc, hooks.get("after"), "{0}: Hook ''after'' has failed!", mappingName); }
+        callHook(direction ? "afterAtoB" : "afterBtoA", lc);
 
         mapper.contextManager.popLocal();
         return target;
