@@ -45,8 +45,8 @@ Features
 
   * context management
 
-    Expressions and hooks can use objects from the context passed to the mapper. Context is nothing else as
-    just a Map instance with string keys.
+    Expressions and hooks can use objects from the context passed to the mapper. Context can be just a Map instance with string keys. Also
+    there is integration with Spring, so you are able to use beans defined in the Spring context.
 
   * high performance and thread-safety
 
