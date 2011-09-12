@@ -46,5 +46,11 @@ Introspectors
   introspector new SpecificIntrospector()
 +---
 
+  It is possible to set default introspector to be used widely in all mappings as shown below
+
++---
+  NominMappper nomin = new Nomin(...).defaultIntrospector(Mapping.fast);
++---
+
   You are absolutely free to implement an introspector/instance creator for your own needs.
 

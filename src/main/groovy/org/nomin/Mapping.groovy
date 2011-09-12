@@ -45,7 +45,12 @@ class Mapping {
             introspector.instanceCreator(), mapper)
   }
 
-  /** Defines mapping information: classes of the sides and mapping case */
+  /**
+   * Defines mapping information: classes of the sides and mapping case. This method should be called firstly.
+   * <p><code> mappingFor a: org.nomin.entity.Person, b: org.nomin.entity.Employee</code></p>or
+   * <p><code> mappingFor a: org.nomin.entity.Person, b: org.nomin.entity.Employee, case: "specificCase"</code></p>
+   * @param mappingInfo specifies parameters of the mapping
+   */
   void mappingFor(Map mappingInfo) {
     if (mappingInfo.a) side.a = mappingInfo.a
     if (mappingInfo.b) side.b = mappingInfo.b
@@ -116,7 +121,13 @@ class Mapping {
     }
   }
 
-  /** Defines conversions between sides. */
+  /**
+   * Defines conversions between sides.
+   * <p><code>
+   * a.sex = b.gender<br>
+   * convert to_a: { gender -> gender == Gender.MALE }, to_b: { sex -> sex ? Gender.MALE : Gender.FEMALE }
+   * </code></p>
+   */
   void convert(Map<String, Closure> conversions) {
     if (!entries) entry()
     entries.last().conversion to_a: mapper.contextManager.makeContextAware(conversions.to_a),
@@ -124,15 +135,22 @@ class Mapping {
   }
 
   /**
-   * When applying a hint to collections there is the ability to specify the type of collection elements.
-   * For instance, <p><code>hint a: List[Person]</code></p>
+   * Specifies the types of the sides to be used instead of discovered by the introspector. This is useful when we have
+   * more specific types. For instance, if we have a.objects of type Object but we would like to interpret this as
+   * a list of Person.
+   * <p><code>a.objects = b.list<br>hint a: List[Person]</code></p>
+   * @param hints specifies hints
    */
   void hint(hints) {
     if (!entries) entry()
     entries.last().hint a: processHints(hints.a), b: processHints(hints.b)
   }
 
-  /** Defines a mapping case for the last mapping rule. */
+  /**
+   * Defines a mapping case for the last mapping rule as follows
+   * <p><code>a.details = b.object<br>mappingCase "specificCase"</code></p>
+   * @param mappingCase specifies the mapping case to use
+   */
   void mappingCase(mappingCase) {
     if (!entries) entry()
     if (Closure.isInstance(mappingCase)) mapper.contextManager.makeContextAware(mappingCase)
@@ -142,8 +160,8 @@ class Mapping {
   /**
    * Applies a conversion between string and date values to the last mapping rule as follows:
    * <p><code>
-   *     a.date = b.dateAsString<br>
-   *     dateFormat "dd-MM-yyyy"
+   * a.date = b.dateAsString<br>
+   * dateFormat "dd-MM-yyyy"
    * </code></p>
    * As a formatter SimpleDateFormat is used.
    * @param pattern specifies SimpleDateFormat's pattern
@@ -155,7 +173,14 @@ class Mapping {
     convert to_a: conversion, to_b: conversion
   }
 
-  /** Applies simple conversions to the last mapping rule. */
+  /**
+   * Defines a simple conversion as follows:
+   * <p><code>
+   * a.sex = b.gender<br>
+   * simple([true, Gender.MALE], [false, Gender.FEMALE])
+   * </code></p>
+   * @param pairs specifies corresponding values from both sides
+   */
   void simple(List... pairs) { simple(pairs.collect {[a: it[0], b: it[1]]}.toArray(new Map[pairs.size()])) }
 
   /**
@@ -172,13 +197,20 @@ class Mapping {
     convert to_a: new SimpleConversionClosure(reverse), to_b: new SimpleConversionClosure(direct)
   }
 
-  /** Uses specified class introspector. */
+  /**
+   * Uses specified class introspector: <p><code>introspector exploding // or fast</code></p>
+   * @param introspector specifies an introspector to be used for discovering classes.
+   *
+   */
   void introspector(Introspector introspector) {
     if (introspector) this.introspector = introspector
     else throw new NominException("${mappingName}: introspector should not be null!")
   }
 
-  /** Creates mapping entries with properties of the same names. */
+  /**
+   * Creates mapping entries with properties of the same names. This is useful in case of classes with the same structure,
+   * for example DTO or something like that.
+   */
   Mapping automap() {
     checkSides()
     if (logger.isDebugEnabled()) logger.debug "${mappingName}: Building a mapping between ${side.a.name} and ${side.b.name} automatically"
@@ -202,7 +234,7 @@ class Mapping {
     hints
   }
 
-  /** Returns current mapping entry or newly created entry if the previous entry is full */
+  /** Returns current mapping entry or newly created entry if the previous entry is full. */
   private def entry() {
     if (!entries || entries.last().completed()) entries << new MappingEntry(mapping: this)
     entries.last()
@@ -227,7 +259,18 @@ class Mapping {
     propertyMissing(name)
   }
 
-  /** Contains mapping rules.  */
+  /**
+   * Contains mapping rules. This method should be overridden to provide mapping details to Nomin as follows
+   * <pre><code>
+   * class MyMapping extends Mapping {
+   *     void build() {
+   *         mappingFor a: Class1, b: Class2
+   *         a.property1 = b.property2
+   *         ...
+   *     }
+   * }
+   * </code></pre>
+   */
   protected void build() {}
 
   def String toString() {
