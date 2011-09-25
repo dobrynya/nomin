@@ -7,7 +7,7 @@ Getting started
   To start working with Nomin it's necessary to download
   {{{https://sourceforge.net/projects/nomin/files/}the Nomin distribution package}},
   unpack and put nomin.jar with dependencies into the classpath of your application. If you use Maven to build an application
-  just add Nomin as a dependency into your pom.xml. Recomended Nomin's version is 1.1.0.
+  just add Nomin as a dependency into your pom.xml.
 
 +---
   <dependency>
