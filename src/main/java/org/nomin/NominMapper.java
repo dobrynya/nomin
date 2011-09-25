@@ -1,7 +1,6 @@
 package org.nomin;
 
 import org.nomin.context.Context;
-import org.nomin.util.InstanceCreator;
 import org.nomin.util.Introspector;
 
 import java.util.Map;
@@ -12,8 +11,21 @@ import java.util.Map;
  *         Created 15.04.2010 11:06:56
  */
 public interface NominMapper {
-    // TODO: Implement a method to load all scripts in the specified directory
-    // TODO: Implement a method to load scripts from specified files which are not on the classpath
+    /**
+     * Parses Groovy scripts located in the specified directory.
+     * @param directory specifies the directory containing mapping scripts
+     * @return this
+     * @see java.io.File File
+     */
+    NominMapper parseDirectory(String directory);
+
+    /**
+     * Parses specified files containing mappings.
+     * @param mappingScripts specifies files using relative or absolute paths
+     * @return this
+     * @see java.io.File File
+     */
+    NominMapper parseFiles(String... mappingScripts);
 
     /**
      * Parses specified Groovy scripts containing mappings.

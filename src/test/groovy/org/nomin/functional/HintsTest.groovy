@@ -16,8 +16,6 @@ import org.nomin.mappings.LegacyPerson2Employee
 class HintsTest {
   NominMapper mapper = new Nomin()
 
-  // TODO: Write tests with using DEFAULT constant
-
   @org.junit.Test
   void testHints() {
     mapper.parse LegacyPerson2Employee

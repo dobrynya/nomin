@@ -255,7 +255,7 @@ class Mapping {
     else throw new NominException("${mappingName}: Property '${name}' isn't defined!")
   }
 
-  def propertyMissing(String name, value) {
+  void propertyMissing(String name, value) {
     propertyMissing(name)
   }
 

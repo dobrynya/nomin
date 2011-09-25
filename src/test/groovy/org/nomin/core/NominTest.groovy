@@ -77,18 +77,34 @@ class NominTest {
 
   @org.junit.Test
   void testParsingScripts() {
-    nomin.parse "person2employee.groovy", "child2kid.groovy"
-    def now = new Date()
-    Employee e = nomin.map(new Person(name: "Name", lastName: "Last", gender: Gender.MALE, birthDate: now,
-            children: [new Child(name: "Child")]), Employee)
-    assert e && e.name == "Name" && e.last == "Last" && e.details && e.details.birth == now && e.details.sex &&
-            e.details.kids?.size() == 1
-    Kid kid = e.details.kids.iterator().next();
-    assert kid.kidName == "Child"
+    nomin.parse "mappings/person2employee.groovy", "mappings/child2kid.groovy"
+    testMappedInstances()
   }
 
   @org.junit.Test (expected = NominException.class)
   void testFailedParsingScripts() {
     nomin.parse "unexistentMapping.groovy"
   }
+
+  @org.junit.Test
+  void testParseFiles() {
+    nomin.parseFiles("src/test/resources/mappings/person2employee.groovy", "src/test/resources/mappings/child2kid.groovy")
+    testMappedInstances()
+  }
+
+  @org.junit.Test
+  void testParseDirectory() {
+    nomin.parseDirectory("src/test/resources/mappings")
+    testMappedInstances()
+  }
+
+    private void testMappedInstances() {
+        def now = new Date()
+        Employee e = nomin.map(new Person(name: "Name", lastName: "Last", gender: Gender.MALE, birthDate: now,
+                children: [new Child(name: "Child")]), Employee)
+        assert e && e.name == "Name" && e.last == "Last" && e.details && e.details.birth == now && e.details.sex &&
+                e.details.kids?.size() == 1
+        Kid kid = e.details.kids.iterator().next();
+        assert kid.kidName == "Child"
+    }
 }

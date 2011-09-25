@@ -1,8 +1,7 @@
 package org.nomin.core;
 
-import static java.text.MessageFormat.format;
-import static java.util.Arrays.asList;
 import org.slf4j.*;
+import static java.lang.String.format;
 
 /**
  * Contains mapping rule elements and delegates mapping to them.
@@ -24,7 +23,7 @@ public class MappingRule {
 
     public Object map(Object source, Object target, RuleElem srcElem, RuleElem targetElem) throws Exception {
         Object result = srcElem.get(source);
-        if (logger.isTraceEnabled()) logger.trace(format("{0}: {1} = {2}", mapping.mappingName, srcElem.path(), result));
+        if (logger.isTraceEnabled()) logger.trace(format("%s: %s = %s", mapping.mappingName, srcElem.path(), result));
         if (result != null || mapping.mapNulls) return targetElem.set(target, result);
         return target;
     }
@@ -37,5 +36,5 @@ public class MappingRule {
         if (allowedToB) return map(a, b, this.a, this.b); else return b;
     }
 
-    public String toString() { return format("{0} = {1}", a.path(), b.path()); }
+    public String toString() { return format("%s = %s", a.path(), b.path()); }
 }

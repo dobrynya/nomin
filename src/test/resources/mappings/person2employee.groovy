@@ -1,3 +1,5 @@
+package mappings
+
 import org.nomin.entity.*
 
 mappingFor a: Person, b: Employee

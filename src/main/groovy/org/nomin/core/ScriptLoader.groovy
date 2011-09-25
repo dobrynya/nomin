@@ -1,6 +1,7 @@
 package org.nomin.core
 
 import org.nomin.Mapping
+import org.slf4j.*
 
 /**
  * Performs loading Groovy scripts containing mappings.
@@ -8,12 +9,26 @@ import org.nomin.Mapping
  * Created 09.04.2010 14:32:59
  */
 class ScriptLoader {
+  final static Logger logger = LoggerFactory.getLogger(ScriptLoader)
   protected GroovyShell shell = new GroovyShell()
+
+  /** Loads specified mapping script. */
+  Mapping loadFile(String mappingScript) {
+      def file = new File(mappingScript)
+      if (file.exists()) {
+          logger.debug("Loading file ${file.absolutePath}")
+          load(shell.parse(file), mappingScript)
+      }
+      else throw new NominException("Specified script file ${file.absolutePath} isn't found!")
+  }
 
   /** Loads specified mapping script. */
   Mapping load(String mappingScript) {
     def stream = this.class.classLoader.getResourceAsStream(mappingScript)
-    if (stream) load(shell.parse(stream), mappingScript)
+    if (stream) {
+        logger.debug("Loading resource ${mappingScript}")
+        load(shell.parse(stream), mappingScript)
+    }
     else throw new NominException("Specified script file ${mappingScript} isn't found!")
   }
 

@@ -10,4 +10,12 @@ Caching mapped instances
 
   Caching can be disabled. Actually this is required in rare cases. For example you would like to create a new object
   instance each time you call <<NominMapper.map(...)>> instead of getting a cached one. Also there is an interesting case
-  when disabling cache is useful. Please refer <<<org.nomin.functional.MappingCasesTest>>>.
+  when disabling cache is useful, please refer <<<org.nomin.functional.MappingCasesTest>>>.
+
+  The following code snippet shows how to enable or disable caching.
+
++++
+  nominMapper.enableCache();
+  // or
+  nominMapper.disableCache();
++++

@@ -1,3 +1,5 @@
+package mappings
+
 import org.nomin.entity.Child
 import org.nomin.entity.Kid
 

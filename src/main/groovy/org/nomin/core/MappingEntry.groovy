@@ -2,14 +2,9 @@ package org.nomin.core
 
 import org.nomin.Mapping
 import org.nomin.util.*
-import static java.text.MessageFormat.format
 import static org.nomin.util.TypeInfoFactory.*
-import org.nomin.core.preprocessing.ConversionPreprocessing
-import org.nomin.core.preprocessing.DynamicPreprocessing
+import org.nomin.core.preprocessing.*
 import org.apache.commons.beanutils.ConvertUtils
-import org.nomin.core.preprocessing.ConvertUtilsPreprocessing
-import org.nomin.core.preprocessing.MapperPreprocessing
-import org.nomin.core.preprocessing.Preprocessing
 
 /**
  * Contains mapping pair from side a and side b.
@@ -67,13 +62,9 @@ class MappingEntry {
 
   protected void validate(lastA, lastB) {
     if (RootRuleElem.isInstance(lastA) && RootRuleElem.isInstance(lastB))
-      throw new NominException(format("{0}: Recursive mapping rule {1} causes infinite loop!", mapping.mappingName, this))
-    /*
-    // TODO: Fix the following!
+      throw new NominException("${mapping.mappingName}: Recursive mapping rule ${this} causes infinite loop!")
     if ((lastA.typeInfo.container ^ lastB.typeInfo.container) && PropRuleElem.isInstance(lastA) && PropRuleElem.isInstance(lastB))
-      throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a collection/array on the first side and a single value on another!", mapping.mappingName, this))
-    if (lastA.typeInfo.map ^ lastB.typeInfo.map)
-      throw new NominException(format("{0}: Mapping rule {1} is invalid because there is a map on the first side and a non-map on another!", mapping.mappingName, this))*/
+      throw new NominException("{${mapping.mappingName}: Mapping rule ${this} is invalid because there is a collection/array on the first side and a single value on another!")
   }
 
   protected RuleElem findLast(RuleElem elem) { elem.next ? findLast(elem.next) : elem }
@@ -111,5 +102,5 @@ class MappingEntry {
     else new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
   }
 
-  String toString() { format("{0} = {1}", sides[0].pathElem, sides[1].pathElem) }
+  String toString() { "${sides[0].pathElem} = ${sides[1].pathElem}" }
 }

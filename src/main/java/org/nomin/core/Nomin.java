@@ -1,10 +1,10 @@
 package org.nomin.core;
 
-import org.nomin.Mapping;
-import org.nomin.NominMapper;
+import org.nomin.*;
 import org.nomin.context.*;
 import org.nomin.util.Introspector;
 import org.slf4j.*;
+import java.io.*;
 import java.util.*;
 import static java.text.MessageFormat.format;
 
@@ -99,6 +99,20 @@ public class Nomin implements NominMapper {
     public Introspector defaultIntrospector() { return defaultIntrospector; }
 
     public List<ParsedMapping> getMappings() { return Collections.unmodifiableList(mappings); }
+
+    public NominMapper parseDirectory(String directory) {
+        File dir = new File(directory);
+        if (dir.exists() && dir.isDirectory()) for (String mappingScript : dir.list(new FilenameFilter() {
+            public boolean accept(File dir, String name) { return name.endsWith(".groovy"); }
+        })) parse(scriptLoader.loadFile(dir + "/" + mappingScript));
+        else throw new NominException(format("Directory {0} does not exist!"));
+        return this;
+    }
+
+    public NominMapper parseFiles(String... mappingScripts) {
+        for (String mappingScript : mappingScripts) parse(scriptLoader.loadFile(mappingScript));
+        return this;
+    }
 
     public Nomin parse(String... mappingScripts) {
         for (String mappingScript : mappingScripts) parse(scriptLoader.load(mappingScript));
