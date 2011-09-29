@@ -18,7 +18,7 @@ Release Notes
 
   * <<<org.nomin.NominMapper>>> allows to parse files and directories as well as class path resources.
 
-  * Nomin has been updated to use Groovy 1.8.0 instead of 1.7.x. Please refer Groovy docs.
+  * Nomin has been updated to use Groovy 1.8.2 instead of 1.7.5. Please refer Groovy docs.
 
 * 1.1.0
 

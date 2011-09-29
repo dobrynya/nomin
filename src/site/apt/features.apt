@@ -50,7 +50,7 @@ Features
 
   * high performance and thread-safety
 
-    Nomin is developed for working in multithreading environments. Its performance exceeds performance of frameworks
+    Nomin is developed for working in multi-threading environments. Its performance exceeds performance of frameworks
     with the same functionality, the following table show the comparison results.
 
 *--------------------------*--------------------------------------*----------------------------------*
@@ -76,3 +76,5 @@ Features
   * implicit conversions of primitive/wrapper types
 
   * type and null-safe
+
+  * ready for deployment into OSGi container
