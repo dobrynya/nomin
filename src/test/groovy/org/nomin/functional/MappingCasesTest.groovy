@@ -1,5 +1,6 @@
 package org.nomin.functional
 
+import org.nomin.context.MapContext
 import org.nomin.core.Nomin
 import org.nomin.entity.*
 import org.nomin.mappings.*
@@ -12,7 +13,7 @@ import org.nomin.NominMapper
  */
 class MappingCasesTest {
   String mappingCase = null;
-  NominMapper mapper = new Nomin([decision: { mappingCase }],
+  NominMapper mapper = new Nomin(new MapContext(decision: { mappingCase }),
           Person2Employee, Person2EmployeeInverse, Person2Details, Person2DetailsEmpty).disableCache()
 
   @org.junit.Test

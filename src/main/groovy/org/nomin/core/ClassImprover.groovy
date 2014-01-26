@@ -1,6 +1,6 @@
 package org.nomin.core
 
-import org.nomin.util.TypeInfoFactory
+import org.nomin.util.*
 
 /**
  * Adds getAt method to Class.
@@ -8,7 +8,7 @@ import org.nomin.util.TypeInfoFactory
  * Created 11.05.2010 16:44:23
  */
 class ClassImprover {
-  static {
+  static void initialize() {
     Class.metaClass.getAt = { arg -> TypeInfoFactory.typeInfo(delegate, arg) }
   }
 }

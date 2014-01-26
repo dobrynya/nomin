@@ -279,5 +279,5 @@ class Mapping {
     sb.append("}").toString()
   }
 
-  static { ClassImprover }
+  static { ClassImprover.initialize() }
 }

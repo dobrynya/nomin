@@ -5,6 +5,7 @@ import org.nomin.context.*;
 import org.nomin.util.Introspector;
 import org.slf4j.*;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
 import static java.text.MessageFormat.format;
 
@@ -16,8 +17,8 @@ import static java.text.MessageFormat.format;
  */
 @SuppressWarnings({"unchecked"})
 public class Nomin implements NominMapper {
-    public static final String NOMIN_VERSION = "1.1.1";
-    static final Logger logger = LoggerFactory.getLogger(Nomin.class);
+    public static final String NOMIN_VERSION = "1.1.2";
+    protected static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
     protected ScriptLoader scriptLoader = new ScriptLoader();
     protected ContextManager contextManager = new ContextManager();
@@ -29,32 +30,13 @@ public class Nomin implements NominMapper {
 
     public Nomin() {}
 
-    public Nomin(Map<String, Object> context) { contextManager.setSharedContext(new MapContext(context)); }
+    public Nomin(Context context) { contextManager.setSharedContext(context); }
 
     public Nomin(Class<? extends Mapping>... mappingClasses) { parse(mappingClasses); }
 
-    /**
-     * Constructs a Nomin instance.
-     * @param context specifies the context to use
-     * @param mappingClasses specifies mapping classes to parse
-     * @deprecated use {@link #context(org.nomin.context.Context)} and {@link #parse(Class[])} to configure Nomin
-     */
-    @Deprecated
-    public Nomin(Map<String, Object> context, Class<? extends Mapping>... mappingClasses) {
-        this(context);
+    public Nomin(Context context, Class<? extends Mapping>... mappingClasses) {
+        contextManager.setSharedContext(context);
         parse(mappingClasses);
-    }
-
-    @Deprecated
-    public Nomin(Map<String, Object> context, Mapping... mappings) {
-        this(context);
-        for (Mapping mapping : mappings) parse(mapping);
-    }
-
-    @Deprecated
-    public Nomin(Map<String, Object> context, String... mappingScripts) {
-        this(context);
-        parse(mappingScripts);
     }
 
     public Nomin(String... mappingScripts) { parse(mappingScripts); }
@@ -101,21 +83,52 @@ public class Nomin implements NominMapper {
     public List<ParsedMapping> getMappings() { return Collections.unmodifiableList(mappings); }
 
     public NominMapper parseDirectory(String directory) {
-        File dir = new File(directory);
-        if (dir.exists() && dir.isDirectory()) for (String mappingScript : dir.list(new FilenameFilter() {
-            public boolean accept(File dir, String name) { return name.endsWith(".groovy"); }
-        })) parse(scriptLoader.loadFile(dir + "/" + mappingScript));
-        else throw new NominException(format("Directory {0} does not exist!"));
+        parseDirectory(new File(directory));
+        return this;
+    }
+
+    public NominMapper parseDirectory(File directory) {
+        return parseDirectory(directory, Charset.defaultCharset());
+    }
+
+    public NominMapper parseDirectory(File directory, Charset charset) {
+        if (directory.exists() && directory.isDirectory())
+            for (File mappingScript : directory.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".groovy");
+                }
+            })) parse(scriptLoader.loadFile(mappingScript, charset));
+        else
+            throw new NominException(format("Directory {0} does not exist!", directory));
         return this;
     }
 
     public NominMapper parseFiles(String... mappingScripts) {
-        for (String mappingScript : mappingScripts) parse(scriptLoader.loadFile(mappingScript));
+        for (String mappingScript : mappingScripts)
+            parse(scriptLoader.loadFile(new File(mappingScript), Charset.defaultCharset()));
         return this;
     }
 
-    public Nomin parse(String... mappingScripts) {
-        for (String mappingScript : mappingScripts) parse(scriptLoader.load(mappingScript));
+    public NominMapper parseFiles(File... mappingScripts) {
+        return parseFiles(Charset.defaultCharset(), mappingScripts);
+    }
+
+    public NominMapper parseFiles(Charset charset, File... mappingScripts) {
+        for (File mappingScript : mappingScripts) parse(scriptLoader.loadFile(mappingScript, charset));
+        return this;
+    }
+
+    public NominMapper parse(Reader... readers) {
+        for (Reader reader : readers) parse(scriptLoader.loadWithReader(reader));
+        return this;
+    }
+
+    public NominMapper parse(String... mappingScripts) {
+        return parse(Charset.defaultCharset(), mappingScripts);
+    }
+
+    public NominMapper parse(Charset charset, String... mappingScripts) {
+        for (String mappingScript : mappingScripts) parse(scriptLoader.loadResource(mappingScript, charset));
         return this;
     }
 
@@ -149,21 +162,11 @@ public class Nomin implements NominMapper {
         return source != null && targetClass != null ? (T) map(source, null, targetClass, mappingCase) : null;
     }
 
-    @Deprecated
-    public <T> T map(Object source, Class<T> targetClass, Map<String, Object> context) {
-        return map(source, targetClass, new MapContext(context));
-    }
-
     public <T> T map(Object source, Class<T> targetClass, Context context) {
         contextManager.replaceShared(context);
         T target = map(source, targetClass);
         contextManager.restoreShared();
         return target;
-    }
-
-    @Deprecated
-    public <T> T map(Object source, Class<T> targetClass, Object mappingCase, Map<String, Object> context) {
-        return map(source, targetClass, mappingCase, new MapContext(context));
     }
 
     public <T> T map(Object source, Class<T> targetClass, Object mappingCase, Context context) {
@@ -182,21 +185,11 @@ public class Nomin implements NominMapper {
         return target;
     }
 
-    @Deprecated
-    public <T> T map(Object source, T target, Map<String, Object> context) {
-        return map(source, target, new MapContext(context));
-    }
-
     public <T> T map(Object source, T target, Context context) {
         contextManager.replaceShared(context);
         map(source, target, (Object) null);
         contextManager.restoreShared();
         return target;
-    }
-
-    @Deprecated
-    public <T> T map(Object source, T target, Object mappingCase, Map<String, Object> context) {
-        return map(source, target, mappingCase, new MapContext(context));
     }
 
     public <T> T map(Object source, T target, Object mappingCase, Context context) {

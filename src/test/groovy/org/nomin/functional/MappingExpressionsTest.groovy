@@ -1,6 +1,7 @@
 package org.nomin.functional
 
 import org.nomin.NominMapper
+import org.nomin.context.MapContext
 import org.nomin.core.Nomin
 import org.nomin.entity.Device
 import org.nomin.entity.Router
@@ -19,7 +20,7 @@ class MappingExpressionsTest {
   def deviceResolver = new Object() {
     public String resolveProtocol(String model) { return "http" }
   }
-  NominMapper mapper = new Nomin([upperCase: { it?.toUpperCase() }, deviceResolver: deviceResolver], Device2Router)
+  NominMapper mapper = new Nomin(new MapContext(upperCase: { it?.toUpperCase() }, deviceResolver: deviceResolver), Device2Router)
 
   @org.junit.Test
   void testMapping() {

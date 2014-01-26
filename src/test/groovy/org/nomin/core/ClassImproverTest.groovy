@@ -10,7 +10,7 @@ import org.nomin.util.TypeInfo
  */
 class ClassImproverTest {
   @org.junit.Before
-  void before() { ClassImprover }
+  void before() { ClassImprover.initialize() }
 
   @org.junit.Test
   void test() {
