@@ -212,7 +212,6 @@ class Mapping {
    * for example DTO or something like that.
    */
   Mapping automap() {
-    if (logger.isDebugEnabled()) logger.debug "${mappingName}: checking sides ${side.a.name} and ${side.b.name}"
     checkSides()
     if (logger.isDebugEnabled()) logger.debug "${mappingName}: Building a mapping between ${side.a.name} and ${side.b.name} automatically"
     Set<String> b = introspector.properties(side.b)

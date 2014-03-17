@@ -228,8 +228,7 @@ public final class Nomin implements NominMapper {
         } else if (automappingEnabled) {
             logger.info("Could not find applicable mappings between {} and {}. A mapping will be created using automapping facility",
                     key.source.getName(), key.target.getName());
-            ParsedMapping pm;
-            pm = new Mapping(key.source, key.target, this).automap().parse();
+            ParsedMapping pm = new Mapping(key.source, key.target, this).automap().parse();
             logger.debug("Automatically created {}", pm);
             mappings.add(pm);
             result.add(new MappingWithDirection(pm, true));
