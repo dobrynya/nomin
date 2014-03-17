@@ -226,4 +226,13 @@ public interface NominMapper {
      * @return this
      */
     NominMapper defaultIntrospector(Introspector introspector);
+    
+    /**
+     * Provides Nomin with a special ClassLoader to use. This becomes handy
+     * if use Nomin in a non standalone environment.
+     * 
+     * @param classLoader the ClassLoader you want Nomin to use while mapping
+     * @return this
+     */
+    NominMapper classLoader(ClassLoader classLoader);
 }

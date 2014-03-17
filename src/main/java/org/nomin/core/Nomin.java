@@ -16,14 +16,14 @@ import static java.text.MessageFormat.format;
  *         Created 28.04.2010 17:10:24
  */
 @SuppressWarnings({"unchecked"})
-public class Nomin implements NominMapper {
+public final class Nomin implements NominMapper {
     public static final String NOMIN_VERSION = "1.1.2";
     protected static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
     protected ScriptLoader scriptLoader = new ScriptLoader();
     protected ContextManager contextManager = new ContextManager();
     protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
-    protected Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<MappingKey, List<MappingWithDirection>>();
+    private final Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<MappingKey, List<MappingWithDirection>>();
     protected boolean automappingEnabled = true;
     protected boolean cacheEnabled = true;
     protected Introspector defaultIntrospector = Mapping.jb;
@@ -228,7 +228,8 @@ public class Nomin implements NominMapper {
         } else if (automappingEnabled) {
             logger.info("Could not find applicable mappings between {} and {}. A mapping will be created using automapping facility",
                     key.source.getName(), key.target.getName());
-            ParsedMapping pm = new Mapping(key.source, key.target, this).automap().parse();
+            ParsedMapping pm;
+            pm = new Mapping(key.source, key.target, this).automap().parse();
             logger.debug("Automatically created {}", pm);
             mappings.add(pm);
             result.add(new MappingWithDirection(pm, true));
@@ -249,14 +250,20 @@ public class Nomin implements NominMapper {
         mappings.add(parsedMapping);
     }
 
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Nomin Mapper\nParsed mappings:\n");
         for (ParsedMapping pm : mappings) sb.append(pm).append("\n");
         return sb.toString();
     }
 
+    public NominMapper classLoader(ClassLoader classLoader) {
+        scriptLoader = new ScriptLoader(classLoader);
+        return this;
+    }
+
     static class MappingComparator implements Comparator<MappingWithDirection> {
-        private Class<?> target;
+        private final Class<?> target;
 
         public MappingComparator(Class<?> target) { this.target = target; }
 

@@ -107,4 +107,19 @@ class NominTest {
         Kid kid = e.details.kids.iterator().next();
         assert kid.kidName == "Child"
     }
+    
+  @org.junit.Test
+  void testWithClassLoader() {
+      nomin = new Nomin().classLoader(this.getClass().getClassLoader());
+      org.junit.Assert.assertNotNull("use of different classloader failed", nomin);
+
+      // test mapper a little
+      ParsedMapping m1
+      nomin.mappings = [
+            m1 = new ParsedMapping("", Person, Employee, null, [], [:], false, null, null, nomin),
+      ]
+      
+      def res = nomin.findApplicable(new MappingKey(Person, Employee, null))
+      assert res.size() == 1 && res[0].mapping == m1 && res[0].direction
+  }
 }
