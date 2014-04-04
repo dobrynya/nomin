@@ -2,6 +2,7 @@ package org.nomin.core
 
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.nomin.Mapping
+import groovy.lang.GroovyShell
 import java.io.*
 import org.slf4j.*
 import java.nio.charset.Charset
@@ -16,9 +17,13 @@ class ScriptLoader {
     protected GroovyShell shell
 
     ScriptLoader() {
+        this(getClass().getClassLoader())
+    }
+    
+    ScriptLoader(ClassLoader classLoader) {
         CompilerConfiguration configuration = new CompilerConfiguration()
         configuration.setScriptBaseClass(DelegatingScript.name)
-        shell = new GroovyShell(configuration)
+        shell = new GroovyShell(classLoader, new Binding(), configuration)
     }
 
     Mapping loadWithReader(Reader reader) {
