@@ -1,12 +1,9 @@
 package org.nomin;
 
+import java.io.*;
 import org.nomin.context.Context;
 import org.nomin.util.Introspector;
-
-import java.io.File;
-import java.io.Reader;
 import java.nio.charset.Charset;
-import java.util.Map;
 
 /**
  * Provides operations to perform mapping object trees as well as parsing mappings.
@@ -226,4 +223,12 @@ public interface NominMapper {
      * @return this
      */
     NominMapper defaultIntrospector(Introspector introspector);
+    
+    /**
+     * Provides Nomin with a special {@link java.lang.ClassLoader} to use.
+     * This becomes handy if use Nomin in a non-standalone environment.
+     * @param classLoader specifies the class loader to use during parsing mappings
+     * @return this
+     */
+    NominMapper classLoader(ClassLoader classLoader);
 }

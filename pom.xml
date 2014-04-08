@@ -4,7 +4,7 @@
     <groupId>net.sf.nomin</groupId>
     <artifactId>nomin</artifactId>
     <name>Nomin Mapping Engine</name>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
     <inceptionYear>2010</inceptionYear>
     <url>http://nomin.sourceforge.net</url>
 
@@ -49,6 +49,12 @@
         <contributor>
             <name>Alexander Racheev</name>
             <email>fixxer@inbox.ru</email>
+            <roles><role>Technical adviser</role></roles>
+        </contributor>
+
+        <contributor>
+            <name>Daniel Klotz</name>
+            <roles><role>Developer</role></roles>
         </contributor>
     </contributors>
 

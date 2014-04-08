@@ -1,5 +1,6 @@
 package org.nomin.core
 
+import org.junit.Test
 import org.nomin.entity.*
 
 /**
@@ -10,7 +11,7 @@ import org.nomin.entity.*
 class NominTest {
   Nomin nomin = new Nomin().disableAutomapping()
 
-  @org.junit.Test
+  @Test
   void testFindApplicable() {
     ParsedMapping m1, m2, m3, m4
     nomin.mappings = [
@@ -65,7 +66,7 @@ class NominTest {
     assert !nomin.findApplicable(new MappingKey(DetailedPerson, LinearManager, "non-existent"))
   }
 
-  @org.junit.Test
+  @Test
   void testKey() {
     assert new MappingKey(Person, Employee, null) == new MappingKey(Person, Employee, null)
     assert new MappingKey(Person, Employee, "1") == new MappingKey(Person, Employee, "1")
@@ -75,24 +76,24 @@ class NominTest {
     assert new MappingKey(Person, Employee, "1") != new MappingKey(Person, Employee, null)
   }
 
-  @org.junit.Test
+  @Test
   void testParsingScripts() {
     nomin.parse "mappings/person2employee.groovy", "mappings/child2kid.groovy"
     testMappedInstances()
   }
 
-  @org.junit.Test (expected = NominException.class)
+  @Test (expected = NominException.class)
   void testFailedParsingScripts() {
     nomin.parse "unexistentMapping.groovy"
   }
 
-  @org.junit.Test
+  @Test
   void testParseFiles() {
     nomin.parseFiles("src/test/resources/mappings/person2employee.groovy", "src/test/resources/mappings/child2kid.groovy")
     testMappedInstances()
   }
 
-  @org.junit.Test
+  @Test
   void testParseDirectory() {
     nomin.parseDirectory("src/test/resources/mappings")
     testMappedInstances()
@@ -104,7 +105,31 @@ class NominTest {
                 children: [new Child(name: "Child")]), Employee)
         assert e && e.name == "Name" && e.last == "Last" && e.details && e.details.birth == now && e.details.sex &&
                 e.details.kids?.size() == 1
-        Kid kid = e.details.kids.iterator().next();
+        Kid kid = e.details.kids.iterator().next()
         assert kid.kidName == "Child"
     }
+    
+  @Test
+  void testParsingMappingsUsingAnotherClassLoader() {
+      ClassLoader another = new ClassLoader(this.class.classLoader) {
+          InputStream getResourceAsStream(String name) {
+              return super.getResourceAsStream(name == "script.groovy" ?
+                      "mappings/child2kid.groovy" : name)
+          }
+      }
+      nomin = new Nomin().classLoader(another)
+
+      try {
+          nomin.parse("non-existent.groovy")
+          assert false
+      } catch (NominException e) {
+          assert e.message.startsWith("Specified resource")
+      }
+
+      nomin.parse("script.groovy")
+
+      Kid kid = new Kid("frodo baggins")
+      Child child = nomin.map(kid, Child)
+      assert child.name == "frodo baggins"
+  }
 }

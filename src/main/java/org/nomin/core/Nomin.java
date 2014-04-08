@@ -17,10 +17,10 @@ import static java.text.MessageFormat.format;
  */
 @SuppressWarnings({"unchecked"})
 public class Nomin implements NominMapper {
-    public static final String NOMIN_VERSION = "1.1.2";
+    public static final String NOMIN_VERSION = "1.1.3";
     protected static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
-    protected ScriptLoader scriptLoader = new ScriptLoader();
+    protected ScriptLoader scriptLoader = new ScriptLoader(Nomin.class.getClassLoader());
     protected ContextManager contextManager = new ContextManager();
     protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
     protected Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<MappingKey, List<MappingWithDirection>>();
@@ -64,9 +64,6 @@ public class Nomin implements NominMapper {
         cacheEnabled = false;
         return this;
     }
-
-    @Deprecated
-    public NominMapper setContext(Map<String, Object> context) { return context(new MapContext(context)); }
 
     public Nomin context(Context context) {
         contextManager.setSharedContext(context);
@@ -255,8 +252,13 @@ public class Nomin implements NominMapper {
         return sb.toString();
     }
 
+    public NominMapper classLoader(ClassLoader classLoader) {
+        scriptLoader = new ScriptLoader(classLoader);
+        return this;
+    }
+
     static class MappingComparator implements Comparator<MappingWithDirection> {
-        private Class<?> target;
+        private final Class<?> target;
 
         public MappingComparator(Class<?> target) { this.target = target; }
 

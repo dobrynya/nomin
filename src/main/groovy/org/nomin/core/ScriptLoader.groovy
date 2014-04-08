@@ -14,11 +14,17 @@ import java.nio.charset.Charset
 class ScriptLoader {
     private final Logger logger = LoggerFactory.getLogger(ScriptLoader)
     protected GroovyShell shell
+    protected ClassLoader classLoader
 
-    ScriptLoader() {
-        CompilerConfiguration configuration = new CompilerConfiguration()
-        configuration.setScriptBaseClass(DelegatingScript.name)
-        shell = new GroovyShell(configuration)
+    /**
+     * Constructs classLoader with the specified class classLoader to use while looking for resources and classes.
+     * @param classLoader specifies the class classLoader to use
+     */
+    ScriptLoader(ClassLoader classLoader) {
+        logger.debug("Using class loader $classLoader")
+        this.classLoader = classLoader ?: getClass().getClassLoader()
+        shell = new GroovyShell(classLoader, new Binding(),
+                new CompilerConfiguration(scriptBaseClass: DelegatingScript.name))
     }
 
     Mapping loadWithReader(Reader reader) {
@@ -46,7 +52,7 @@ class ScriptLoader {
      * @return initialized mapping
      */
   Mapping loadResource(String mappingScript, Charset charset) {
-    def stream = this.class.classLoader.getResourceAsStream(mappingScript)
+    def stream = this.classLoader.getResourceAsStream(mappingScript)
     if (stream) {
         logger.debug("Loading resource {}", mappingScript)
         load(shell.parse(new InputStreamReader(stream, charset)), mappingScript)
