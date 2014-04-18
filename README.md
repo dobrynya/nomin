@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zerounix/nomin/master/doc/nomin_logo_small.png?raw=true" alt="nomin - japanese peasant"/>
+</p>
+
 Introduction
 ============
 
@@ -65,6 +69,140 @@ Which approach to use? You decide.
 ``` groovy
 a.name = b.firstName
 ```
+means "map property 'name' of the first class to property 'firstName' of the second class and vice versa"
 
-	means "map property 'name' of the first class to property 'firstName' of the second class and vice versa"
+* map arbitrary expressions
+	In other words now you can map result of calulating arbitrary block of code to properties. Expressions have access to objects being mapped and will 
+	be calculated at runtime.
 
+* method invocation
+	So there is the ability to map result of method invocation on some property.
+
+* automapping facility
+	Nomin can automatically create mapping rules between properties of the same names.
+
+* abilities to easily customize the mapping engine behavio
+	You can choose a class introspector, advise the engine what is the type of a property with hints including dynamic hints which are calculated at mapping time. 
+	You are not restricted to use only JavaBeans naming convention, you can use anything suitable for your needs.
+
+* hooks
+	Sometimes it needs to perform pre and/or postprocessing entities being mapped. So that code can be placed right in a mapping.
+
+* context management
+	Expressions and hooks can use objects from the context passed to the mapper. Context can be just a Map instance with string keys. Also there is integration with Spring, 
+	so you are able to use beans defined in the Spring context.
+
+* high performance and thread-safety
+	Nomin is developed for working in multi-threading environments. Its performance exceeds performance of frameworks with the same functionality, the following table 
+	show the comparison results.
+
+| Environment / framework  | Nomin 1.1.0 | Dozer 5.3.1 |
+| ------------- | -------------: | -------------: |
+| Mapping complex objects, 400000 iterations  |  |  |
+| Pentium Dual E2180 2GHz, RAM 3 GB Win 32 XP SP 3, JVM 1.6.0_18  | ReflectionIntrospector <br/> ~5.51 sec    | with disabled statistics 60.93 sec |
+|  | ExplodingIntrospector <br/>~4.96 sec | |
+|  | FastIntrospector <br/>~3.49 sec | |
+| AMD x64 2GHz, RAM 2 GB Win 7 x64, JVM x64 1.6.0_22| with ReflectionIntrospector <br/> ~4.33 sec  | with disabled statistics 33.87 sec |
+|  | ExplodingIntrospector <br/>~4.17 sec | |
+|  | FastIntrospector <br/>~3.68 sec | |
+
+
+* recursive mapping of complex types
+* full supporting collections, arrays and maps
+* implicit conversions of primitive/wrapper types
+* type and null-safe
+* ready for deployment into OSGi container
+
+##Getting started
+
+To start working with Nomin it's necessary to download the [Nomin distribution package](https://github.com/dobrynya/nomin/releases), unpack and put nomin.jar with dependencies into the classpath of your application. 
+If you use Maven to build an application just add Nomin as a dependency into your pom.xml.
+
+``` xml
+<properties>
+	<nomin.version>1.1.3</nomin.version>	
+</properties>
+...
+<dependency>
+	<groupId>net.sf.nomin</groupId>
+	<artifactId>nomin</artifactId>
+	<version>${nomin.version}</version>
+</dependency>
+
+```
+
+Suppose we have an integration task to feed an external system with some data, so we have two domain models, ours and theirs. Despite the transport layer both of the domains are represented by sets of POJOs. 
+The following diagram shows all classes and its relations.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zerounix/nomin/master/doc/domains.jpg?raw=true" alt="example domain class diagram"/>
+</p>
+
+To perform mappings between the domains it needs to create mappings rules. Just create these files and put them into classpath.
+
+``` groovy
+// person2employee.groovy
+import org.nomin.entity.*
+
+mappingFor a: Person, b: Employee
+a.name = b.name
+a.lastName = b.last
+a.birthDate = b.details.birth
+a.children = b.details.kids
+
+a.strDate = b.details.birth
+dateFormat "dd-MM-yyyy"
+
+a.gender = b.details.sex
+simple ([Gender.MALE, true], [Gender.FEMALE, false])
+
+a.snn = b.employeeId
+convert to_a: { eId -> repositry.findByEmployeeId(eId) }, 
+		to_b: { snn -> repository.findBySnn(snn) }
+```
+``` groovy
+// child2kid.groovy
+import org.nomin.entity.*
+
+mappingFor a: Child, b: Kid
+a.name = b.kidName
+```
+Well, it's not looking too complicated. The last question that remains is how to make it work? The next code snippet shows that.
+``` java
+// MappingTest.java
+public class MappingTest {
+  NominMapper nomin = new Nomin("person2employee.groovy", "child2kid.groovy");
+  Person person;
+  Employee employee;
+
+  @Before
+  public void before() { /* create and initialize a person and an employee instances */ }
+
+  @Test
+  public void test() {
+      Employee e = nomin.map(person, Employee.class);
+      // here should be assertions to ensure that everything is ok
+
+      Person p = nomin.map(employee, Person.class);
+      // assertions again
+  }
+}
+```
+Let's look more deeply at the mappings. There are only a couple of things I should clarify because they are not so obvious as others.
+``` groovy
+a.gender = b.details.sex
+simple ([Gender.MALE, true], [Gender.FEMALE, false])
+```
+The simple conversion defines pairs of corresponding values for both sides.
+``` groovy
+a.snn = b.employeeId
+convert to_a: { eId -> service.convertEmployeeId2snn(eId) }, 
+		to_b: { snn -> service.convertSnn2EmployeeId(snn) }
+```
+We have string properties on both sides, but they can be converted to each other only using an external component or service. 
+Nomin provides access to a particular context to get services which are able to perform conversions to and from. How to configure Nomin 
+to use required context during mapping will be shown in the rest of this guide.
+
+Now you have all necessary knowledges to start working with Nomin.
+
+Find more documentation in the [Wiki](https://github.com/dobrynya/nomin/wiki)
