@@ -17,7 +17,7 @@ import static java.text.MessageFormat.format;
  */
 @SuppressWarnings({"unchecked"})
 public class Nomin implements NominMapper {
-    public static final String NOMIN_VERSION = "1.1.3";
+    public static final String NOMIN_VERSION = "1.1.4";
     protected static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
     protected ScriptLoader scriptLoader = new ScriptLoader(Nomin.class.getClassLoader());
