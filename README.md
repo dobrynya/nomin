@@ -7,7 +7,7 @@ Introduction
 
 Nomin is a mapping engine for the Java platform transforming object trees according to declarative mapping rules. 
 This Java mapping framework aims to reduce efforts when it's needed to map different structures to each other. 
-The current stable version of the Nomin framework is 1.1.2.
+The current stable version of the Nomin framework is 1.1.3.
 
 ##What mapping is
 
@@ -96,7 +96,7 @@ means "map property 'name' of the first class to property 'firstName' of the sec
 	Nomin is developed for working in multi-threading environments. Its performance exceeds performance of frameworks with the same functionality, the following table 
 	show the comparison results.
 
-| Environment / framework  | Nomin 1.1.0 | Dozer 5.3.1 |
+| Environment / framework  | Nomin 1.1.3 | Dozer 5.3.1 |
 | ------------- | -------------: | -------------: |
 | Mapping complex objects, 400000 iterations  |  |  |
 | Pentium Dual E2180 2GHz, RAM 3 GB Win 32 XP SP 3, JVM 1.6.0_18  | ReflectionIntrospector <br/> ~5.51 sec    | with disabled statistics 60.93 sec |
@@ -115,20 +115,15 @@ means "map property 'name' of the first class to property 'firstName' of the sec
 
 ##Getting started
 
-To start working with Nomin it's necessary to download the [Nomin distribution package](https://github.com/dobrynya/nomin/releases), unpack and put nomin.jar with dependencies into the classpath of your application. 
+To start working with Nomin it's necessary to download [Nomin](http://search.maven.org/remotecontent?filepath=net/sf/nomin/nomin/1.1.3/nomin-1.1.3.jar) and put it on the classpath of your application. 
 If you use Maven to build an application just add Nomin as a dependency into your pom.xml.
 
 ``` xml
-<properties>
-	<nomin.version>1.1.3</nomin.version>	
-</properties>
-...
 <dependency>
 	<groupId>net.sf.nomin</groupId>
 	<artifactId>nomin</artifactId>
-	<version>${nomin.version}</version>
+	<version>1.1.3</version>
 </dependency>
-
 ```
 
 Suppose we have an integration task to feed an external system with some data, so we have two domain models, ours and theirs. Despite the transport layer both of the domains are represented by sets of POJOs. 
@@ -203,6 +198,6 @@ We have string properties on both sides, but they can be converted to each other
 Nomin provides access to a particular context to get services which are able to perform conversions to and from. How to configure Nomin 
 to use required context during mapping will be shown in the rest of this guide.
 
-Now you have all necessary knowledges to start working with Nomin.
+Now you have basic knowledge to start working with Nomin.
 
 Find more documentation in the [Wiki](https://github.com/dobrynya/nomin/wiki)

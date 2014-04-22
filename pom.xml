@@ -4,7 +4,8 @@
     <groupId>net.sf.nomin</groupId>
     <artifactId>nomin</artifactId>
     <name>Nomin Mapping Engine</name>
-    <version>1.1.3</version>
+    <version>1.1.4-SNAPSHOT</version>
+    <packaging>bundle</packaging>
     <inceptionYear>2010</inceptionYear>
     <url>http://nomin.sourceforge.net</url>
 
@@ -100,7 +101,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.2.1</version>
+            <version>2.2.2</version>
         </dependency>
 
         <dependency>
@@ -164,6 +165,38 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.2</version>
+                        <executions>
+                            <execution><goals><goal>sign</goal></goals></execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals><goal>jar</goal></goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions><execution><goals><goal>jar</goal></goals><phase>package</phase></execution></executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>
@@ -176,14 +209,6 @@
                 <artifactId>maven-site-plugin</artifactId>
                 <version>3.0</version>
                 <configuration><templateFile>${basedir}/src/site/nomin-template.vm</templateFile></configuration>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution><goals><goal>sign</goal></goals></execution>
-                </executions>
             </plugin>
 
             <plugin>
@@ -208,7 +233,7 @@
                     <dependency>
                         <groupId>org.codehaus.groovy</groupId>
                         <artifactId>groovy-all</artifactId>
-                        <version>2.2.1</version>
+                        <version>2.2.2</version>
                     </dependency>
                 </dependencies>
                 <executions>
@@ -224,21 +249,6 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals><goal>jar</goal></goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <executions><execution><goals><goal>jar</goal></goals><phase>package</phase></execution></executions>
-            </plugin>
-
-            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
             </plugin>
@@ -251,6 +261,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
                 <configuration>
                     <instructions>
                         <Bundle-SymbolicName>${project.groupId}</Bundle-SymbolicName>
