@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory
  */
 class ClassImprover {
   static void initialize() {
-      LoggerFactory.getLogger(ClassImprover).debug("Adding getAt method to Class")
       Class.metaClass.getAt = { arg -> TypeInfoFactory.typeInfo(delegate, arg) }
+      LoggerFactory.getLogger(ClassImprover).debug("Class.getAt() has been added")
   }
 }

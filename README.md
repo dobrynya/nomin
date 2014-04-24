@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/zerounix/nomin/master/doc/nomin_logo_small.png?raw=true" alt="nomin - japanese peasant"/>
 </p>
 
-<img src="https://travis-ci.org/dobrynya/nomin.svg?branch=master"> Introduction
+<a href="https://travis-ci.org/dobrynya/nomin"><img src="https://travis-ci.org/dobrynya/nomin.svg?branch=master"></a> Introduction
 ============
 
 Nomin is a mapping engine for the Java platform transforming object trees according to declarative mapping rules. 
