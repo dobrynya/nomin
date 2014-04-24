@@ -1,6 +1,7 @@
 package org.nomin.core
 
 import org.nomin.util.*
+import org.slf4j.LoggerFactory
 
 /**
  * Adds getAt method to Class.
@@ -9,6 +10,7 @@ import org.nomin.util.*
  */
 class ClassImprover {
   static void initialize() {
-    Class.metaClass.getAt = { arg -> TypeInfoFactory.typeInfo(delegate, arg) }
+      LoggerFactory.getLogger(ClassImprover).debug("Adding getAt method to Class")
+      Class.metaClass.getAt = { arg -> TypeInfoFactory.typeInfo(delegate, arg) }
   }
 }

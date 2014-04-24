@@ -1,5 +1,6 @@
 package org.nomin.functional
 
+import org.junit.Test
 import org.nomin.context.MapContext
 import org.nomin.core.Nomin
 import org.nomin.entity.*
@@ -16,7 +17,7 @@ class MappingCasesTest {
   NominMapper mapper = new Nomin(new MapContext(decision: { mappingCase }),
           Person2Employee, Person2EmployeeInverse, Person2Details, Person2DetailsEmpty).disableCache()
 
-  @org.junit.Test
+  @Test
   void test() {
     def p = new Person(name: "Name", lastName: "Last name", birthDate: new Date(), gender: Gender.MALE)
     Employee e = mapper.map(p, Employee)
