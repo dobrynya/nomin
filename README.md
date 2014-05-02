@@ -149,7 +149,7 @@ a.strDate = b.details.birth
 dateFormat "dd-MM-yyyy"
 
 a.gender = b.details.sex
-simple ([Gender.MALE, true], [Gender.FEMALE, false])
+simple ([a: Gender.MALE, b: true], [a: Gender.FEMALE, b: false])
 
 a.snn = b.employeeId
 convert to_a: { eId -> repositry.findByEmployeeId(eId) }, 
@@ -171,7 +171,7 @@ public class MappingTest {
   Employee employee;
 
   @Before
-  public void before() { /* create and initialize a person and an employee instances */ }
+  public void before() { /* create and initialize a person and an employee instance */ }
 
   @Test
   public void test() {
@@ -186,7 +186,7 @@ public class MappingTest {
 Let's look more deeply at the mappings. There are only a couple of things I should clarify because they are not so obvious as others.
 ``` groovy
 a.gender = b.details.sex
-simple ([Gender.MALE, true], [Gender.FEMALE, false])
+simple ([a: Gender.MALE, b: true], [a: Gender.FEMALE, b: false])
 ```
 The simple conversion defines pairs of corresponding values for both sides.
 ``` groovy
@@ -200,4 +200,4 @@ to use required context during mapping will be shown in the rest of this guide.
 
 Now you have basic knowledge to start working with Nomin.
 
-Find more documentation in the [Wiki](https://github.com/dobrynya/nomin/wiki)
+Find more documentation in the [wiki](https://github.com/dobrynya/nomin/wiki)
