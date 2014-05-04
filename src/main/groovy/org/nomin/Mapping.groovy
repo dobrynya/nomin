@@ -278,6 +278,4 @@ class Mapping {
     entries.each { sb.append("  ").append(it).append("\n") }
     sb.append("}").toString()
   }
-
-  static { ClassImprover.initialize() }
 }

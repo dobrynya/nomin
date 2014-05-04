@@ -1,5 +1,6 @@
 package org.nomin.util
 
+import org.junit.Test
 import java.lang.reflect.Method
 
 /**
@@ -15,11 +16,11 @@ class BaseIntrospectorTest {
     protected PropertyAccessor createAccessor(String name, Class<?> targetClass) {return null; }
   }
 
-  @org.junit.Test
+  @Test
   void testCanApply() {
     assert bi.canApply(null, String)
     assert bi.canApply(String, String)
-    assert bi.canApply(Class.getPrimitiveClass("int"), Class.getPrimitiveClass("int"))
+    assert bi.canApply(Integer.TYPE, Integer.TYPE)
     assert bi.canApply(Integer, Number)
     assert !bi.canApply(Integer, String)
   }
@@ -28,13 +29,13 @@ class BaseIntrospectorTest {
     "${s} ${i} ${s2} ${l}"
   }
 
-  @org.junit.Test
+  @Test
   void testFindApplicable() {
     def method = bi.findApplicableMethod("methodToFind", getClass(), "String", 1, null, 1L)
     assert method && method.invoke(this, "String", 1, null, 1L) == "String 1 null 1"
   }
 
-  @org.junit.Test
+  @Test
   void testFindAccessorMethods() {
     def (getter, setter, ti) = bi.findAccessorMethods(["getA"], ["setA"], this.class)
     assert getter && setter && ti.type == String && getter.invoke(this) == "a"

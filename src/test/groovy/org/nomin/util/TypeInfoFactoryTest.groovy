@@ -1,8 +1,8 @@
 package org.nomin.util
 
+import org.junit.*
 import org.nomin.entity.Person
 import static org.nomin.util.TypeInfoFactory.typeInfo
-import org.nomin.util.TypeInfo
 import org.nomin.core.ClassImprover
 
 /**
@@ -17,10 +17,10 @@ class TypeInfoFactoryTest {
   Map<String, Person> persons2;
   Person[] person3;
 
-  @org.junit.Before
-  void before() { ClassImprover }
+  @BeforeClass
+  static void before() { ClassImprover.initialize() }
 
-  @org.junit.Test
+  @Test
   void testCreation() {
     def ti = typeInfo(String)
     assert ti && !ti.isDynamic() && !ti.array && !ti.collection && ti.type == String
@@ -34,7 +34,7 @@ class TypeInfoFactoryTest {
     assert ti && ti.isContainer() && ti.array && ti.parameters?.size() == 1 && ti.parameters[0].type == Person
   }
 
-  @org.junit.Test
+  @Test
   void testMerge() {
     TypeInfo ti = List[Person]
     ti = ti.merge(List[{ Person }])
@@ -48,7 +48,7 @@ class TypeInfoFactoryTest {
     assert ti.type == Person
   }
 
-  @org.junit.Test
+  @Test
   void testGetDynamicType() {
     def c = { "just a closure" }
     TypeInfo ti = typeInfo(c)

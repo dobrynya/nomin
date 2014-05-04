@@ -278,5 +278,8 @@ public class Nomin implements NominMapper {
         }
     }
 
-    static { logger.info("Nomin Mapping Engine version {}", NOMIN_VERSION); }
+    static {
+        logger.info("Nomin Mapping Engine version {}", NOMIN_VERSION);
+        ClassImprover.initialize();
+    }
 }
