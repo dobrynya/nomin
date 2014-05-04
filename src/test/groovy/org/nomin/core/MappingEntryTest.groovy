@@ -1,5 +1,6 @@
 package org.nomin.core
 
+import org.junit.Test
 import org.nomin.Mapping
 import org.nomin.core.preprocessing.*
 import static org.nomin.util.TypeInfoFactory.typeInfo
@@ -13,7 +14,7 @@ class MappingEntryTest {
 
   def e = new MappingEntry(mapping: new Mapping())
 
-  @org.junit.Test
+  @Test
   void testCompleted() {
     assert !e.completed()
     e.pathElem new RootPathElem()
@@ -22,7 +23,7 @@ class MappingEntryTest {
     assert e.completed()
   }
 
-  @org.junit.Test
+  @Test
   void testNoNeedPreprocessing() {
     assert e.preprocessings(
             new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)),
@@ -33,7 +34,7 @@ class MappingEntryTest {
             new MappingSide(lastRuleElem: new PropRuleElem(null, Set[String], null)))[0] == null
   }
 
-  @org.junit.Test
+  @Test
   void testConversionPreprocessing() {
     assert e.preprocessings(
             new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null), conversion: { it }),
@@ -44,24 +45,24 @@ class MappingEntryTest {
             new MappingSide(lastRuleElem: new PropRuleElem(null, Set[String], null), conversion: { it }))[0] instanceof ConversionPreprocessing
   }
 
-  @org.junit.Test
+  @Test
   void testConvertUtilsPreprocessing() {
     assert e.preprocessings(
             new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(Integer), null)),
-            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)))[0] instanceof ConvertUtilsPreprocessing
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)))[0] instanceof ConverterPreprocessing
     assert e.preprocessings(
             new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)),
-            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(Integer), null)))[0] instanceof ConvertUtilsPreprocessing
+            new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(Integer), null)))[0] instanceof ConverterPreprocessing
 
     assert e.preprocessings(
             new MappingSide(lastRuleElem: new PropRuleElem(null, List[Integer], null)),
-            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[String], null)))[0] instanceof ConvertUtilsPreprocessing
+            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[String], null)))[0] instanceof ConverterPreprocessing
     assert e.preprocessings(
             new MappingSide(lastRuleElem: new PropRuleElem(null, List[String], null)),
-            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[Integer], null)))[0] instanceof ConvertUtilsPreprocessing
+            new MappingSide(lastRuleElem: new PropRuleElem(null, Set[Integer], null)))[0] instanceof ConverterPreprocessing
   }
 
-  @org.junit.Test
+  @Test
   void testDynamicPreprocessing() {
     assert e.preprocessings(
             new MappingSide(lastRuleElem: new PropRuleElem(null, typeInfo(String), null)),

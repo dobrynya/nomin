@@ -48,7 +48,6 @@ public class DetailedPerson extends Person {
         this.educationDescription = educationDescription;
     }
 
-    @Override
     public String toString() {
         return format("DetailedPerson [ name = {0} lastName = {1} birthDate = {2} gender = {3} children = {4} strDate = {5} description = {6} educationName = {7} educationDescription = {8}]",
                 getName(), getLastName(), getBirthDate(), getGender(), getChildren(), getStrDate(), description, educationName, educationDescription);

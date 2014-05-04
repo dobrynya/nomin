@@ -1,9 +1,8 @@
 package org.nomin.core.preprocessing;
 
-import org.apache.commons.beanutils.ConvertUtils;
 import org.nomin.NominMapper;
 import org.nomin.core.*;
-import org.nomin.util.TypeInfo;
+import org.nomin.util.*;
 
 /**
  * Chooses and applies appropriate preprocessing depending on a value.
@@ -24,7 +23,7 @@ public class DynamicPreprocessing extends Preprocessing {
     public Object preprocess(Object source) {
         Class<?> targetClass = typeInfo.determineTypeDynamically(source);
         if (source == null || targetClass.isInstance(source)) return source;
-        if (ConvertUtils.lookup(source.getClass(), targetClass) != null) return ConvertUtils.convert(source, targetClass);
-        return mapper.map(source, targetClass, mappingCase.get());
+        ScalarConverter<Object, Object> converter = Converters.findConverter(source.getClass(), targetClass);
+        return converter != null ? converter.convert(source) : mapper.map(source, targetClass, mappingCase.get());
     }
 }

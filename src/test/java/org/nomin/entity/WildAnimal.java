@@ -1,8 +1,7 @@
 package org.nomin.entity;
 
 /**
- * Documentation.
- *
+ * Represents a business entity.
  * @author Dmitry Dobrynin
  *         Created: 13.05.2010 0:35:52
  */

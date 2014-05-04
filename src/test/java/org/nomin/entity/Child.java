@@ -22,7 +22,6 @@ public class Child {
         this.name = name;
     }
 
-    @Override
     public String toString() {
         return "Child [ " + name + " ]";
     }

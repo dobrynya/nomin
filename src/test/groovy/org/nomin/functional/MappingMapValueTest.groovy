@@ -1,8 +1,8 @@
 package org.nomin.functional
 
+import org.junit.Test
 import org.nomin.core.Nomin
 import org.nomin.entity.*
-
 import org.nomin.mappings.MappingMapValue
 
 /**
@@ -13,7 +13,7 @@ import org.nomin.mappings.MappingMapValue
 class MappingMapValueTest {
   Nomin nomin = new Nomin(MappingMapValue)
 
-  @org.junit.Test
+  @Test
   void test() {
     Person p = new Person(options: [name: "Person's Name", lastName: "Person's Lastname"])
     Employee e = nomin.map(p, Employee)

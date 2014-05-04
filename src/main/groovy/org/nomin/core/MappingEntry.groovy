@@ -4,7 +4,6 @@ import org.nomin.Mapping
 import org.nomin.util.*
 import static org.nomin.util.TypeInfoFactory.*
 import org.nomin.core.preprocessing.*
-import org.apache.commons.beanutils.ConvertUtils
 
 /**
  * Contains mapping pair from side a and side b.
@@ -98,7 +97,7 @@ class MappingEntry {
   protected Preprocessing preprocessing(TypeInfo thiz, TypeInfo that) {
     if (thiz.dynamic || that.isUndefined()) new DynamicPreprocessing(thiz, mapping.mapper, mappingCase)
     else if (thiz.type.isAssignableFrom(that.type)) return null
-    else if (ConvertUtils.lookup(that.type, thiz.type) != null) new ConvertUtilsPreprocessing(thiz.type)
+    else if (Converters.isRegistered(that.type, thiz.type)) new ConverterPreprocessing(Converters.findConverter(that.type, thiz.type))
     else new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
   }
 
