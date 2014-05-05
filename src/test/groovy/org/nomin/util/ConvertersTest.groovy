@@ -174,6 +174,16 @@ class ConvertersTest {
     }
 
     @Test
+    void convertersShouldConvertBetweenWrapperAndPrimitive() {
+        assert (byte) 1 == convert(new Byte((byte) 1), Byte.TYPE)
+        assert (short) 1 == convert((short) 1, Short.TYPE)
+        assert 1 == convert(1, Integer.TYPE)
+        assert 1L == convert(1L, Long.TYPE)
+        assert 1F == convert(1F, Float.TYPE)
+        assert 1D == convert(1D, Double.TYPE)
+    }
+
+    @Test
     void convertersShouldConvertString2Class_File_URL_bool() {
         assert convert("true", Boolean)
         assert convert("true", Boolean.TYPE)

@@ -24,6 +24,11 @@ public class Converters {
     private static Logger logger = LoggerFactory.getLogger(Converters.class);
     private static final Map<Class<?>, Map<Class<?>, ScalarConverter<?, ?>>> converters = new HashMap<Class<?>, Map<Class<?>, ScalarConverter<?, ?>>>();
 
+    public static final ScalarConverter<?, ?> asIs = new ScalarConverter<Object, Object>() {
+        public Object convert(Object source) {
+            return source;
+        }
+    };
     public static final ScalarConverter<Object, String> obj2str = new ScalarConverter<Object, String>() {
         public String convert(Object source) {
             return source.toString();
@@ -185,6 +190,7 @@ public class Converters {
     }
 
     static {
+        register(Byte.class, Byte.TYPE, (ScalarConverter<Byte, Byte>) asIs);
         register(asList(Byte.class, Byte.TYPE), asList(Short.class, Short.TYPE), number2short);
         register(asList(Byte.class, Byte.TYPE), asList(Integer.class, Integer.TYPE), number2int);
         register(asList(Byte.class, Byte.TYPE), asList(Long.class, Long.TYPE), number2long);
@@ -193,6 +199,7 @@ public class Converters {
         register(asList(Byte.class, Byte.TYPE), asList(BigInteger.class), number2bigint);
         register(asList(Byte.class, Byte.TYPE), asList(BigDecimal.class), number2bigdec);
 
+        register(Short.class, Short.TYPE, (ScalarConverter<Short, Short>) asIs);
         register(asList(Short.class, Short.TYPE), asList(Byte.class, Byte.TYPE), number2byte);
         register(asList(Short.class, Short.TYPE), asList(Integer.class, Integer.TYPE), number2int);
         register(asList(Short.class, Short.TYPE), asList(Long.class, Long.TYPE), number2long);
@@ -201,6 +208,7 @@ public class Converters {
         register(asList(Short.class, Short.TYPE), asList(BigInteger.class), number2bigint);
         register(asList(Short.class, Short.TYPE), asList(BigDecimal.class), number2bigdec);
 
+        register(Integer.class, Integer.TYPE, (ScalarConverter<Integer, Integer>) asIs);
         register(asList(Integer.class, Integer.TYPE), asList(Byte.class, Byte.TYPE), number2byte);
         register(asList(Integer.class, Integer.TYPE), asList(Short.class, Short.TYPE), number2short);
         register(asList(Integer.class, Integer.TYPE), asList(Long.class, Long.TYPE), number2long);
@@ -209,6 +217,7 @@ public class Converters {
         register(asList(Integer.class, Integer.TYPE), asList(BigInteger.class), number2bigint);
         register(asList(Integer.class, Integer.TYPE), asList(BigDecimal.class), number2bigdec);
 
+        register(Long.class, Long.TYPE, (ScalarConverter<Long, Long>) asIs);
         register(asList(Long.class, Long.TYPE), asList(Byte.class, Byte.TYPE), number2byte);
         register(asList(Long.class, Long.TYPE), asList(Short.class, Short.TYPE), number2short);
         register(asList(Long.class, Long.TYPE), asList(Integer.class, Integer.TYPE), number2int);
@@ -217,6 +226,7 @@ public class Converters {
         register(asList(Long.class, Long.TYPE), asList(BigInteger.class), number2bigint);
         register(asList(Long.class, Long.TYPE), asList(BigDecimal.class), number2bigdec);
 
+        register(Float.class, Float.TYPE, (ScalarConverter<Float, Float>) asIs);
         register(asList(Float.class, Float.TYPE), asList(Byte.class, Byte.TYPE), number2byte);
         register(asList(Float.class, Float.TYPE), asList(Short.class, Short.TYPE), number2short);
         register(asList(Float.class, Float.TYPE), asList(Integer.class, Integer.TYPE), number2int);
@@ -225,6 +235,7 @@ public class Converters {
         register(asList(Float.class, Float.TYPE), asList(BigInteger.class), number2bigint);
         register(asList(Float.class, Float.TYPE), asList(BigDecimal.class), number2bigdec);
 
+        register(Double.class, Double.TYPE, (ScalarConverter<Double, Double>) asIs);
         register(asList(Double.class, Double.TYPE), asList(Byte.class, Byte.TYPE), number2byte);
         register(asList(Double.class, Double.TYPE), asList(Short.class, Short.TYPE), number2short);
         register(asList(Double.class, Double.TYPE), asList(Integer.class, Integer.TYPE), number2int);
@@ -267,5 +278,7 @@ public class Converters {
         register(Date.class, java.sql.Date.class, udate2sdate);
         register(Date.class, Time.class, udate2time);
         register(Date.class, Timestamp.class, udate2timestamp);
+
+        register(Boolean.class, Boolean.TYPE, (ScalarConverter<Boolean, Boolean>) asIs);
     }
 }
