@@ -21,7 +21,7 @@ public class CollectionRuleElem extends PropRuleElem {
     public Object set(Object instance, Object value) throws Exception {
         if (next == null) {
             Collection<?> source = (value == null ? null : asCollection(value));
-            property.set(instance, source == null || source.size() == 0 ? null : containerHelper.convert(source, preprocessings));
+            property.set(instance, source == null ? null : containerHelper.convert(source, preprocessings));
         } else {
             Object ov = property.get(instance), nv = next.set(ov, value);
             if (ov != nv) property.set(instance, nv);
