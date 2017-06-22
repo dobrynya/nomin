@@ -68,8 +68,10 @@ class RuleElemTest {
     }
 
     assert collElem.set(instance, null) == instance
+    verify(pa).set instance, null
+
     assert collElem.set(instance, []) == instance
-    verify(pa, times(2)).set instance, null
+    verify(pa).set instance, []
 
     assert collElem.set(instance, [1, 2, 3]) == instance
     verify(pa).set instance, [1, 2, 3]
