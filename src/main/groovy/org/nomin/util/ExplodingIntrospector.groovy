@@ -15,9 +15,7 @@ class ExplodingIntrospector extends BaseReflectionIntrospector {
   }
 
   Set<String> properties(Class<?> targetClass) {
-    Set<String> properties = new HashSet()
-    collectFields(targetClass).each { properties.add(it.name) }
-    return properties;
+    new HashSet(collectFields(targetClass).collect {it.name})
   }
 
   protected Field searchField(Class clazz, String fieldName) {
@@ -26,8 +24,8 @@ class ExplodingIntrospector extends BaseReflectionIntrospector {
   }
 
   protected List<Field> collectFields(Class<?> targetClass) {
-    def fields = targetClass != Object ? targetClass.declaredFields.collect { it } : []
+    def fields = targetClass != Object ? targetClass.declaredFields.findAll { !it.isSynthetic() } : []
     if (targetClass.superclass) fields + collectFields(targetClass.superclass)
-    fields
+    else fields
   }
 }

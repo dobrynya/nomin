@@ -1,5 +1,6 @@
 package org.nomin.util
 
+import org.junit.Test
 import org.nomin.entity.Person
 
 /**
@@ -10,7 +11,7 @@ import org.nomin.entity.Person
 class ExplodingIntrospectorTest {
   Introspector exploding = new ExplodingIntrospector();
 
-  @org.junit.Test
+  @Test
   void testProperty() {
     def pa = exploding.property("a", this.class)
     assert pa && pa.get(this) == "a"
@@ -18,7 +19,7 @@ class ExplodingIntrospectorTest {
     assert a == "newA"
   }
 
-  @org.junit.Test
+  @Test
   void testProperties() {
     assert ["name", "lastName", "birthDate", "gender", "children", "strDate", "options"].containsAll(exploding.properties(Person))
   }
