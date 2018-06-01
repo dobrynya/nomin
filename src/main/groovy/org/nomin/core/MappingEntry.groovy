@@ -1,5 +1,6 @@
 package org.nomin.core
 
+import java.text.SimpleDateFormat
 import org.nomin.Mapping
 import org.nomin.util.*
 import static org.nomin.util.TypeInfoFactory.*
@@ -18,6 +19,7 @@ class MappingEntry {
   List<MappingSide> sides = []
   Introspector introspector
   MappingCase mappingCase = defaultMappingCase
+  SimpleDateFormat dateFormat
 
   /** Checks whether this mapping entry is full. */
   boolean completed() { sides.size() == 2 }
@@ -44,6 +46,9 @@ class MappingEntry {
   /** Forces the mapper to use a particular mapping case.  */
   void mappingCase(mappingCase) { this.mappingCase = mappingCase }
 
+  /** Does date conversion from/to string. */
+  void dateFormat(dateFormat) { this.dateFormat = dateFormat }
+
   MappingRule parse() {
     sides.sort { it.sideA ? -1 : it.sideB ? 1 : 0 }
     sides.each {
@@ -54,6 +59,14 @@ class MappingEntry {
       it.lastRuleElem = findLast(it.firstRuleElem)
     }
     validate sides[0].lastRuleElem, sides[1].lastRuleElem
+
+    if (dateFormat) {
+      TypeInfo typeInfo0 = sides[0].lastRuleElem.typeInfo
+      TypeInfo typeInfo1 = sides[1].lastRuleElem.typeInfo
+      sides[0].conversion = new String2DateConversion(dateFormat, typeInfo0, typeInfo1)
+      sides[1].conversion = new String2DateConversion(dateFormat, typeInfo1, typeInfo0)
+    }
+
     sides[0].lastRuleElem.preprocessings = preprocessings(sides[0], sides[1]) as Preprocessing[]
     sides[1].lastRuleElem.preprocessings = preprocessings(sides[1], sides[0]) as Preprocessing[]
     new MappingRule(sides[0].firstRuleElem, sides[1].firstRuleElem, allowed(sides[1].lastRuleElem), allowed(sides[0].lastRuleElem))

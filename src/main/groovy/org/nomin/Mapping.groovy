@@ -168,9 +168,7 @@ class Mapping {
    */
   void dateFormat(String pattern) {
     if (!entries) entry()
-    SimpleDateFormat sdf = new SimpleDateFormat(pattern)
-    def conversion = new String2DateConversion(sdf)
-    convert to_a: conversion, to_b: conversion
+    entries.last().dateFormat new SimpleDateFormat(pattern)
   }
 
   /**
