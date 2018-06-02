@@ -98,7 +98,7 @@ class MappingEntry {
     if (thiz.dynamic || that.isUndefined()) new DynamicPreprocessing(thiz, mapping.mapper, mappingCase)
     else if (thiz.type.isAssignableFrom(that.type)) return null
     else if (Converters.isRegistered(that.type, thiz.type)) new ConverterPreprocessing(Converters.findConverter(that.type, thiz.type))
-    else new MapperPreprocessing(thiz.type, mapping.mapper, mappingCase)
+    else new DynamicPreprocessing(thiz, mapping.mapper, mappingCase)
   }
 
   String toString() { "${sides[0].pathElem} = ${sides[1].pathElem}" }
