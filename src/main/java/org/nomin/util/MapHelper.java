@@ -37,7 +37,7 @@ public class MapHelper extends ContainerHelper {
 
     public Object setElement(Object target, Object index, Object element, Preprocessing[] preprocessings) throws Exception {
         Map<Object, Object> targetMap = target != null ? (Map<Object, Object>) target : createContainer(1);
-        targetMap.put(index, preprocess(element, preprocessings, 1));
+        targetMap.put(index, preprocess(element, preprocessings, 0));
         return targetMap;
     }
 
