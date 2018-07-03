@@ -10,18 +10,14 @@ import org.nomin.core.NominException
  */
 @SuppressWarnings("GroovyAssignabilityCheck") abstract
 class BaseIntrospector implements Introspector {
-  protected Map icache = [:], pacache = [:]
+  protected Map pacache = [:]
 
   MethodInvocation invocation(String name, Class<?> targetClass, Object... args) {
-    MethodInvocation mi = icache[[targetClass, name]]
-    if (!mi) {
-      Method method = findApplicableMethod(name, targetClass, args)
-      if (method) icache[[targetClass, name]] = (mi = createInvocation(method, args))
-    }
-    mi
+    Method method = findApplicableMethod(name, targetClass, args)
+    if (method) createInvocation(method, args) else null
   }
 
-  def PropertyAccessor property(String name, Class<?> targetClass) {
+    PropertyAccessor property(String name, Class<?> targetClass) {
     PropertyAccessor pa = pacache[[targetClass, name]]
     if (!pa) {
       pacache[[targetClass, name]] = (pa = createAccessor(name, targetClass))

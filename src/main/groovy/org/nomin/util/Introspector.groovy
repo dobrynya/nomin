@@ -5,7 +5,7 @@ package org.nomin.util
  * @author Dmitry Dobrynin
  * Created 14.04.2010 17:03:34
  */
-public interface Introspector {
+interface Introspector {
 
   /**
    * Creates a method invocation which is able to invoke specified method of specified class.

@@ -273,7 +273,7 @@ class Mapping {
    */
   protected void build() {}
 
-  def String toString() {
+  String toString() {
     def sb = new StringBuilder("Mapping { a: ${sideA?.name} b: ${sideB?.name} case: ${mappingCase ?: "default"}\n")
     entries.each { sb.append("  ").append(it).append("\n") }
     sb.append("}").toString()
