@@ -4,7 +4,7 @@
     <groupId>net.sf.nomin</groupId>
     <artifactId>nomin</artifactId>
     <name>Nomin Mapping Engine</name>
-    <version>1.1.7-SNAPSHOT</version>
+    <version>1.1.8-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <inceptionYear>2010</inceptionYear>
     <url>http://nomin.sourceforge.net</url>
@@ -101,7 +101,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.4.13</version>
+            <version>2.4.15</version>
         </dependency>
 
         <dependency>
@@ -255,11 +255,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration><descriptors><descriptor>src/assembly/all.xml</descriptor></descriptors></configuration>
             </plugin>
 
             <plugin>
