@@ -1,5 +1,6 @@
 package org.nomin.core
 
+import org.junit.Test
 import org.nomin.context.MapContext
 
 /**
@@ -11,7 +12,7 @@ class ContextManagerTest {
   def cm = new ContextManager()
   def ownerProperty = "Just a value"
 
-  @org.junit.Test
+  @Test
   void testPushPopPeek() {
     cm.pushLocal new MapContext(a: "a")
     assert cm.a == "a"
@@ -21,27 +22,29 @@ class ContextManagerTest {
     assert cm.a == "a"
     cm.replaceShared new MapContext(sharedData: "Shared data")
     assert "Shared data" == cm.sharedData
+    cm.clearContexts()
+    assert cm.localStack.isEmpty() && cm.globalContext.isEmpty()
   }
 
-  @org.junit.Test(expected = RuntimeException.class)
+  @Test(expected = RuntimeException.class)
   void testModification() { cm.a = "Not allowed" }
 
-  @org.junit.Test(expected = RuntimeException.class)
+  @Test(expected = RuntimeException.class)
   void testNonExistentObject() { cm.nonExistent }
 
-  @org.junit.Test
+  @Test
   void testMethodMissing() {
     cm.pushLocal new MapContext([:])
     cm.replaceShared new MapContext(function: { a, b, c -> "Function(${a}, ${b}, ${c})" })
     assert "Function(1, 2, 3)" == cm.function(1, 2, 3)
   }
 
-  @org.junit.Test(expected = RuntimeException.class)
+  @Test(expected = RuntimeException.class)
   void testNonExistentClosure() {
     cm.nonexistentClosure()
   }
 
-  @org.junit.Test
+  @Test
   void testLookingUpOwnerPropety() {
     cm.pushLocal new MapContext([:])
     def closure = { ownerProperty }

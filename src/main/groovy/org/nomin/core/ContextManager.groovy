@@ -1,6 +1,7 @@
 package org.nomin.core
 
 import org.nomin.context.Context
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Contains and manages a context.
@@ -9,31 +10,48 @@ import org.nomin.context.Context
  */
 class ContextManager {
   Context sharedContext = new EmptyContext()
+  protected ConcurrentHashMap<Thread, Context> globalContext = new ConcurrentHashMap<>()
+  protected ConcurrentHashMap<Thread, LinkedList<Context>> localStack = new ConcurrentHashMap<>()
 
-  protected ThreadLocal<Context> shared = new ThreadLocal() {
-    protected Context initialValue() { sharedContext }
+  def clearContexts() {
+    globalContext.clear()
+    localStack.clear()
   }
 
-  protected ThreadLocal<List<Context>> local = new ThreadLocal() {
-    protected List<Context> initialValue() { new ArrayList() }
+  protected void replaceShared(Context sharedContext) {
+    globalContext.put(Thread.currentThread(), sharedContext)
   }
 
-  protected void replaceShared(Context sharedContext) { shared.set sharedContext }
+  protected void restoreShared() {
+    globalContext.put(Thread.currentThread(), sharedContext)
+  }
 
-  protected void restoreShared() { shared.set sharedContext }
+  protected void pushLocal(Context localContext) {
+    localStack.compute(Thread.currentThread()) { thread, stack ->
+      if (stack == null) stack = new LinkedList<Context>()
+      stack.addFirst(localContext)
+      stack
+    }
+  }
 
-  protected void pushLocal(Context localContext) { local.get().push localContext }
-
-  protected void popLocal() { local.get().pop() }
+  protected void popLocal() {
+    localStack.compute(Thread.currentThread()) { thread, stack ->
+      stack.removeFirst()
+      stack
+    }
+  }
 
   Closure makeContextAware(Closure closure) {
-    if (closure) { closure.resolveStrategy = Closure.DELEGATE_FIRST; closure.delegate = this }
+    if (closure != null) {
+      closure.resolveStrategy = Closure.DELEGATE_FIRST
+      closure.delegate = this
+    }
     closure
   }
 
   def propertyMissing(String name) {
-    def result = local.get().last().getResource(name)
-    if (result == null) result = shared.get().getResource(name)
+    def result = localStack.get(Thread.currentThread()).peekFirst().getResource(name)
+    if (result == null) result = globalContext.getOrDefault(Thread.currentThread(), sharedContext).getResource(name)
     if (result == null) throw new MissingPropertyException("There is no resource/component '${name}' in the context!")
     result
   }
@@ -49,8 +67,9 @@ class ContextManager {
   }
 
   def String toString() {
-    local.get().isEmpty() ? "ContextManager [ shared context = ${shared.get()} ]" :
-      "ContextManager [ local context = ${local.get().last()} shared context = ${shared.get()} ]"
+    def global = globalContext.getOrDefault(Thread.currentThread(), sharedContext)
+    def local = localStack.get(Thread.currentThread())
+    "ContextManager [ local context = ${local.peekFirst()} shared context = ${global} ]"
   }
 
   static class EmptyContext implements Context {

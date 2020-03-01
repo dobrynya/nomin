@@ -217,6 +217,11 @@ public interface NominMapper {
     NominMapper context(Context context);
 
     /**
+     * Removes meta-information and context to prepare shutting down.
+     */
+    void clearContext();
+
+    /**
      * Provides Nomin with the default introspector to use accross all mappings. Nomin uses
      * {@link org.nomin.util.ReflectionIntrospector ReflectionIntrospector} by default.
      * @param introspector specifies the introspector to use

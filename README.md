@@ -7,9 +7,17 @@
 
 Nomin is a mapping engine for the Java platform transforming object trees according to declarative mapping rules. 
 This Java mapping framework aims to reduce efforts when it's needed to map different structures to each other. 
-The current stable version of the Nomin framework is 1.1.3.
+The current stable version of the Nomin framework is 1.2.
 
 ## Releases
+
+### 1.2
+
+* Resolved the problem with leaking memory in ContextManager due to dropping ThreadLocal use. More details at https://github.com/dobrynya/nomin/issues/17
+* Upgraded JVM up to 11
+* Upgraded Groovy up to 2.5.9
+* Upgraded SLF4j API up to 1.7.30
+* Upgraded CGLIB up to 3.3.0
 
 ### 1.1.7
 

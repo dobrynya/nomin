@@ -17,7 +17,7 @@ import static java.text.MessageFormat.format;
  */
 @SuppressWarnings({"unchecked"})
 public class Nomin implements NominMapper {
-    public static final String NOMIN_VERSION = "1.1.4";
+    public static final String NOMIN_VERSION = "1.2";
     protected static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
     protected ScriptLoader scriptLoader = new ScriptLoader(Nomin.class.getClassLoader());
@@ -70,6 +70,10 @@ public class Nomin implements NominMapper {
         return this;
     }
 
+    public void clearContext() {
+        contextManager.clearContexts();
+    }
+
     public NominMapper defaultIntrospector(Introspector introspector) {
         defaultIntrospector = introspector;
         return this;
@@ -90,11 +94,7 @@ public class Nomin implements NominMapper {
 
     public NominMapper parseDirectory(File directory, Charset charset) {
         if (directory.exists() && directory.isDirectory())
-            for (File mappingScript : directory.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".groovy");
-                }
-            })) parse(scriptLoader.loadFile(mappingScript, charset));
+            for (File mappingScript : directory.listFiles((dir, name) -> name.endsWith(".groovy"))) parse(scriptLoader.loadFile(mappingScript, charset));
         else
             throw new NominException(format("Directory {0} does not exist!", directory));
         return this;
@@ -161,16 +161,20 @@ public class Nomin implements NominMapper {
 
     public <T> T map(Object source, Class<T> targetClass, Context context) {
         contextManager.replaceShared(context);
-        T target = map(source, targetClass);
-        contextManager.restoreShared();
-        return target;
+        try {
+            return map(source, targetClass);
+        } finally {
+            contextManager.restoreShared();
+        }
     }
 
     public <T> T map(Object source, Class<T> targetClass, Object mappingCase, Context context) {
         contextManager.replaceShared(context);
-        T target = map(source, targetClass, mappingCase);
-        contextManager.restoreShared();
-        return target;
+        try {
+            return map(source, targetClass, mappingCase);
+        } finally {
+            contextManager.restoreShared();
+        }
     }
 
     public <T> T map(Object source, T target) {
@@ -184,15 +188,21 @@ public class Nomin implements NominMapper {
 
     public <T> T map(Object source, T target, Context context) {
         contextManager.replaceShared(context);
-        map(source, target, (Object) null);
-        contextManager.restoreShared();
+        try {
+            map(source, target, (Object) null);
+        } finally {
+            contextManager.restoreShared();
+        }
         return target;
     }
 
     public <T> T map(Object source, T target, Object mappingCase, Context context) {
         contextManager.replaceShared(context);
-        map(source, target, mappingCase);
-        contextManager.restoreShared();
+        try {
+            map(source, target, mappingCase);
+        } finally {
+            contextManager.restoreShared();
+        }
         return target;
     }
 
