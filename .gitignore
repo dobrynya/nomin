@@ -3,4 +3,7 @@ out/
 *.iml
 *.iws
 *.ipr
-.idea
+.idea/
+.gradle/
+build/
+gradle.properties

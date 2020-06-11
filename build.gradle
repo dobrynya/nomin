@@ -1,0 +1,88 @@
+plugins {
+    id "groovy"
+    id "com.bmuschko.nexus" version "2.3.1"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.codehaus.groovy:groovy-all:2.5.9"
+    implementation "org.slf4j:slf4j-api:[1,)"
+    implementation "cglib:cglib-nodep:[3,)"
+    compileOnly "org.springframework:spring-context:[5,)"
+
+    testImplementation "org.springframework:spring-context:[5,)"
+    testImplementation "ch.qos.logback:logback-classic:[1,)"
+    testImplementation "junit:junit:[4,)"
+    testImplementation "org.mockito:mockito-all:1.9.5"
+    testImplementation "net.sf.dozer:dozer:[5,)"
+}
+
+group = "net.sf.nomin"
+version = "1.2.1"
+description = "Nomin Mapping Engine"
+sourceCompatibility = "11"
+
+sourceSets {
+    [main.java, test.java]*.srcDirs = []
+    main.groovy.srcDirs += "src/main/java"
+    test.groovy.srcDirs += "src/test/java"
+}
+
+modifyPom {
+    project {
+        name rootProject.description
+        description """Nomin is a mapping engine for the Java platform. It provides abilities to transform object trees according to
+                       declarative mapping rules. Main features of Nomin are no XML configuration, intuitively looking mapping,
+                       using arbitrary expressions and method invocations in mappings, pre and postprocessing right in a mapping listing,
+                       customizations. It's applicable for any Java compatible classes, not only JavaBeans."""
+        url "https://github.com/dobrynya/nomin"
+        inceptionYear "2010"
+
+        scm {
+            url 'https://github.com/bmuschko/gradle-nexus-plugin'
+            connection "https://github.com/dobrynya/nomin.git"
+            developerConnection "https://github.com/dobrynya/nomin.git"
+        }
+
+        licenses {
+            license {
+                name "The Apache Software License, Version 2.0"
+                url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                distribution "repo"
+            }
+        }
+
+        developers {
+            developer {
+                id "dobrynya"
+                name "Dmitry Dobrynin"
+                email "dobrynya@inbox.ru"
+            }
+        }
+
+        contributors {
+            contributor {
+                name "Alexey Dobrynin"
+            }
+            contributor {
+                name "Helen Dobrynina"
+            }
+            contributor {
+                name "Alexander Racheev"
+            }
+        }
+    }
+}
+
+nexus {
+    sign = true
+    repositoryUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+    snapshotRepositoryUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
