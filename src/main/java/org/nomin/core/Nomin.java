@@ -26,6 +26,8 @@ public class Nomin implements NominMapper {
     protected Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<MappingKey, List<MappingWithDirection>>();
     protected boolean automappingEnabled = true;
     protected boolean cacheEnabled = true;
+    protected final ThreadLocal<WeakHashMap<Object, Map<MappingKey, Object>>> cache = ThreadLocal.withInitial(() -> new WeakHashMap<Object, Map<MappingKey, Object>>());
+
     protected Introspector defaultIntrospector = Mapping.jb;
 
     public Nomin() {}
