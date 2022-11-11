@@ -15,11 +15,6 @@ import static java.lang.String.format;
  */
 public class ParsedMapping {
     static final Logger logger = LoggerFactory.getLogger(ParsedMapping.class);
-    static final ThreadLocal<WeakHashMap<Object, Map<MappingKey, Object>>> cache = new ThreadLocal<WeakHashMap<Object, Map<MappingKey, Object>>>() {
-        protected WeakHashMap<Object, Map<MappingKey, Object>> initialValue() {
-            return new WeakHashMap<Object, Map<MappingKey, Object>>();
-        }
-    };
 
     final String mappingName;
     final Class<?> sideA, sideB;
@@ -88,8 +83,8 @@ public class ParsedMapping {
             catch (Throwable th) { throw new NominException(true, format("Could not instantiate %s!", targetClass), th); }
 
         if (mapper.cacheEnabled) {
-            Map<MappingKey, Object> keys = cache.get().get(source);
-            if (keys == null) cache.get().put(source, keys = new HashMap<MappingKey, Object>(1));
+            Map<MappingKey, Object> keys = mapper.cache.get().get(source);
+            if (keys == null) mapper.cache.get().put(source, keys = new HashMap<MappingKey, Object>(1));
             MappingKey key = new MappingKey(source.getClass(), targetClass, mappingCase);
             Object cached = keys.get(key);
             if (cached == null) keys.put(key, target);
