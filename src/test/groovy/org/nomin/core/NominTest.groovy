@@ -1,6 +1,7 @@
 package org.nomin.core
 
 import org.junit.Test
+import org.nomin.NominMapper
 import org.nomin.entity.*
 
 /**
@@ -9,7 +10,18 @@ import org.nomin.entity.*
  * Created: 18.05.2010 0:36:40
  */
 class NominTest {
-  Nomin nomin = new Nomin().disableAutomapping()
+  NominMapper nomin = new Nomin().disableAutomapping()
+
+  @Test
+  void testWhetherAutomappingIsDisabled() {
+    assert !nomin.isAutomappingEnabled()
+  }
+
+  @Test
+  void testWhetherAutomappingIsEnabled() {
+      nomin.enableAutomapping()
+      assert nomin.isAutomappingEnabled()
+  }
 
   @Test
   void testFindApplicable() {
@@ -108,7 +120,7 @@ class NominTest {
         Kid kid = e.details.kids.iterator().next()
         assert kid.kidName == "Child"
     }
-    
+
   @Test
   void testParsingMappingsUsingAnotherClassLoader() {
       ClassLoader another = new ClassLoader(this.class.classLoader) {

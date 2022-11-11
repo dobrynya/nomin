@@ -17,16 +17,17 @@ import static java.text.MessageFormat.format;
  */
 @SuppressWarnings({"unchecked"})
 public class Nomin implements NominMapper {
-    public static final String NOMIN_VERSION = "1.2";
+    public static final String NOMIN_VERSION = "1.2.2";
     protected static final Logger logger = LoggerFactory.getLogger(Nomin.class);
 
     protected ScriptLoader scriptLoader = new ScriptLoader(Nomin.class.getClassLoader());
     protected ContextManager contextManager = new ContextManager();
-    protected List<ParsedMapping> mappings = new ArrayList<ParsedMapping>();
-    protected Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<MappingKey, List<MappingWithDirection>>();
+    protected List<ParsedMapping> mappings = new ArrayList<>();
+    protected Map<MappingKey, List<MappingWithDirection>> cachedApplicable = new HashMap<>();
     protected boolean automappingEnabled = true;
     protected boolean cacheEnabled = true;
-    protected final ThreadLocal<WeakHashMap<Object, Map<MappingKey, Object>>> cache = ThreadLocal.withInitial(() -> new WeakHashMap<Object, Map<MappingKey, Object>>());
+    protected final ThreadLocal<WeakHashMap<Object, Map<MappingKey, Object>>> cache =
+            ThreadLocal.withInitial(WeakHashMap::new);
 
     protected Introspector defaultIntrospector = Mapping.jb;
 
@@ -95,8 +96,11 @@ public class Nomin implements NominMapper {
     }
 
     public NominMapper parseDirectory(File directory, Charset charset) {
-        if (directory.exists() && directory.isDirectory())
-            for (File mappingScript : directory.listFiles((dir, name) -> name.endsWith(".groovy"))) parse(scriptLoader.loadFile(mappingScript, charset));
+        if (directory.exists() && directory.isDirectory()) {
+            File[] files = directory.listFiles((dir, name) -> name.endsWith(".groovy"));
+            if (files != null)
+                for (File mappingScript : files) parse(scriptLoader.loadFile(mappingScript, charset));
+        }
         else
             throw new NominException(format("Directory {0} does not exist!", directory));
         return this;
@@ -225,7 +229,7 @@ public class Nomin implements NominMapper {
     }
 
     protected List<MappingWithDirection> findApplicable(MappingKey key) {
-        ArrayList<MappingWithDirection> result = new ArrayList<MappingWithDirection>();
+        ArrayList<MappingWithDirection> result = new ArrayList<>();
         for (ParsedMapping pm : mappings) {
             if ((pm.mappingCase == null && key.mappingCase == null) ^ (pm.mappingCase != null && pm.mappingCase.equals(key.mappingCase))) {
                 if (pm.sideA.isAssignableFrom(key.source) && pm.sideB.isAssignableFrom(key.target)) result.add(new MappingWithDirection(pm, true));
@@ -233,7 +237,7 @@ public class Nomin implements NominMapper {
             }
         }
         if (!result.isEmpty()) {
-            Collections.sort(result, new MappingComparator(key.target));
+            result.sort(new MappingComparator(key.target));
         } else if (automappingEnabled) {
             logger.info("Could not find applicable mappings between {} and {}. A mapping will be created using automapping facility",
                     key.source.getName(), key.target.getName());

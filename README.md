@@ -7,9 +7,13 @@
 
 Nomin is a mapping engine for the Java platform transforming object trees according to declarative mapping rules. 
 This Java mapping framework aims to reduce efforts when it's needed to map different structures to each other. 
-The current stable version of the Nomin framework is 1.2.
+The current stable version of the Nomin framework is 1.2.2
 
 ## Releases
+
+### 1.2.2
+
+* Fixed a bug with caching, details https://github.com/dobrynya/nomin/pull/40
 
 ### 1.2
 
@@ -112,15 +116,15 @@ means "map property `name` of the first class to property `firstName` of the sec
 
     Nomin is developed for working in multi-threading environments. Its performance exceeds performance of frameworks with the same functionality, the following table shows the comparison results.
 
-| Environment / framework  | Nomin 1.1.3 | Dozer 5.3.1 |
-| ------------- | -------------: | -------------: |
-| Mapping complex objects, 400000 iterations  |  |  |
-| Pentium Dual E2180 2GHz, RAM 3 GB Win 32 XP SP 3, JVM 1.6.0_18  | ReflectionIntrospector <br/> ~5.51 sec    | with disabled statistics 60.93 sec |
-|  | ExplodingIntrospector <br/>~4.96 sec | |
-|  | FastIntrospector <br/>~3.49 sec | |
-| AMD x64 2GHz, RAM 2 GB Win 7 x64, JVM x64 1.6.0_22| with ReflectionIntrospector <br/> ~4.33 sec  | with disabled statistics 33.87 sec |
-|  | ExplodingIntrospector <br/>~4.17 sec | |
-|  | FastIntrospector <br/>~3.68 sec | |
+| Environment / framework                                        |                                 Nomin 1.1.3 |                        Dozer 5.3.1 |
+|----------------------------------------------------------------|--------------------------------------------:|-----------------------------------:|
+| Mapping complex objects, 400000 iterations                     |                                             |                                    |
+| Pentium Dual E2180 2GHz, RAM 3 GB Win 32 XP SP 3, JVM 1.6.0_18 |      ReflectionIntrospector <br/> ~5.51 sec | with disabled statistics 60.93 sec |
+|                                                                |        ExplodingIntrospector <br/>~4.96 sec |                                    |
+|                                                                |             FastIntrospector <br/>~3.49 sec |                                    |
+| AMD x64 2GHz, RAM 2 GB Win 7 x64, JVM x64 1.6.0_22             | with ReflectionIntrospector <br/> ~4.33 sec | with disabled statistics 33.87 sec |
+|                                                                |        ExplodingIntrospector <br/>~4.17 sec |                                    |
+|                                                                |             FastIntrospector <br/>~3.68 sec |                                    |
 
 
 * recursive mapping of complex types
@@ -131,14 +135,14 @@ means "map property `name` of the first class to property `firstName` of the sec
 
 ## Getting started
 
-To start working with Nomin it's necessary to download [Nomin](http://search.maven.org/remotecontent?filepath=net/sf/nomin/nomin/1.1.3/nomin-1.1.3.jar) and put it on the classpath of your application. 
+To start working with Nomin it's necessary to download [Nomin](http://search.maven.org/remotecontent?filepath=net/sf/nomin/nomin/1.2/nomin-1.2.jar) and put it on the classpath of your application. 
 If you use Maven to build an application, just add Nomin as a dependency into your pom.xml.
 
 ``` xml
 <dependency>
 	<groupId>net.sf.nomin</groupId>
 	<artifactId>nomin</artifactId>
-	<version>1.1.3</version>
+	<version>1.2.2</version>
 </dependency>
 ```
 

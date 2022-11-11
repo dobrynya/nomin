@@ -14,8 +14,4 @@ appender("STDOUT", ConsoleAppender) {
 }
 
 root(INFO, ["STDOUT"])
-logger("org.nomin", DEBUG)
-
-
-
-
+logger("org.nomin", INFO)
